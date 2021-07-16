@@ -18,3 +18,16 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('35.193.25.247', 6379)],
+            'capacity': 1500,
+            'expiry': 10,
+        },
+    },
+}
+
+ASGI_APPLICATION = 'config.asgi.application'

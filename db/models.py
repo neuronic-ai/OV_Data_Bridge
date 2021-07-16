@@ -17,15 +17,8 @@ BRIDGE_TYPE = [
 ]
 
 
-class TBLFrequency(models.Model):
-    value = models.IntegerField()
-
-    class Meta:
-        db_table = 'TBLFREQUENCY'
-
-
 class TBLBridge(models.Model):
-    user = models.ForeignKey(TBLUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(TBLUser, on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=255, default='')
     type = models.IntegerField(choices=BRIDGE_TYPE)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -34,8 +27,8 @@ class TBLBridge(models.Model):
     src_address = models.CharField(max_length=255, default='')
     dst_address = models.CharField(max_length=255, default='')
     format = models.TextField(blank=True, null=True)
-    frequency = models.ManyToManyField(TBLFrequency)
-    is_active = models.BooleanField(default=False)
+    frequency = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
     third_response = models.TextField(blank=True, null=True)
 
     class Meta:

@@ -1,0 +1,236 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% block title %}
+    {% endblock title %}
+    <link rel="stylesheet" type="text/css"
+          href="https://fonts.googleapis.com/css?family=Poppins:300,400,600,700&amp;lang=en">
+    <link rel="stylesheet" href="{% static "css/style.css" %}" type="text/css">
+    <link rel='stylesheet' href="https://cdn.rawgit.com/t4t5/sweetalert/v0.2.0/lib/sweet-alert.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static "css/custom.css" %}">
+</head>
+
+<body>
+<header>
+    <div class="main-header">
+        <div class="home-title">
+            <span>Ocean Vantage Data bridge</span>
+        </div>
+        <div class="main-header-body">
+            <div class="mobile-search">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14.6771 12.9102C15.6612 11.5662 16.2499 9.91535 16.2499 8.12572C16.2499 3.64575 12.6049 0.000732422 8.12494 0.000732422C3.64498 0.000732422 0 3.64575 0 8.12572C0 12.6057 3.64502 16.2507 8.12498 16.2507C9.91462 16.2507 11.5656 15.6619 12.9096 14.6778L18.2324 20.0006L20 18.2331C20 18.233 14.6771 12.9102 14.6771 12.9102ZM8.12498 13.7507C5.02318 13.7507 2.50001 11.2275 2.50001 8.12572C2.50001 5.02391 5.02318 2.50074 8.12498 2.50074C11.2268 2.50074 13.75 5.02391 13.75 8.12572C13.75 11.2275 11.2267 13.7507 8.12498 13.7507Z"
+                          fill="#C1C1C1"/>
+                </svg>
+            </div>
+            <div class="search-bar">
+                <div class="close-toggle">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <form class="navbar-search navbar-search-light form-inline" id="navbar-search-main">
+                    <div class="form-group mb-0">
+                        <div class="input-group input-group-alternative input-group-merge">
+                            <div class="input-group-prepend">
+                      <span class="input-group-text">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M14.6771 12.9102C15.6612 11.5662 16.2499 9.91535 16.2499 8.12572C16.2499 3.64575 12.6049 0.000732422 8.12494 0.000732422C3.64498 0.000732422 0 3.64575 0 8.12572C0 12.6057 3.64502 16.2507 8.12498 16.2507C9.91462 16.2507 11.5656 15.6619 12.9096 14.6778L18.2324 20.0006L20 18.2331C20 18.233 14.6771 12.9102 14.6771 12.9102ZM8.12498 13.7507C5.02318 13.7507 2.50001 11.2275 2.50001 8.12572C2.50001 5.02391 5.02318 2.50074 8.12498 2.50074C11.2268 2.50074 13.75 5.02391 13.75 8.12572C13.75 11.2275 11.2267 13.7507 8.12498 13.7507Z"
+                                fill="#C1C1C1"/>
+                        </svg>
+                      </span>
+                            </div>
+                            <input class="form-control" placeholder="Search" type="text">
+                        </div>
+                    </div>
+                    <div class="search-btn-mobile">
+                        <a href="#" class="">Search</a>
+                    </div>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+                           aria-expanded="false">
+                            <div class="media align-items-center">
+                                <div class="profile-icon">
+                                    <img src="{% static "img/icons/profile.png" %}">
+                                </div>
+                            </div>
+                        </a>
+                        <div class="dropdown-menu  dropdown-menu-right ">
+                            <div class="dropdown-header noti-title">
+                                <h6 class="text-overflow m-0">Welcome {{ username }}!</h6>
+                            </div>
+                            <a href="{% url "profile" %}" class="dropdown-item">
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0)">
+                                        <path d="M14.9051 12.5928C13.6057 11.2734 11.8831 10.5469 10.0547 10.5469H7.94531C6.11691 10.5469 4.39432 11.2734 3.09495 12.5928C1.80193 13.9057 1.61719 14.1692 1.08984 16.1869C1.08984 16.4782 1.08984 16.7143 1.61719 16.7143H16.3125C16.9102 16.7143 16.9102 16.4782 16.9102 16.1869C16.3125 14.0625 16.1981 13.9057 14.9051 12.5928Z"
+                                              fill="#676765"></path>
+                                        <path d="M15.7871 11.6859C11.7337 9.43803 6.26564 9.43803 2.21353 11.6859C1.46485 12.1002 1 12.8551 1 13.6557V17H17V13.6557C17 12.8551 16.5351 12.1002 15.7871 11.6859Z"
+                                              fill="#676765"></path>
+                                        <path d="M12 1.31802C13.7574 3.07539 13.7574 5.92459 12 7.68197C10.2426 9.43934 7.39343 9.43934 5.63606 7.68197C3.87869 5.92459 3.87869 3.07539 5.63606 1.31802C7.39343 -0.439359 10.2426 -0.439319 12 1.31802Z"
+                                              fill="#676765"></path>
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0">
+                                            <rect width="18" height="18" fill="white"></rect>
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                                <span>My profile</span>
+                            </a>
+                            <a href="{% url "logout" %}" class="dropdown-item">
+                                <svg height="512pt" viewBox="0 0 512.00533 512" width="512pt"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="m320 277.335938c-11.796875 0-21.332031 9.558593-21.332031 21.332031v85.335937c0 11.753906-9.558594 21.332032-21.335938 21.332032h-64v-320c0-18.21875-11.605469-34.496094-29.054687-40.554688l-6.316406-2.113281h99.371093c11.777344 0 21.335938 9.578125 21.335938 21.335937v64c0 11.773438 9.535156 21.332032 21.332031 21.332032s21.332031-9.558594 21.332031-21.332032v-64c0-35.285156-28.714843-63.99999975-64-63.99999975h-229.332031c-.8125 0-1.492188.36328175-2.28125.46874975-1.027344-.085937-2.007812-.46874975-3.050781-.46874975-23.53125 0-42.667969 19.13281275-42.667969 42.66406275v384c0 18.21875 11.605469 34.496093 29.054688 40.554687l128.386718 42.796875c4.351563 1.34375 8.679688 1.984375 13.226563 1.984375 23.53125 0 42.664062-19.136718 42.664062-42.667968v-21.332032h64c35.285157 0 64-28.714844 64-64v-85.335937c0-11.773438-9.535156-21.332031-21.332031-21.332031zm0 0"/>
+                                    <path d="m505.75 198.253906-85.335938-85.332031c-6.097656-6.101563-15.273437-7.9375-23.25-4.632813-7.957031 3.308594-13.164062 11.09375-13.164062 19.714844v64h-85.332031c-11.777344 0-21.335938 9.554688-21.335938 21.332032 0 11.777343 9.558594 21.332031 21.335938 21.332031h85.332031v64c0 8.621093 5.207031 16.40625 13.164062 19.714843 7.976563 3.304688 17.152344 1.46875 23.25-4.628906l85.335938-85.335937c8.339844-8.339844 8.339844-21.824219 0-30.164063zm0 0"/>
+                                </svg>
+                                <span>Logout</span>
+                            </a>
+                        </div>
+                    </li>
+                </form>
+            </div>
+            <div class="menu-toggle">
+                <label for="check" class="button">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="main-body">
+    <nav class="sidenav navbar navbar-vertical fixed-left navbar-expand-xs navbar-light bg-white" id="sidenav-main">
+        <div class="scrollbar-inner">
+            <div class="navbar-inner">
+                <!-- Collapse -->
+                <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+                    <!-- Nav items -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link {% if page_name == 'dashboard' %}active{% endif %}" href="{% url "dashboard" %}">
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6.72719 0H1.27268C0.570886 0 0 0.588725 0 1.31244V4.68742C0 5.41127 0.570886 6 1.27268 6H6.72719C7.42911 6 8 5.41127 8 4.68742V1.31244C8 0.588725 7.42911 0 6.72719 0Z"
+                                          fill="#676765"/>
+                                    <path d="M6.72719 8H1.27268C0.570886 8 0 8.56069 0 9.25008V16.75C0 17.4393 0.570886 18 1.27268 18H6.72719C7.42911 18 8 17.4393 8 16.75V9.25008C8 8.56069 7.42911 8 6.72719 8Z"
+                                          fill="#676765"/>
+                                    <path d="M16.7273 12H11.2728C10.5709 12 10 12.5887 10 13.3126V16.6876C10 17.4113 10.5709 18 11.2728 18H16.7273C17.4291 18 18 17.4113 18 16.6876V13.3126C18 12.5887 17.4291 12 16.7273 12Z"
+                                          fill="#676765"/>
+                                    <path d="M16.7273 0H11.2728C10.5709 0 10 0.560693 10 1.24995V8.74992C10 9.43931 10.5709 10 11.2728 10H16.7273C17.4291 10 18 9.43931 18 8.74992V1.24995C18 0.560693 17.4291 0 16.7273 0V0Z"
+                                          fill="#676765"/>
+                                </svg>
+                                <span class="nav-link-text">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if page_name == 'data_bridges' %}active{% endif %}" href="{% url "data_bridges" %}">
+                                <svg width="18" height="20" viewBox="0 0 20 20" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M20 5.02205V3.70337H0V5.02205H1.31868V6.78029H0V16.2968H2.90079V13.6697C2.90079 12.1121 4.16532 10.8494 5.72523 10.8494C7.28514 10.8494 8.54967 12.1121 8.54967 13.6697L8.54945 16.2968H11.4504V13.6697C11.4504 12.1121 12.7149 10.8494 14.2748 10.8494C15.8347 10.8494 17.0993 12.1121 17.0993 13.6697V16.2968H20V6.78029H18.6813V5.02205H20ZM9.34066 6.78029H2.63736V5.02205H9.34066V6.78029ZM17.3626 6.78029H10.6593V5.02205H17.3626V6.78029Z"
+                                          fill="#676765"/>
+                                </svg>
+                                <span class="nav-link-text">Data Bridges</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if page_name == 'profile' %}active{% endif %}" href="{% url "profile" %}">
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0)">
+                                        <path d="M14.9051 12.5928C13.6057 11.2734 11.8831 10.5469 10.0547 10.5469H7.94531C6.11691 10.5469 4.39432 11.2734 3.09495 12.5928C1.80193 13.9057 1.61719 14.1692 1.08984 16.1869C1.08984 16.4782 1.08984 16.7143 1.61719 16.7143H16.3125C16.9102 16.7143 16.9102 16.4782 16.9102 16.1869C16.3125 14.0625 16.1981 13.9057 14.9051 12.5928Z"
+                                              fill="#676765"/>
+                                        <path d="M15.7871 11.6859C11.7337 9.43803 6.26564 9.43803 2.21353 11.6859C1.46485 12.1002 1 12.8551 1 13.6557V17H17V13.6557C17 12.8551 16.5351 12.1002 15.7871 11.6859Z"
+                                              fill="#676765"/>
+                                        <path d="M12 1.31802C13.7574 3.07539 13.7574 5.92459 12 7.68197C10.2426 9.43934 7.39343 9.43934 5.63606 7.68197C3.87869 5.92459 3.87869 3.07539 5.63606 1.31802C7.39343 -0.439359 10.2426 -0.439319 12 1.31802Z"
+                                              fill="#676765"/>
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0">
+                                            <rect width="18" height="18" fill="white"/>
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                                <span class="nav-link-text">Profile</span>
+                            </a>
+                        </li>
+                        <li class="nav-item hide">
+                            <a class="nav-link" href="#">
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0)">
+                                        <path d="M16.9766 11.774C15.4335 10.8004 13.6667 10.2662 11.8408 10.1663C12.2629 10.3639 12.6808 10.5726 13.077 10.8226C14.0317 11.4241 14.625 12.5134 14.625 13.6647V16.8749H18V13.6647C18 12.8968 17.6078 12.1722 16.9766 11.774Z"
+                                              fill="#676765"/>
+                                        <path d="M12.4766 11.774C9.05659 9.61634 4.44288 9.61634 1.02392 11.774C0.392221 12.1717 0 12.8963 0 13.6648V16.875H13.5V13.6648C13.5 12.8963 13.1078 12.1717 12.4766 11.774Z"
+                                              fill="#676765"/>
+                                        <path d="M10.1185 8.81368C10.4822 8.92376 10.8575 9.00005 11.2501 9.00005C13.421 9.00005 15.1876 7.23345 15.1876 5.06254C15.1876 2.89164 13.421 1.125 11.2501 1.125C10.8575 1.125 10.4822 1.20129 10.1185 1.31137C11.1503 2.23875 11.8125 3.56907 11.8125 5.06251C11.8125 6.55594 11.1504 7.88626 10.1185 8.81368Z"
+                                              fill="#676765"/>
+                                        <path d="M9.53431 2.27827C11.072 3.81597 11.072 6.30903 9.53431 7.84673C7.9966 9.38444 5.50355 9.38444 3.96584 7.84673C2.42813 6.30903 2.42813 3.81597 3.96584 2.27827C5.50355 0.74056 7.9966 0.740595 9.53431 2.27827Z"
+                                              fill="#676765"/>
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0">
+                                            <rect width="18" height="18" fill="white"/>
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                                <span class="nav-link-text">Admin</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="logout-collapse">
+                    <ul>
+                        <li>
+                            <a href="{% url "logout" %}">
+                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                        <li class="collapse-panel">
+                            <a href="#">
+                                <svg width="14" height="16" viewBox="0 0 11 16" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8 1L1.14142 7.85858C1.06332 7.93668 1.06332 8.06332 1.14142 8.14142L8 15"
+                                          stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                                <span class="mr-set">Collapse</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% block content %}
+    {% endblock content %}
+</div>
+
+{% block sub_content %}
+{% endblock sub_content %}
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+{#<script src="{% static "js/jquery-3.5.1.slim.min.js" %}"></script>#}
+<script src="{% static "js/bootstrap.bundle.js" %}"></script>
+<script src="https://cdn.rawgit.com/t4t5/sweetalert/v0.2.0/lib/sweet-alert.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+<script src="{% static "js/main.js" %}"></script>
+
+{% block javascript %}
+{% endblock javascript %}
+
+</body>
+</html>

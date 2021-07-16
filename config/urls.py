@@ -17,7 +17,7 @@ from django.urls import path
 from django.urls.conf import include
 
 urlpatterns = [
-    path('', include('sectors.dashboard.urls')),
+    path('', include('sectors.ov.urls')),
     path('auth/', include('sectors.auth.urls')),
-    path('webhook/', include('webhook.urls'))
+    path('webhook/', include('webhook.urls')),
 ]

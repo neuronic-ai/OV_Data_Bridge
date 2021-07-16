@@ -1,0 +1,1111 @@
+{% extends "ov/base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Data Bridges</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="main-content" id="panel">
+        <div class="header">
+            <div class="">
+                <div class="header-body">
+                    <div class="dashboard-panel">
+                        <div class="dashaborad-card">
+                            <div class="card card-stats">
+                                <div class="card-body">
+                                    <h2 class="main-title">New Data Bridge</h2>
+                                    <div class="card-body-box">
+                                        <a class="" data-toggle="modal" data-target="#databridge">
+                                            <svg width="136" height="136" viewBox="0 0 136 136" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <g filter="url(#filter0_d)">
+                                                    <circle cx="68" cy="66" r="36" fill="#01C579"/>
+                                                </g>
+                                                <path d="M68 56L68 76" stroke="white" stroke-width="3"
+                                                      stroke-linecap="round"/>
+                                                <path d="M78 66L58 66" stroke="white" stroke-width="3"
+                                                      stroke-linecap="round"/>
+                                                <defs>
+                                                    <filter id="filter0_d" x="0" y="0" width="136" height="136"
+                                                            filterUnits="userSpaceOnUse"
+                                                            color-interpolation-filters="sRGB">
+                                                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                                                        <feColorMatrix in="SourceAlpha" type="matrix"
+                                                                       values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+                                                        <feOffset dy="2"/>
+                                                        <feGaussianBlur stdDeviation="16"/>
+                                                        <feColorMatrix type="matrix"
+                                                                       values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"/>
+                                                        <feBlend mode="normal" in2="BackgroundImageFix"
+                                                                 result="effect1_dropShadow"/>
+                                                        <feBlend mode="normal" in="SourceGraphic"
+                                                                 in2="effect1_dropShadow" result="shape"/>
+                                                    </filter>
+                                                </defs>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% for bridge_info in bridges_info %}
+                            <div class="dashaborad-card">
+                                <div class="card card-stats">
+                                    <div class="card-body">
+                                        <h2 class="main-title">{{ bridge_info.name }}</h2>
+                                        <div class="card-body-box">
+                                            <span>{{ bridge_info.description }}</span>
+                                            <label><i>Start Date: {{ bridge_info.date_created }}</i></label>
+                                            <label>Conversions: {{ bridge_info.api_calls }}</label>
+                                        </div>
+                                        <div class="action-panel">
+                                            <svg id={{ bridge_info.id }} type={{ bridge_info.type }} class="edit-bridge"
+                                                 width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M23.2736 9.61743L21.5884 9.32688C21.385 8.54237 21.0654 7.78693 20.6586 7.08959L21.6465 5.69492C21.908 5.34625 21.8789 4.8523 21.5593 4.56174L19.4092 2.41162C19.1186 2.09201 18.6247 2.06295 18.276 2.32446L16.8814 3.31235C16.184 2.93462 15.4286 2.61501 14.6731 2.41162L14.3826 0.726392C14.3245 0.290557 13.9467 0 13.5109 0H10.4891C10.0533 0 9.67554 0.290557 9.61743 0.726392L9.32688 2.41162C8.54237 2.61501 7.78693 2.93462 7.08959 3.3414L5.69492 2.35351C5.34625 2.09201 4.8523 2.12107 4.56174 2.44068L2.41162 4.5908C2.09201 4.88136 2.06295 5.3753 2.32446 5.72397L3.31235 7.11864C2.93462 7.81598 2.61501 8.57143 2.41162 9.32688L0.726392 9.61743C0.290557 9.67554 0 10.0533 0 10.4891V13.5109C0 13.9467 0.290557 14.3245 0.726392 14.3826L2.41162 14.6731C2.61501 15.4576 2.93462 16.2131 3.3414 16.9104L2.35351 18.3051C2.09201 18.6538 2.12107 19.1477 2.44068 19.4383L4.5908 21.5884C4.88136 21.908 5.3753 21.937 5.72397 21.6755L7.11864 20.6877C7.81598 21.0654 8.57143 21.385 9.32688 21.5884L9.61743 23.2736C9.67554 23.7094 10.0533 24 10.4891 24H13.5109C13.9467 24 14.3245 23.7094 14.3826 23.2736L14.6731 21.5884C15.4576 21.385 16.2131 21.0654 16.9104 20.6586L18.3051 21.6465C18.6538 21.908 19.1477 21.8789 19.4383 21.5593L21.5884 19.4092C21.908 19.1186 21.937 18.6247 21.6755 18.276L20.6877 16.8814C21.0654 16.184 21.385 15.4286 21.5884 14.6731L23.2736 14.3826C23.7094 14.3245 24 13.9467 24 13.5109V10.4891C24 10.0533 23.7094 9.67554 23.2736 9.61743ZM12 16.7942C9.35593 16.7942 7.20581 14.6441 7.20581 12C7.20581 9.35593 9.35593 7.20581 12 7.20581C14.6441 7.20581 16.7942 9.35593 16.7942 12C16.7942 14.6441 14.6441 16.7942 12 16.7942Z"
+                                                      fill="#76757A"/>
+                                            </svg>
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M4.96875 24H19.0312C20.1944 24 21.1406 23.0538 21.1406 21.8906V7.03125H16.2188C15.0556 7.03125 14.1094 6.08503 14.1094 4.92188V0H4.96875C3.80559 0 2.85938 0.946219 2.85938 2.10938V21.8906C2.85938 23.0538 3.80559 24 4.96875 24ZM7.78125 9.89062H16.2188C16.6074 9.89062 16.9219 10.2051 16.9219 10.5938C16.9219 10.9824 16.6074 11.2969 16.2188 11.2969H7.78125C7.39261 11.2969 7.07812 10.9824 7.07812 10.5938C7.07812 10.2051 7.39261 9.89062 7.78125 9.89062ZM7.78125 12.7031H16.2188C16.6074 12.7031 16.9219 13.0176 16.9219 13.4062C16.9219 13.7949 16.6074 14.1094 16.2188 14.1094H7.78125C7.39261 14.1094 7.07812 13.7949 7.07812 13.4062C7.07812 13.0176 7.39261 12.7031 7.78125 12.7031ZM7.78125 15.5156H16.2188C16.6074 15.5156 16.9219 15.8301 16.9219 16.2188C16.9219 16.6074 16.6074 16.9219 16.2188 16.9219H7.78125C7.39261 16.9219 7.07812 16.6074 7.07812 16.2188C7.07812 15.8301 7.39261 15.5156 7.78125 15.5156ZM7.78125 18.3281H13.4062C13.7949 18.3281 14.1094 18.6426 14.1094 19.0312C14.1094 19.4199 13.7949 19.7344 13.4062 19.7344H7.78125C7.39261 19.7344 7.07812 19.4199 7.07812 19.0312C7.07812 18.6426 7.39261 18.3281 7.78125 18.3281Z"
+                                                      fill="#76757A"/>
+                                                <path d="M16.2188 5.62512H20.7286L15.5156 0.412109V4.922C15.5156 5.30994 15.8308 5.62512 16.2188 5.62512Z"
+                                                      fill="#76757A"/>
+                                            </svg>
+                                            <svg id={{ bridge_info.id }} is_active={{ bridge_info.is_active }}
+                                                 class="power-bridge {% if not bridge_info.is_active %}color-grey{% endif %}"
+                                                 width="24" height="24"
+                                                 viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12 0C5.38317 0 0 5.38317 0 12C0 18.6168 5.38317 24 12 24C18.6168 24 24 18.6168 24 12C24 5.38317 18.6168 0 12 0ZM11.2969 4.03125C11.2969 3.64294 11.6117 3.32812 12 3.32812C12.3883 3.32812 12.7031 3.64294 12.7031 4.03125V9.65625C12.7031 10.0446 12.3883 10.3594 12 10.3594C11.6117 10.3594 11.2969 10.0446 11.2969 9.65625V4.03125ZM12 19.7344C7.73527 19.7344 4.26562 16.2647 4.26562 12C4.26562 8.92762 6.087 6.14597 8.90583 4.91348C9.26161 4.75786 9.67617 4.92023 9.83175 5.27602C9.98733 5.6318 9.825 6.04636 9.46922 6.20194C7.16241 7.21059 5.67188 9.48642 5.67188 12C5.67188 15.4893 8.51067 18.3281 12 18.3281C15.4893 18.3281 18.3281 15.4893 18.3281 12C18.3281 9.48642 16.8376 7.21059 14.5308 6.20198C14.175 6.04641 14.0127 5.63184 14.1683 5.27606C14.3238 4.92023 14.7384 4.75781 15.0942 4.91353C17.913 6.14597 19.7344 8.92762 19.7344 12C19.7344 16.2647 16.2647 19.7344 12 19.7344Z"
+                                                      fill="#01C579"/>
+                                            </svg>
+                                            <img id={{ bridge_info.id }} class="delete-bridge"
+                                                 src="{% static "img/icons/trash.png" %}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block sub_content %}
+    <div class="modal fade" id="databridge" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered data-bridge" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Choose Data Bridge Type</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="bridge_form" class="row m-0">
+                        <div class="col-lg-6 p-0">
+                            <a v-on:click="on_ws2wh" href="#" class="bridge-button" data-toggle="modal"
+                               data-target="#ws2wh">WebSocket to WebHook</a>
+                        </div>
+                        <div class="col-lg-6 p-0">
+                            <a v-on:click="on_wh2ws" href="#" class="bridge-button mr-0" data-toggle="modal"
+                               data-target="#wh2ws">WebHook to WebSocket</a>
+                        </div>
+                        <div class="col-lg-6 p-0">
+                            <a v-on:click="on_ws2api" href="#" class="bridge-button" data-toggle="modal"
+                               data-target="#ws2api">WebSocket to API</a>
+                        </div>
+                        <div class="col-lg-6 p-0">
+                            <a v-on:click="on_api2ws" href="#" class="bridge-button mr-0">API to WebSocket</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ws2wh" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">WebSocket to WebHook</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="websocket-panel">
+                        <div class="change-password">
+                            <form id="ws2wh_form">
+                                <div class="left-panel">
+                                    <div class="form-group formate-section name-formate">
+                                        <div class="name-formate-div">
+                                            <label>Name</label>
+                                            <input v-model="name" id="ws2wh_name" type="text" class="form-control"
+                                                   placeholder="Enter here">
+                                        </div>
+                                        <a href="#" v-on:click="on_format" class="formate blue-bg" data-toggle="modal"
+                                           data-target="#formate">Format</a>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>WebSocket Address</label>
+                                        <input v-model="ws_address" id="ws2wh_ws_address" type="text"
+                                               class="form-control" placeholder="Enter here">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>WebHook Address</label>
+                                        <input v-model="wh_address" id="ws2wh_wh_address" type="text"
+                                               class="form-control" placeholder="Enter here">
+                                    </div>
+                                </div>
+                                <div class="right-button-panel example">
+                                    <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
+                                    <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
+                                    <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="wh2ws" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">WebHook to WebSocket</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="websocket-panel">
+                        <div class="change-password">
+                            <form id="wh2ws_form">
+                                <div class="left-panel">
+                                    <div class="form-group formate-section name-formate">
+                                        <div class="name-formate-div">
+                                            <label>Name</label>
+                                            <input v-model="name" id="wh2ws_name" type="text" class="form-control"
+                                                   placeholder="Enter here">
+                                        </div>
+                                        <a href="#" v-on:click="on_format" class="formate blue-bg" data-toggle="modal"
+                                           data-target="#formate">Format</a>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>WebHook Address</label>
+                                        <div class="copybutton">
+                                            <input v-model="wh_address" type="text" class="form-control"
+                                                   placeholder="Enter here" readonly>
+                                            <div v-on:click="on_copy_wh" class="copy-icon">
+                                                <img src="{% static "img/icons/copy.png" %}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>WebSocket Address</label>
+                                        <div class="copybutton">
+                                            <input v-model="ws_address" type="text" class="form-control"
+                                                   placeholder="Enter here" readonly>
+                                            <div v-on:click="on_copy_ws" class="copy-icon">
+                                                <img src="{% static "img/icons/copy.png" %}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="right-button-panel example">
+                                    <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
+                                    <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
+                                    <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="formate-popup modal fade" id="formate" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered format-modal" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Format</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="websocket-panel">
+                        <div class="change-password">
+                            <form id="format_form">
+                                <div class="left-panel">
+                                    <div class="form-section">
+                                        <label>Comma delimited search words</label>
+                                        <div class="data-formate-section formate-section remember-forgot">
+                                            <input v-model="search_word" id="search_word" type="text"
+                                                   class="form-control"
+                                                   placeholder="Enter here">
+                                            <div class="form-group remember-check">
+                                                <input v-model="any" v-on:click="on_check_any" type="checkbox" id="any">
+                                                <label for="any">Any</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input v-model="replace_word" type="text" class="form-control"
+                                               placeholder="Enter here">
+                                    </div>
+                                </div>
+                                <div class="right-button-section">
+                                    <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
+                                    <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
+                                    <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ws2api" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">WebSocket to API</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="websocket-panel">
+                        <div class="change-password">
+                            <form id="ws2api_form">
+                                <div class="left-panel">
+                                    <div class="form-group formate-section name-formate">
+                                        <div class="name-formate-div">
+                                            <label>Name</label>
+                                            <input v-model="name" id="ws2api_name" type="text" class="form-control"
+                                                   placeholder="Enter here">
+                                        </div>
+                                        <div class="frequency-dropdown">
+                                            <label>Frequency</label>
+                                            <select v-model="frequency" class="selectpicker form-control"
+                                                    data-dropup-auto="false" data-size="4">
+                                                {% for f in frequency %}
+                                                    <option value={{ f.second }}>{{ f.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>WebSocket Address</label>
+                                        <input v-model="ws_address" id="ws2api_ws_address" type="text"
+                                               class="form-control"
+                                               placeholder="Enter here">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>API Feed</label>
+                                        <div class="copybutton">
+                                            <input v-model="api_feed" type="text" class="form-control"
+                                                   placeholder="Enter here" readonly>
+                                            <div v-on:click="on_copy_api" class="copy-icon">
+                                                <img src="{% static "img/icons/copy.png" %}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="right-button-panel example">
+                                    <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
+                                    <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
+                                    <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="api2ws" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">API to WebSocket</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="websocket-panel">
+                        <div class="change-password">
+                            <form id="api2ws_form">
+                                <div class="left-panel">
+                                    <div class="form-group formate-section name-formate">
+                                        <div class="name-formate-div">
+                                            <label>Name</label>
+                                            <input v-model="name" id="api2ws_name" type="text" class="form-control"
+                                                   placeholder="Enter here">
+                                        </div>
+                                        <div class="frequency-dropdown">
+                                            <label>Frequency</label>
+                                            <select v-model="frequency" class="selectpicker form-control"
+                                                    data-dropup-auto="false" data-size="4">
+                                                {% for f in frequency %}
+                                                    <option value={{ f.second }}>{{ f.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>API Feed</label>
+                                        <input v-model="api_feed" id="api2ws_api_feed" type="text"
+                                               class="form-control"
+                                               placeholder="Enter here">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>API Feed</label>
+                                        <div class="copybutton">
+                                            <input v-model="ws_address" type="text" class="form-control"
+                                                   placeholder="Enter here" readonly>
+                                            <div v-on:click="on_copy_ws" class="copy-icon">
+                                                <img src="{% static "img/icons/copy.png" %}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="right-button-panel example">
+                                    <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
+                                    <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
+                                    <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock sub_content %}
+
+{% block javascript %}
+    <script>
+        /*
+            var socket;
+            $(document).ready(function () {
+
+                socket = new WebSocket('ws://' + window.location.host + '/websocket/jong/jogaebap/beef');
+
+                socket.onmessage = function(e) {console.log(e);};
+                socket.onopen = function(e) {console.log("connection opened");console.log(e); socket.send("asdfsadfasdf");};
+                socket.onerror = function(e) {console.log("connection error");console.log(e);};
+                socket.onclose = function(e) {console.log("connection closed");console.log(e);};
+            });*/
+
+        var g_bridges_info = {{ bridges_info|safe }};
+        var g_frequency_info = {{ frequency|safe }};
+
+        var ws_host = 'ws://' + window.location.host + '/websocket/';
+        var wh_host = 'http://' + window.location.host + '/webhook/';
+        var api_host = 'http://' + window.location.host + '/api/';
+
+        var bridge_vue = new Vue({
+            delimiters: ['[[', ']]'],
+            el: '#bridge_form',
+            data: {},
+            methods: {
+                on_ws2wh: function () {
+
+                    open_bridge_modal(1);
+                },
+                on_wh2ws: function () {
+
+                    open_bridge_modal(2);
+                },
+                on_ws2api: function () {
+
+                    open_bridge_modal(3);
+                },
+                on_api2ws: function () {
+
+                    open_bridge_modal(4);
+                }
+            }
+        });
+
+        var format_vue = new Vue({
+            delimiters: ['[[', ']]'],
+            el: '#format_form',
+            data: {
+                search_word: '',
+                replace_word: '',
+                any: false,
+            },
+            methods: {
+                on_delete: function () {
+
+                    swal({
+                            title: 'Are you sure?',
+                            text: 'You will not be able to recover this format!',
+                            type: 'warning',
+                            showCancelButton: true,
+                            showSweetAlert: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Yes, delete it!',
+                            cancelButtonText: 'No, cancel plx!',
+                            closeOnConfirm: true,
+                            closeOnCancel: true
+                        },
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                $('#formate').modal('hide');
+                                reset_format();
+                            }
+                        });
+                },
+                on_reset: function () {
+
+                    swal({
+                            title: 'Are you sure?',
+                            text: 'Format for this bridge will be cleared!',
+                            type: 'warning',
+                            showCancelButton: true,
+                            showSweetAlert: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Yes, reset it!',
+                            cancelButtonText: 'No, cancel plx!',
+                            closeOnConfirm: true,
+                            closeOnCancel: true
+                        },
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                reset_format();
+                                focus_on_element('search_word');
+                            }
+                        });
+                },
+                on_save: function () {
+
+                    $('#formate').modal('hide');
+                },
+                on_check_any: function () {
+
+                    this.any = !this.any;
+                }
+            },
+            watch: {
+                search_word: function (cur_val, prev_val) {
+
+                },
+                replace_word: function (cur_val, prev_val) {
+
+                }
+            }
+        });
+
+        function focus_on_element(element_name, timeout = 500) {
+
+            setTimeout(function () {
+                $('#' + element_name).focus();
+            }, timeout);
+        }
+
+        function reset_format() {
+
+            format_vue.search_word = '';
+            format_vue.replace_word = '';
+            format_vue.any = false;
+        }
+
+        var ws2wh_vue = new Vue({
+            delimiters: ['[[', ']]'],
+            el: '#ws2wh_form',
+            data: {
+                id: 0,
+                name: '',
+                ws_address: '',
+                wh_address: '',
+            },
+            methods: {
+                on_format: function () {
+
+                    focus_on_element('search_word');
+                },
+                on_delete: function () {
+
+                    delete_bridge(this.id);
+                },
+                on_reset: function () {
+
+                    swal({
+                            title: 'Are you sure?',
+                            text: 'All configurations for this bridge will be cleared!',
+                            type: 'warning',
+                            showCancelButton: true,
+                            showSweetAlert: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Yes, reset it!',
+                            cancelButtonText: 'No, cancel plx!',
+                            closeOnConfirm: true,
+                            closeOnCancel: true
+                        },
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                ws2wh_vue.name = '';
+                                ws2wh_vue.ws_address = '';
+                                ws2wh_vue.wh_address = '';
+                                reset_format();
+                                focus_on_element('ws2wh_name');
+                            }
+                        });
+                },
+                on_save: function () {
+
+                    if (this.name === '') {
+                        $('#ws2wh_name').focus();
+                        return;
+                    }
+
+                    if (this.ws_address === '') {
+                        $('#ws2wh_ws_address').focus();
+                        return;
+                    }
+
+                    if (this.wh_address === '') {
+                        $('#ws2wh_wh_address').focus();
+                        return;
+                    }
+
+                    save_bridge({
+                        'id': this.id,
+                        'name': this.name,
+                        'type': 1,
+                        'src_address': this.ws_address,
+                        'dst_address': this.wh_address,
+                        'format': JSON.stringify({
+                            'search_word': format_vue.search_word,
+                            'replace_word': format_vue.replace_word,
+                            'any': format_vue.any
+                        })
+                    });
+                }
+            },
+            watch: {
+                ws_address: function (cur_val, prev_val) {
+
+                },
+                wh_address: function (cur_val, prev_val) {
+
+                }
+            }
+        });
+
+        var wh2ws_vue = new Vue({
+            delimiters: ['[[', ']]'],
+            el: '#wh2ws_form',
+            data: {
+                id: 0,
+                name: '',
+                wh_address: '',
+                ws_address: '',
+            },
+            methods: {
+                on_format: function () {
+
+                    focus_on_element('search_word');
+                },
+                on_delete: function () {
+
+                    delete_bridge(this.id);
+                },
+                on_reset: function () {
+
+                    swal({
+                            title: 'Are you sure?',
+                            text: 'All configurations for this bridge will be cleared!',
+                            type: 'warning',
+                            showCancelButton: true,
+                            showSweetAlert: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Yes, reset it!',
+                            cancelButtonText: 'No, cancel plx!',
+                            closeOnConfirm: true,
+                            closeOnCancel: true
+                        },
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                wh2ws_vue.name = '';
+                                wh2ws_vue.wh_address = wh_host + gen_rp(10) + '/' + gen_rp(20);
+                                wh2ws_vue.ws_address = ws_host + gen_rp(10) + '/' + gen_rp(20);
+                                reset_format();
+                                focus_on_element('wh2ws_name');
+                            }
+                        });
+                },
+                on_save: function () {
+
+                    if (this.name === '') {
+                        $('#wh2ws_name').focus();
+                        return;
+                    }
+
+                    save_bridge({
+                        'id': this.id,
+                        'name': this.name,
+                        'type': 2,
+                        'src_address': this.wh_address,
+                        'dst_address': this.ws_address,
+                        'format': JSON.stringify({
+                            'search_word': format_vue.search_word,
+                            'replace_word': format_vue.replace_word,
+                            'any': format_vue.any
+                        })
+                    });
+                },
+                on_copy_wh: function () {
+
+                },
+                on_copy_ws: function () {
+
+                }
+            }
+        });
+
+        function change_frequency_title(frequency) {
+            var i;
+            for (i = 0; i < g_frequency_info.length; i++) {
+                if (g_frequency_info[i].second === frequency) {
+                    $('.filter-option-inner-inner').html(g_frequency_info[i].name);
+                    break;
+                }
+            }
+        }
+
+        var ws2api_vue = new Vue({
+            delimiters: ['[[', ']]'],
+            el: '#ws2api_form',
+            data: {
+                id: 0,
+                name: '',
+                ws_address: '',
+                api_feed: '',
+                frequency: 0,
+            },
+            methods: {
+                on_delete: function () {
+
+                    delete_bridge(this.id);
+                },
+                on_reset: function () {
+
+                    swal({
+                            title: 'Are you sure?',
+                            text: 'All configurations for this bridge will be cleared!',
+                            type: 'warning',
+                            showCancelButton: true,
+                            showSweetAlert: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Yes, reset it!',
+                            cancelButtonText: 'No, cancel plx!',
+                            closeOnConfirm: true,
+                            closeOnCancel: true
+                        },
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                ws2api_vue.name = '';
+                                ws2api_vue.ws_address = '';
+                                ws2api_vue.api_feed = ws_host + gen_rp(10) + '/' + gen_rp(20);
+                                ws2api_vue.frequency = g_frequency_info[0].second;
+                                change_frequency_title(ws2api_vue.frequency);
+                                focus_on_element('ws2api_name');
+                            }
+                        });
+                },
+                on_save: function () {
+
+                    if (this.name === '') {
+                        $('#ws2api_name').focus();
+                        return;
+                    }
+
+                    if (this.ws_address === '') {
+                        $('#ws2api_ws_address').focus();
+                        return;
+                    }
+
+                    save_bridge({
+                        'id': this.id,
+                        'name': this.name,
+                        'type': 3,
+                        'src_address': this.ws_address,
+                        'dst_address': this.api_feed,
+                        'frequency': this.frequency
+                    });
+                },
+                on_copy_api: function () {
+
+                },
+            },
+            watch: {
+                ws_address: function (cur_val, prev_val) {
+
+                }
+            }
+        });
+
+        var api2ws_vue = new Vue({
+            delimiters: ['[[', ']]'],
+            el: '#api2ws_form',
+            data: {
+                id: 0,
+                name: '',
+                api_feed: '',
+                ws_address: '',
+                frequency: 0,
+            },
+            methods: {
+                on_delete: function () {
+
+                    delete_bridge(this.id);
+                },
+                on_reset: function () {
+
+                    swal({
+                            title: 'Are you sure?',
+                            text: 'All configurations for this bridge will be cleared!',
+                            type: 'warning',
+                            showCancelButton: true,
+                            showSweetAlert: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Yes, reset it!',
+                            cancelButtonText: 'No, cancel plx!',
+                            closeOnConfirm: true,
+                            closeOnCancel: true
+                        },
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                api2ws_vue.name = '';
+                                api2ws_vue.api_feed = ws_host + gen_rp(10) + '/' + gen_rp(20);
+                                api2ws_vue.ws_address = '';
+                                api2ws_vue.frequency = g_frequency_info[0].second;
+                                change_frequency_title(api2ws_vue.frequency);
+                                focus_on_element('api2ws_name');
+                            }
+                        });
+                },
+                on_save: function () {
+
+                    if (this.name === '') {
+                        $('#ws2api_name').focus();
+                        return;
+                    }
+
+                    if (this.ws_address === '') {
+                        $('#ws2api_ws_address').focus();
+                        return;
+                    }
+
+                    save_bridge({
+                        'id': this.id,
+                        'name': this.name,
+                        'type': 4,
+                        'src_address': this.api_feed,
+                        'dst_address': this.ws_address,
+                        'frequency': this.frequency
+                    });
+                },
+                on_copy_ws: function () {
+
+                },
+            },
+            watch: {
+                ws_address: function (cur_val, prev_val) {
+
+                }
+            }
+        });
+
+        function gen_rp(length) {
+
+            var i, result = '';
+            var characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            var charactersLength = characters.length;
+
+            for (i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+
+            return result;
+        }
+
+        function open_bridge_modal(bridge_type, bridge_id = 0) {
+
+            var bridge_info = {};
+            var i;
+
+            bridge_type = parseInt(bridge_type);
+            bridge_id = parseInt(bridge_id);
+
+            if (bridge_id === 0) {
+                bridge_info.id = 0;
+                bridge_info.name = '';
+                if (bridge_type === 1) {
+                    bridge_info.src_address = '';
+                    bridge_info.dst_address = '';
+                } else if (bridge_type === 2) {
+                    bridge_info.src_address = wh_host + gen_rp(10) + '/' + gen_rp(20);
+                    bridge_info.dst_address = ws_host + gen_rp(10) + '/' + gen_rp(20);
+                } else if (bridge_type === 3) {
+                    bridge_info.src_address = '';
+                    bridge_info.dst_address = api_host + gen_rp(10) + '/' + gen_rp(20);
+                } else if (bridge_type === 4) {
+                    bridge_info.src_address = '';
+                    bridge_info.dst_address = ws_host + gen_rp(10) + '/' + gen_rp(20);
+                }
+
+                bridge_info.format = JSON.stringify({'search_word': '', 'replace_word': '', 'any': false});
+                bridge_info.frequency = g_frequency_info[0].second;
+            } else {
+                for (i = 0; i < g_bridges_info.length; i++) {
+                    if (g_bridges_info[i].id === bridge_id) {
+                        bridge_info = g_bridges_info[i];
+                        break;
+                    }
+                }
+            }
+
+            if (bridge_type === 1 || bridge_type === 2) {    // ws2wh
+
+                var format_json = JSON.parse(bridge_info.format);
+                format_vue.search_word = format_json.search_word;
+                format_vue.replace_word = format_json.replace_word;
+                format_vue.any = format_json.any;
+
+                if (format_vue.any) {
+                    document.getElementById("any").checked = true;
+                }
+
+                if (bridge_type === 1) {
+                    ws2wh_vue.id = bridge_info.id;
+                    ws2wh_vue.name = bridge_info.name;
+                    ws2wh_vue.ws_address = bridge_info.src_address;
+                    ws2wh_vue.wh_address = bridge_info.dst_address;
+                    $('#ws2wh').modal('show');
+                    focus_on_element('ws2wh_name');
+                } else if (bridge_type === 2) {
+                    wh2ws_vue.id = bridge_info.id;
+                    wh2ws_vue.name = bridge_info.name;
+                    wh2ws_vue.wh_address = bridge_info.src_address;
+                    wh2ws_vue.ws_address = bridge_info.dst_address;
+                    $('#wh2ws').modal('show');
+                    focus_on_element('wh2ws_name');
+                }
+            } else if (bridge_type === 3 || bridge_type === 4) {
+
+                if (bridge_type === 3) {
+                    ws2api_vue.id = bridge_info.id;
+                    ws2api_vue.name = bridge_info.name;
+                    ws2api_vue.ws_address = bridge_info.src_address;
+                    ws2api_vue.api_feed = bridge_info.dst_address;
+                    ws2api_vue.frequency = bridge_info.frequency;
+                    change_frequency_title(ws2api_vue.frequency);
+                    $('#ws2api').modal('show');
+                    focus_on_element('ws2api_name');
+                } else if (bridge_type === 4) {
+                    api2ws_vue.id = bridge_info.id;
+                    api2ws_vue.name = bridge_info.name;
+                    api2ws_vue.api_feed = bridge_info.src_address;
+                    api2ws_vue.ws_address = bridge_info.dst_address;
+                    api2ws_vue.frequency = bridge_info.frequency;
+                    change_frequency_title(api2ws_vue.frequency);
+                    $('#api2ws').modal('show');
+                    focus_on_element('api2ws_name');
+                }
+            }
+        }
+
+        function save_bridge(bridge_info) {
+
+            $.ajax({
+                url: 'save_bridge',
+                type: 'POST',
+                data: bridge_info,
+                success: function (res) {
+                    if (res.status_code === 200) {
+                        swal({
+                                title: "Saved!",
+                                text: "Your bridge saved successfully!",
+                                type: "info",
+                                showSweetAlert: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Show Bridges',
+                                closeOnConfirm: false,
+                            },
+                            function (isConfirm) {
+                                if (isConfirm) {
+                                    window.location.href = 'data_bridges';
+                                }
+                            });
+                    } else {
+                        swal('Error!', res.text, 'error');
+                    }
+                }
+            });
+        }
+
+        function power_bridge(bridge_id, is_active) {
+
+            var msg = '';
+            is_active = parseInt(is_active);
+
+            if (is_active) {
+                msg = 'off';
+            } else {
+                msg = 'on';
+            }
+
+            swal({
+                    title: 'Are you sure?',
+                    text: 'Your want to turn ' + msg + ' this bridge?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    showSweetAlert: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Yes, turn ' + msg + '!',
+                    cancelButtonText: 'No, cancel plx!',
+                    closeOnConfirm: false,
+                    closeOnCancel: true
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            url: 'power_bridge',
+                            type: 'POST',
+                            data: {
+                                'id': bridge_id,
+                                'is_active': is_active
+                            },
+                            success: function (res) {
+                                if (res.status_code === 200) {
+                                    swal({
+                                            title: 'Turned ' + msg + '!',
+                                            text: 'Your bridge has been turned ' + msg + '!',
+                                            type: 'info',
+                                            showSweetAlert: true,
+                                            confirmButtonColor: '#DD6B55',
+                                            confirmButtonText: 'Show Bridges',
+                                            closeOnConfirm: false,
+                                        },
+                                        function (isConfirm) {
+                                            if (isConfirm) {
+                                                window.location.href = 'data_bridges';
+                                            }
+                                        });
+                                } else {
+                                    swal('Error!', res.text, 'error');
+                                }
+                            }
+                        });
+                    }
+                });
+        }
+
+        function delete_bridge(bridge_id) {
+
+            if (bridge_id === 0) {
+                swal('Error!', 'Bridge cannot be deleted while in create mode!', 'error');
+            } else {
+                swal({
+                        title: 'Are you sure?',
+                        text: 'You will not be able to recover this bridge!',
+                        type: 'warning',
+                        showCancelButton: true,
+                        showSweetAlert: true,
+                        confirmButtonColor: '#DD6B55',
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'No, cancel plx!',
+                        closeOnConfirm: false,
+                        closeOnCancel: true
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $.ajax({
+                                url: 'delete_bridge',
+                                type: 'POST',
+                                data: {
+                                    'id': bridge_id,
+                                },
+                                success: function (res) {
+                                    if (res.status_code === 200) {
+                                        swal({
+                                                title: 'Deleted!',
+                                                text: 'Your bridge has been deleted!',
+                                                type: 'info',
+                                                showSweetAlert: true,
+                                                confirmButtonColor: '#DD6B55',
+                                                confirmButtonText: 'Show Bridges',
+                                                closeOnConfirm: false,
+                                            },
+                                            function (isConfirm) {
+                                                if (isConfirm) {
+                                                    window.location.href = 'data_bridges';
+                                                }
+                                            });
+                                    } else {
+                                        swal('Error!', res.text, 'error');
+                                    }
+                                }
+                            });
+                        }
+                    });
+            }
+        }
+
+        $('.edit-bridge').on('click', function (e) {
+
+            open_bridge_modal(this.getAttribute('type'), this.id);
+        });
+
+        $('.power-bridge').on('click', function (e) {
+
+            power_bridge(this.id, this.getAttribute('is_active'));
+        });
+
+        $('.delete-bridge').on('click', function (e) {
+
+            delete_bridge(this.id)
+        });
+    </script>
+{% endblock javascript %}

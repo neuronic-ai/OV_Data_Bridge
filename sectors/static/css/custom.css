@@ -1,0 +1,1638 @@
+/*
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu72xKOzY.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu5mxKOzY.woff2) format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu7mxKOzY.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu4WxKOzY.woff2) format('woff2');
+  unicode-range: U+0370-03FF;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu7WxKOzY.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu7GxKOzY.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu4mxK.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+{"mode":"full","isActive":false}*/
+
+
+.home-title span {
+    font-size: 24px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.profile-icon img {
+    width: 30px;
+    cursor: pointer;
+}
+
+.navbar-vertical.navbar-expand-xs .navbar-nav .nav-link svg {
+    margin-right: 15px;
+}
+
+.card-body .main-title {
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+
+.card-body-box span,
+.card-body-box label {
+    font-size: 20px;
+    display: block;
+}
+
+.card-body-box span {
+    margin-bottom: 20px;
+}
+
+.card-body-box label {
+    margin: 0;
+}
+
+.action-panel {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.action-panel svg {
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.action-panel img {
+    cursor: pointer;
+}
+
+.action-panel svg:last-child {
+    margin: 0;
+}
+
+.logout-collapse {
+    position: absolute;
+    bottom: 0;
+}
+
+.logout-collapse ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.logout-collapse ul li a svg {
+    margin-right: 20px;
+}
+
+.logout-collapse ul li {
+    padding-bottom: 10px;
+}
+
+.logout-collapse ul li a {
+    white-space: nowrap;
+    color: #000000;
+}
+
+.main-body {
+    padding-top: 77px;
+}
+
+.sidenav.collapse {
+    max-width: 70px;
+    transition: all 0.5s;
+}
+
+.sidenav.collapse span.nav-link-text {
+    display: none;
+}
+
+.sidenav.collapse .navbar-nav .nav-item .nav-link,
+.sidenav.collapse .navbar-nav .nav-item .nav-link.active,
+.sidenav.collapse .navbar-nav .nav-item .nav-link:hover {
+    padding-right: 0;
+    padding-left: 0;
+    display: flex;
+    justify-content: center;
+    background: transparent;
+}
+
+.sidenav.collapse .navbar-nav .nav-item .nav-link svg {
+    margin: 0;
+}
+
+.sidenav.collapse + .main-content {
+    margin-left: 115px;
+    transition: all 0.5s;
+}
+
+.main-content {
+    margin-left: 315px;
+}
+
+.sidenav.collapse .logout-collapse ul li a span {
+    display: none;
+}
+
+.sidenav.collapse .logout-collapse ul li a svg {
+    margin: 0;
+    transform: rotate(180deg);
+}
+
+svg {
+    cursor: pointer;
+}
+
+.m-0 {
+    margin: 0;
+}
+
+.pl-0 {
+    padding-left: 0;
+}
+
+.bridge-button {
+    display: block;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #004288;
+    color: #ffffff;
+    margin-bottom: 25px;
+    border-radius: 5px;
+    padding: 8px;
+    margin-right: 15px;
+}
+
+.bridge-button:hover {
+    color: #ffffff;
+}
+
+.profile-page {
+    width: 100%;
+}
+
+.profile-page label {
+    display: flex;
+    margin: 0;
+    min-width: 140px;
+    align-items: center;
+    font-size: 16px;
+    color: #676765;
+}
+
+.profile-page label svg {
+    margin-right: 15px;
+}
+
+.profile-page.form .form-group {
+    display: flex;
+}
+
+.change-paddword {
+    background: #01C579;
+    color: #ffffff;
+    border-radius: 5px;
+    padding: 12px 20px;
+    font-size: 16px;
+}
+
+.change-paddword:hover {
+    color: #ffffff;
+}
+
+.profile-title {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.change-password label {
+    color: #76757A;
+    font-size: 14px;
+    margin-bottom: -3px;
+    display: block;
+}
+
+.change-password input.form-control {
+    border: none;
+    border-bottom: 1.5px solid #C1C1C1;
+    border-radius: 0;
+    padding-left: 0;
+    font-size: 16px;
+    box-shadow: none;
+}
+
+.change-password-action {
+    display: flex;
+    align-items: center;
+}
+
+.back-profile {
+    color: #01c579;
+    display: flex;
+    align-items: center;
+    margin-right: 24px;
+    margin-left: 15px;
+
+}
+
+.back-profile svg {
+    margin-top: -2px;
+    margin-right: 10px;
+}
+
+.back-profile:hover {
+    color: #01c579;
+}
+
+.login-page {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background-color: #000;
+}
+
+.login-page:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url("../img/login-banner.png");
+    background-size: cover;
+}
+
+.login-panel {
+    position: absolute;
+    z-index: 1;
+    width: 500px;
+    left: 8%;
+    height: 100%;
+    padding-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+form.red-form {
+    width: 100%;
+}
+
+.login-panel img {
+    width: 60%;
+    margin-bottom: 30px;
+}
+
+.login-panel .form-group {
+    position: relative;
+}
+
+.login-panel svg {
+    margin: 14px;
+    left: 0;
+    position: absolute;
+}
+
+.error-msg {
+    margin-left: 45px;
+}
+
+.login-panel input {
+    padding-left: 40px;
+    border-radius: 35px;
+}
+
+.login-panel .check-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.login-panel .check-forgot .form-check input {
+    background: black;
+    width: 25px;
+    height: 25px;
+    background-color: transparent;
+}
+
+.login-panel .check-forgot .form-check .form-check-label {
+    color: #ffffff;
+    margin: 6px;
+    margin-left: 14px;
+    font-weight: 300;
+}
+
+.login-panel .check-forgot a {
+    color: #009933;
+    text-decoration: underline;
+}
+
+.login-action a {
+    width: 100%;
+    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    border-radius: 20px;
+}
+
+a.register-btn {
+    background: #004288;
+    color: #ffffff;
+    border-radius: 20px;
+    padding: 12px 20px;
+    font-size: 16px;
+}
+
+.bottom-text h5 {
+    font-size: 32px;
+    color: #ffffff;
+    text-align: center;
+    font-weight: 300;
+    margin: 0;
+}
+
+.bottom-text {
+    margin-top: 45px;
+}
+
+.bottom-text h2 {
+    text-align: center;
+    color: #ffffff;
+    font-size: 52px;
+}
+
+.p-0 {
+    padding: 0;
+}
+
+.format-modal .modal-content:after {
+    content: '';
+    position: absolute;
+    width: 180px;
+    height: 100%;
+    background: #F9F9F9;
+    right: 0;
+}
+
+.WebSocket-modal .modal-content:after {
+    content: '';
+    position: absolute;
+    width: 196px;
+    height: 100%;
+    background: #F9F9F9;
+    right: 0;
+}
+
+.websocket-panel,
+.WebSocket-modal button.close,
+.format-modal button.close {
+    position: inherit;
+    z-index: 1;
+}
+
+.WebSocket-modal {
+    max-width: 896px;
+    min-height: 352px;
+    position: relative;
+}
+
+.websocket-panel .change-password {
+    width: 100%;
+}
+
+.websocket-panel .form-group .left-panel {
+    width: 75%;
+}
+
+.websocket-panel .form-group .right-button-panel {
+    width: 25%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+a.websocket-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 23px;
+    color: #ffffff;
+    border-radius: 5px;
+    font-size: 16px;
+    letter-spacing: 0.9px;
+    width: 116px;
+}
+
+a.formate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 23px;
+    color: #ffffff;
+    border-radius: 5px;
+    font-size: 16px;
+    letter-spacing: 0.9px;
+}
+
+.red-bg {
+    background-color: #C50101;
+    color: #ffffff;
+}
+
+.green-bg {
+    background-color: #01C579;
+    color: #ffffff;
+}
+
+.yellow-bg {
+    background-color: #E0CA00;
+    color: #ffffff;
+}
+
+.right-button-section a {
+    margin-bottom: 15px;
+}
+
+.right-button-section a:last-child {
+    margin: 0;
+}
+
+.data-formate-section {
+    padding-right: 0px;
+    display: flex;
+    align-items: flex-end;
+}
+
+.data-formate-section input.form-control {
+    margin-right: 20px;
+}
+
+.blue-bg {
+    background-color: #6C99FF;
+}
+
+.websocket-panel .form-group .left-panel input.form-control {
+    margin-right: 15px;
+    color: #000;
+}
+
+.right-button-section {
+    padding-left: 20px;
+}
+
+.right-button-section a {
+    margin-bottom: 8px;
+}
+
+.change-password form .right-button-panel a {
+    margin-bottom: 37px;
+}
+
+.change-password form .right-button-panel a:last-child {
+    margin: 0;
+}
+
+
+.check-box input[type=checkbox] + label {
+    display: flex;
+    margin: 0.2em;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.2em;
+}
+
+.check-box input[type=checkbox] {
+    display: none;
+}
+
+.check-box input[type=checkbox] + label:before {
+    content: "\2714";
+    border: 0.1em solid #01C579;
+    border-radius: 0.2em;
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    padding-left: 6px;
+    padding-top: 3px;
+    margin-right: 0.2em;
+    vertical-align: bottom;
+    color: transparent;
+    transition: .2s;
+}
+
+.check-box input[type=checkbox] + label:active:before {
+    transform: scale(0);
+}
+
+.check-box input[type=checkbox]:checked + label:before {
+    background-color: MediumSeaGreen;
+    border-color: MediumSeaGreen;
+    color: #fff;
+}
+
+.check-box input[type=checkbox]:disabled + label:before {
+    transform: scale(1);
+    border-color: #aaa;
+}
+
+.check-box input[type=checkbox]:checked:disabled + label:before {
+    transform: scale(1);
+    background-color: #bfb;
+    border-color: #bfb;
+}
+
+.check-login input {
+    display: flex;
+    align-items: center;
+}
+
+.check-login input[type=checkbox] + label:before {
+    margin-right: 15px;
+}
+
+.check-login label.form-check-label {
+    color: #ffffff;
+    display: flex !important;
+    align-items: center;
+}
+
+span.nav-link-text {
+    display: block;
+    white-space: nowrap;
+    font-weight: 400;
+    color: #000000;
+}
+
+input.form-control {
+    color: #000000 !important;
+}
+
+.search-bar input.form-control:placeholder {
+    color: #C1C1C1;
+}
+
+.search-bar span.input-group-text {
+    padding-left: 5px !important;
+}
+
+.search-bar .navbar-search-light .input-group {
+    border-bottom: 1.5px solid #C1C1C1;
+}
+
+.nav-link.active span.nav-link-text,
+.nav-link:hover span.nav-link-text {
+    font-weight: 600;
+}
+
+.profile-icon {
+    margin-left: 15px;
+}
+
+.formate-section .check-box input[type=checkbox] + label:before {
+    margin-right: 15px;
+}
+
+.menu-toggle .button span {
+    height: 3px;
+    width: 55%;
+    background: #01c579;
+    display: inline-block;
+    transition: all 0.5s cubic-bezier(.62, .43, .35, 1.47);
+    margin-bottom: 6px;
+}
+
+.menu-toggle #check:checked ~ .button span:nth-child(1) {
+    width: 100%;
+    transform: rotate(
+            45deg
+    ) translateY(6px) translateX(6px);
+}
+
+.menu-toggle #check:checked ~ .button span:nth-child(2) {
+    width: 0;
+}
+
+.menu-toggle #check:checked ~ .button span:nth-child(3) {
+    width: 100%;
+    transform: rotate(
+            -45deg
+    ) translateY(-7px) translateX(7px);
+}
+
+.main-header-body {
+    display: flex;
+    align-items: center;
+}
+
+.menu-toggle {
+    width: 50px;
+    margin: 6px 0 0 0px;
+    cursor: pointer;
+}
+
+.menu-toggle label.button {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    cursor: pointer;
+    margin: 0;
+}
+
+.menu-toggle {
+    display: none;
+
+}
+
+.hide {
+    display: none !important;
+}
+
+.show {
+    display: block !important;
+}
+
+.error-msg-panel {
+    border: 1px solid red;
+    border-radius: 10px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    background: #000;
+    padding: 5px 15px;
+    width: 100%;
+    position: absolute;
+    float: left;
+    top: 25px;
+}
+
+.error-msg-panel p {
+    margin: 0;
+    color: #D6D6D6;
+}
+
+.error-msg-panel span {
+    font-weight: 600;
+}
+
+.login-logo {
+    text-align: center;
+}
+
+/*.formate-popup.show:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #00000038;
+}*/
+.modal input.form-control:focus {
+    border-bottom: 1.5px solid #004288;
+}
+
+.check-forgot .form-group input,
+.remember-forgot .form-group input {
+    padding: 0;
+    height: initial;
+    width: initial;
+    margin-bottom: 0;
+    display: none;
+    cursor: pointer;
+}
+
+.check-forgot .form-group label,
+.remember-forgot .form-group label {
+    position: relative;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 300;
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+.check-forgot .form-group label:before,
+.remember-forgot .form-group label:before {
+    content: '';
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: 2px solid #999999;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 5%), inset 0px -15px 10px -12px rgb(0 0 0 / 5%);
+    padding: 10px;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    cursor: pointer;
+    margin-right: 10px;
+    border-radius: 6px;
+}
+
+.modal.fade.show {
+    background: #00000059;
+    padding: 0 !important;
+}
+
+.check-forgot .form-group input:checked + label:before,
+.remember-forgot .form-group input:checked + label:before {
+    background-color: #009933;
+    border-color: #009933;
+}
+
+.formate-section .form-group input:checked + label:before {
+    background-color: #01C579;
+    border-color: #01C579;
+}
+
+.check-forgot .form-group input:checked + label:after,
+.remember-forgot .form-group input:checked + label:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 3px;
+    left: 9px;
+    width: 6px;
+    height: 14px;
+    border: solid #ffffff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.form-group.remember-check,
+.remember-forgot.remember-check {
+    margin: 0;
+}
+
+.mobile-search,
+.close-toggle {
+    display: none;
+}
+
+.remember-forgot .form-group label {
+    color: #000000;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+a.backto-login {
+    text-decoration: underline;
+    color: #009933;
+}
+
+.success-msg-show {
+    border: 1px solid #009933;
+    border-radius: 10px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    background: #000;
+    padding: 5px 15px;
+    width: 100%;
+    position: absolute;
+}
+
+.success-msg-show svg {
+    position: inherit;
+    margin: 0;
+    left: auto;
+}
+
+.success-text-msg {
+    margin-left: 45px;
+}
+
+.success-msg-show span {
+    font-weight: 600;
+}
+
+.success-msg-show p {
+    margin: 0;
+    color: #D6D6D6;
+    font-size: 14px;
+}
+
+.validate-msg.show input {
+    border-color: red;
+}
+
+.validate-msg.show .invalid-feedback {
+    display: block;
+}
+
+.email-panel svg {
+    margin-top: 18px;
+}
+
+a.term-services {
+    color: #009933;
+    text-decoration: underline;
+    font-weight: 400;
+    margin-left: 10px;
+}
+
+.error-msg-panel svg {
+    position: initial;
+    float: left;
+}
+
+.success-msg {
+    border: 1px solid #009933;
+    border-radius: 10px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    background: #000;
+    padding: 5px 15px;
+    width: 100%;
+    position: absolute;
+    float: left;
+    top: 25px;
+}
+
+.success-text-msg p {
+    color: #D6D6D6;
+    font-size: 14px;
+    margin: 0;
+}
+
+.success-msg svg {
+    margin: 5px 10px;
+}
+
+.collapse-panel a svg {
+    transition: all 1s;
+}
+
+.data-bridge {
+    max-width: 743px;
+    min-height: 268px;
+}
+
+.profile-change-password .change-paddword {
+    margin-top: 40px;
+}
+
+.login-panel .form-control:focus {
+    border: 2px solid #006BDD;
+}
+
+.color-grey path {
+    fill: #76757A;
+}
+
+.format-modal {
+    max-width: 700px;
+    min-height: 264px;
+}
+
+.modal input.form-control {
+    height: calc(1.5em + 10px + 0px);
+}
+
+.form-section {
+    margin-bottom: 35px;
+    padding-right: 20px;
+}
+
+.example button {
+    float: left;
+    background-color: #4E3E55;
+    color: white;
+    border: none;
+    box-shadow: none;
+    font-size: 17px;
+    font-weight: 500;
+    font-weight: 600;
+    border-radius: 3px;
+    padding: 15px 35px;
+    margin: 26px 5px 0 5px;
+    cursor: pointer;
+}
+
+.example button:focus {
+    outline: none;
+}
+
+.example button:hover {
+    background-color: #33DE23;
+}
+
+.example button:active {
+    background-color: #81ccee;
+}
+
+.sweet-alert:before {
+    /* background: #00000059; */
+    /* content: ''; */
+    /* position: absolute; */
+    /* width: 100%; */
+    /* height: 100%; */
+    /* left: 0; */
+}
+
+.sweet-alert {
+    box-shadow: 0 0 20px 0 #0000003b;
+    border: 2px solid #c50101;
+}
+
+.sweet-alert .confirm {
+    background: #C50101 !important;
+}
+
+.sweet-alert h2 {
+    color: #000;
+}
+
+.sweet-alert p {
+    font-weight: 400;
+}
+
+.showSweetAlert:after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-image: url(../img/icons/sweetalert.png);
+    top: 15px;
+    background-repeat: no-repeat;
+    right: 10px;
+    cursor: pointer;
+}
+
+.copy-icon img {
+    width: 20px;
+    position: absolute;
+    right: 2px;
+}
+
+.copybutton {
+    display: flex;
+    position: relative;
+}
+
+.copy-icon {
+    cursor: pointer;
+}
+
+.change-password-panel form {
+    width: 343px;
+}
+
+.card-stats .card-body {
+    padding: 30px 0;
+}
+
+.dashaborad-card {
+    margin-right: 80px;
+    width: 366px;
+    height: 310px;
+    margin-bottom: 50px;
+}
+
+.dashboard-panel {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.dark-green {
+    background: #009933;
+}
+
+.modal-content {
+    overflow: hidden;
+    margin: 0.5rem;
+}
+
+.dropdown-menu .dropdown-item svg {
+    width: 18px;
+    height: 18px;
+}
+
+.dropdown-menu .dropdown-item svg path {
+    fill: rgb(103, 103, 101);;
+}
+
+.change-password form {
+    display: flex;
+    justify-content: space-between;
+}
+
+.change-password form .left-panel {
+    width: 75%;
+}
+
+.change-password form .right-button-panel {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 13px;
+}
+
+.name-formate-div {
+    width: 100%;
+    margin-right: 20px;
+}
+
+.form-group.formate-section.name-formate {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.change-password-panel form {
+    display: block;
+}
+
+.form-inline {
+    flex-wrap: inherit;
+}
+
+.form-control-plaintext {
+    border: none;
+    pointer-events: none;
+}
+
+.search-btn-mobile {
+    display: none;
+}
+
+.frequency-dropdown {
+    position: relative;
+    width: 180px;
+}
+
+.frequency-dropdown select {
+    width: 100%;
+    appearance: none;
+    border: none;
+    border-bottom: 1.5px solid #C1C1C1;
+}
+
+.frequency-dropdown label {
+    position: absolute;
+    top: -35px;
+}
+
+.frequency-dropdown select:focus {
+    outline: none;
+}
+
+.frequency-dropdown img {
+    width: 14px;
+    position: absolute;
+    right: 0;
+    bottom: 9px;
+}
+
+.select-hidden {
+    display: none;
+    visibility: hidden;
+    padding-right: 10px;
+}
+
+.select {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    font-size: 16px;
+    color: #000;
+    width: 175px;
+    top: 7px;
+    border-bottom: 1.5px solid #C1C1C1;
+}
+
+.select-styled {
+    position: absolute;
+    top: -35px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 8px 15px;
+    -moz-transition: all 0.2s ease-in;
+    -o-transition: all 0.2s ease-in;
+    -webkit-transition: all 0.2s ease-in;
+    transition: all 0.2s ease-in;
+}
+
+.select-styled:after {
+    content: "";
+    width: 0;
+    height: 0;
+    border: 7px solid transparent;
+    border-color: #a7a7a7 transparent transparent transparent;
+    position: absolute;
+    top: 16px;
+    right: 10px;
+}
+
+.select-styled:active:after, .select-styled.active:after {
+    top: 9px;
+    border-color: transparent transparent #a7a7a7 transparent;
+}
+
+.select-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    z-index: 999;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background-color: #ffffff;
+    overflow-y: auto;
+    height: 248px;
+    box-shadow: 0 0 20px #0000001a;
+    border-radius: 13px;
+    margin-top: 8px;
+}
+
+.select-options li {
+    margin: 0;
+    padding: 12px 0;
+    text-indent: 15px;
+    -moz-transition: all 0.15s ease-in;
+    -o-transition: all 0.15s ease-in;
+    -webkit-transition: all 0.15s ease-in;
+    transition: all 0.15s ease-in;
+}
+
+.select-options li:hover {
+    background: #f1f1f17a;
+}
+
+.select-options li[rel="hide"] {
+    display: none;
+}
+
+.frequency-dropdown .btn-light {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-bottom: 1.5px solid #C1C1C1;
+    border-radius: 0;
+    color: #76757A;
+    padding: 0 0 5px;
+    font-weight: 500;
+}
+
+.frequency-dropdown .btn-light:not(:disabled):not(.disabled):active,
+.frequency-dropdown .btn-light:not(:disabled):not(.disabled).active,
+.frequency-dropdown .show > .btn-light.dropdown-toggle {
+    background: transparent;
+    color: #76757A;
+    outline: transparent !important;
+    box-shadow: none;
+}
+
+.frequency-dropdown .bootstrap-select .dropdown-toggle:focus,
+.frequency-dropdown .bootstrap-select .mobile-device:focus + .dropdown-toggle {
+    outline: 5px auto transparent !important;
+    outline-offset: 0px;
+    box-shadow: #ffffff;
+}
+
+.frequency-dropdown .btn:hover {
+    transform: translateY(-0px);
+}
+
+@media screen and (max-width: 1200px) {
+    .dashboard-panel {
+        justify-content: center;
+    }
+
+    .main-content {
+        margin-left: 270px;
+    }
+
+    .dashaborad-card {
+        margin-right: 20px;
+        width: 330px;
+        height: 310px;
+        margin-bottom: 10px;
+    }
+}
+
+
+@media screen and (max-width: 992px) {
+    .pl-0, .pr-0 {
+        padding: 0;
+    }
+
+    .bridge-button {
+        margin-right: 0;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .close-toggle {
+        display: block;
+        position: absolute;
+        right: 20px;
+        top: 10px;
+    }
+
+    .login-panel img {
+        width: 40%;
+    }
+
+    .login-panel {
+        width: 100%;
+        left: 0;
+        padding: 15px 50px;
+    }
+
+    .home-title span {
+        font-size: 16px;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .navbar-vertical.navbar-expand-xs {
+        margin-left: -100%;
+        transition: all 1s;
+        top: 0;
+        box-shadow: 0 0 2rem 0 rgb(136 152 170 / 15%);
+        z-index: 1;
+        padding-top: 55px;
+    }
+
+    .main-content {
+        padding: 0;
+        margin-left: 22px;
+    }
+
+    .navbar-vertical.navbar-expand-xs.active {
+        margin-left: 0;
+        transition: all 0.5s;
+        z-index: 1;
+        top: 0;
+        padding-top: 55px;
+    }
+
+    li.collapse-panel {
+        display: none;
+    }
+
+    .mobile-search {
+        display: block;
+    }
+
+    .search-bar {
+        opacity: 0;
+        visibility: hidden;
+        transition: all 1s;
+        position: fixed;
+        background: #ffffff;
+        padding: 0 20px;
+        width: 0;
+        left: 0;
+        transform: scale(0);
+        transition: all .3s ease;
+
+    }
+
+    .search-bar.active {
+        opacity: 1;
+        width: 100%;
+        visibility: visible;
+        transition: all 1s;
+        z-index: 9;
+        position: fixed;
+        display: flex;
+        justify-content: center;
+        transform: scale(1);
+        transition: all .3s ease;
+
+    }
+
+    .WebSocket-modal {
+        margin: 0;
+    }
+
+    .login-panel .form-group.bottom-text {
+        display: none;
+    }
+
+    .login-page:after {
+        background-color: #000;
+        background-image: none;
+    }
+
+    .error-msg-panel {
+        width: 85%;
+    }
+
+    .change-password form .left-panel {
+        width: 65%;
+    }
+
+    .profile-page {
+        padding-left: 20px;
+    }
+
+    /*  .search-bar .nav-item.dropdown{
+          display: none;
+      }*/
+    .search-btn-mobile {
+        display: none;
+        width: 100%;
+        background: #01c579;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        border-radius: 5px;
+        margin-top: 10px;
+        padding: 8px;
+    }
+
+    .search-bar.active li.nav-item.dropdown {
+        display: none;
+    }
+
+    .search-btn-mobile a {
+        color: #ffffff;
+        cursor: pointer;
+    }
+
+    .form-inline {
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .form-inline .form-group {
+        width: 90%;
+    }
+
+    .search-bar .navbar-search-light .input-group {
+        width: 100%;
+    }
+
+
+}
+
+@media screen and (max-width: 715px) {
+    .main-content {
+        margin-left: 0px;
+    }
+}
+
+@media screen and (max-width: 690px) {
+    .dashaborad-card {
+        margin-right: 0;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    a.formate,
+    a.websocket-button {
+        font-size: 12px;
+    }
+
+    .change-password input.form-control,
+    .change-password label,
+    .profile-page label {
+        font-size: 10px;
+    }
+
+    .bottom-text h5 {
+        font-size: 26px;
+    }
+
+    .bottom-text h2 {
+        font-size: 35px;
+    }
+
+    .error-msg-panel {
+        width: 82%;
+    }
+
+    .modal-header,
+    .modal-body {
+        padding: 10px;
+    }
+
+    .WebSocket-modal .modal-content:after,
+    .format-modal .modal-content:after {
+        width: 140px;
+    }
+
+    .modal-title {
+        font-size: 16px;
+    }
+
+    .remember-forgot .form-group label {
+        font-size: 12px;
+    }
+
+    .check-forgot .form-group label:before, .remember-forgot .form-group label:before {
+        border: 1px solid #999999;
+        padding: 7px;
+        border-radius: 3px;
+        margin-right: 6px;
+    }
+
+    .sweet-alert button,
+    .form-control-plaintext {
+        font-size: 12px;
+    }
+
+    .sweet-alert h2 {
+        font-size: 18px;
+    }
+
+    .sweet-alert p {
+        font-size: 13px;
+    }
+
+    .profile-title {
+        font-size: 16px;
+    }
+
+    .back-profile {
+        font-size: 12px;
+    }
+
+    .back-profile svg {
+        width: 15px;
+        height: 10px;
+        margin-right: 3px;
+        margin-top: 0;
+    }
+
+    .change-password-action .change-paddword,
+    .profile-change-password .change-paddword {
+        font-size: 12px;
+        padding: 10px;
+    }
+
+    .profile-page label svg {
+        margin-right: 9px;
+        width: 12px;
+        height: 12px;
+    }
+
+    .profile-page label {
+        min-width: 100px;
+    }
+
+    .profile-change-password .change-paddword {
+        margin-top: 5px;
+    }
+
+}
+
+
+@media screen and (max-width: 500px) {
+    .error-msg-panel p {
+        font-size: 12px;
+    }
+
+    .check-box input[type=checkbox] + label:before {
+        width: 20px;
+        height: 20px;
+        padding-left: 1px;
+        padding-top: 0;
+    }
+
+    .card-body .main-title {
+        font-size: 22px;
+    }
+
+    .error-msg-panel {
+        width: 77%;
+    }
+
+    a.websocket-button {
+        width: 85px;
+    }
+
+    .WebSocket-modal .modal-content:after,
+    .format-modal .modal-content:after {
+        display: none;
+    }
+
+    .change-password-panel form {
+        width: 275px;
+    }
+
+    .card-body-box span, .card-body-box label,
+    .card-body .main-title {
+        font-size: 18px;
+    }
+
+    .change-password form {
+        flex-direction: column;
+    }
+
+    .change-password form .left-panel {
+        width: 100%;
+    }
+
+    .change-password form .right-button-panel {
+        width: 100%;
+        display: flex;
+        margin: 0;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+
+    .change-password form .right-button-panel a {
+        margin: 0;
+    }
+
+    .right-button-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+    }
+
+    .right-button-section a {
+        margin: 0;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .login-panel {
+        padding: 15px 20px;
+    }
+
+    .check-forgot .form-group label,
+    .login-panel .check-forgot a {
+        font-size: 12px;
+    }
+
+    .bottom-text h2 {
+        font-size: 40px;
+    }
+
+    .bottom-text h5 {
+        font-size: 25px;
+    }
+
+    .home-title span {
+        font-size: 12px;
+    }
+
+    .error-msg-panel {
+        width: 88%;
+    }
+
+    .dashaborad-card {
+        padding: 0 20px;
+    }
+}
+

@@ -1,3 +1,107 @@
-This is auth page <br>
-{% block page_content %}
-{% endblock %}
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% block title %}
+    {% endblock title %}
+    <link rel="stylesheet" type="text/css"
+          href="https://fonts.googleapis.com/css?family=Poppins:300,400,600,700&amp;lang=en">
+    <link rel="stylesheet" href="{% static "css/style.css" %}" type="text/css">
+    <link rel="stylesheet" type="text/css" href="{% static "css/custom.css" %}">
+</head>
+
+<body>
+<div class="login-page">
+    <div class="login-panel">
+        <div class="success-msg hide">
+            <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="17" cy="17" r="17" fill="#009933"/>
+                <path d="M8 17.2857L13.8065 23L26 11" stroke="white" stroke-width="3"/>
+            </svg>
+            <div class="success-text-msg">
+                <span>Successful!</span>
+                <p>{{ success }}</p>
+            </div>
+        </div>
+        <div class="error-msg-panel hide">
+            <svg width="34" height="30" viewBox="0 0 34 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 29.0645L17 0L34 29.0645H17H0Z" fill="#E32616"/>
+                <path d="M18.5167 20.5774H15.432L14.995 8.70569H18.9537L18.5167 20.5774ZM16.9743 22.6082C17.5998 22.6082 18.1011 22.7924 18.4781 23.1608C18.8637 23.5293 19.0565 24.0005 19.0565 24.5746C19.0565 25.1402 18.8637 25.6071 18.4781 25.9756C18.1011 26.344 17.5998 26.5283 16.9743 26.5283C16.3574 26.5283 15.8561 26.344 15.4706 25.9756C15.0935 25.6071 14.905 25.1402 14.905 24.5746C14.905 24.0091 15.0935 23.5421 15.4706 23.1737C15.8561 22.7967 16.3574 22.6082 16.9743 22.6082Z"
+                      fill="white"/>
+            </svg>
+            <div class="validate-msg">
+                <span>Error!</span>
+                <p>{{ alert }}</p>
+            </div>
+        </div>
+        <div class="login-logo">
+            <img src="{% static "img/logo.png" %}">
+        </div>
+        {% block content %}
+        {% endblock content %}
+        <div class="form-group bottom-text">
+            <h5>OCEAN BANTAGE</h5>
+            <h5>OPEN SOURCE</h5>
+            <h2>DATA BRIDGE</h2>
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="{% static "js/jquery-3.5.1.slim.min.js" %}"></script>
+<script src="{% static "js/bootstrap.bundle.js" %}"></script>
+
+<script>
+    $(document).ready(function () {
+        {% if alert %}
+            show_invalid_feedback_msg();
+
+            $(".error-msg-panel").removeClass("hide");
+
+            setTimeout(function () {
+                $(".error-msg-panel").addClass("hide");
+            }, 3000);
+        {% endif %}
+
+        $("input.enter-control").keydown(function (e) {
+            if (e.keyCode === 13) {
+                submit_form();
+            }
+        })
+    });
+
+    function show_invalid_feedback_msg() {
+
+        var i, matches = document.getElementsByClassName("invalid-feedback");
+
+        for (i = 0; i < matches.length; i++) {
+            matches[i].classList.add("show");
+        }
+
+        setTimeout(function () {
+            for (i = 0; i < matches.length; i++) {
+                matches[i].classList.remove("show");
+            }
+        }, 3000);
+    }
+
+    function show_invalid_feedback_border(element_name) {
+
+        document.getElementsByName(element_name)[0].classList.add("sweet-alert");
+
+        setTimeout(function () {
+            document.getElementsByName(element_name)[0].classList.remove("sweet-alert");
+        }, 3000);
+
+        document.getElementsByName(element_name)[0].focus();
+    }
+</script>
+
+{% block javascript %}
+{% endblock javascript %}
+
+</html>
