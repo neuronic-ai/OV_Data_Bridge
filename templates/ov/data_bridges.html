@@ -482,7 +482,7 @@
                             type: 'warning',
                             showCancelButton: true,
                             showSweetAlert: true,
-                            confirmButtonColor: '#DD6B55',
+                            confirmButtonColor: '#C50101',
                             confirmButtonText: 'Yes, delete it!',
                             cancelButtonText: 'No, cancel plx!',
                             closeOnConfirm: true,
@@ -503,7 +503,7 @@
                             type: 'warning',
                             showCancelButton: true,
                             showSweetAlert: true,
-                            confirmButtonColor: '#DD6B55',
+                            confirmButtonColor: '#E0CA00',
                             confirmButtonText: 'Yes, reset it!',
                             cancelButtonText: 'No, cancel plx!',
                             closeOnConfirm: true,
@@ -575,7 +575,7 @@
                             type: 'warning',
                             showCancelButton: true,
                             showSweetAlert: true,
-                            confirmButtonColor: '#DD6B55',
+                            confirmButtonColor: '#E0CA00',
                             confirmButtonText: 'Yes, reset it!',
                             cancelButtonText: 'No, cancel plx!',
                             closeOnConfirm: true,
@@ -658,7 +658,7 @@
                             type: 'warning',
                             showCancelButton: true,
                             showSweetAlert: true,
-                            confirmButtonColor: '#DD6B55',
+                            confirmButtonColor: '#E0CA00',
                             confirmButtonText: 'Yes, reset it!',
                             cancelButtonText: 'No, cancel plx!',
                             closeOnConfirm: true,
@@ -736,7 +736,7 @@
                             type: 'warning',
                             showCancelButton: true,
                             showSweetAlert: true,
-                            confirmButtonColor: '#DD6B55',
+                            confirmButtonColor: '#E0CA00',
                             confirmButtonText: 'Yes, reset it!',
                             cancelButtonText: 'No, cancel plx!',
                             closeOnConfirm: true,
@@ -808,7 +808,7 @@
                             type: 'warning',
                             showCancelButton: true,
                             showSweetAlert: true,
-                            confirmButtonColor: '#DD6B55',
+                            confirmButtonColor: '#E0CA00',
                             confirmButtonText: 'Yes, reset it!',
                             cancelButtonText: 'No, cancel plx!',
                             closeOnConfirm: true,
@@ -969,7 +969,7 @@
                                 text: "Your bridge saved successfully!",
                                 type: "info",
                                 showSweetAlert: true,
-                                confirmButtonColor: '#DD6B55',
+                                confirmButtonColor: '#AEDEF4',
                                 confirmButtonText: 'Show Bridges',
                                 closeOnConfirm: false,
                             },
@@ -987,13 +987,15 @@
 
         function power_bridge(bridge_id, is_active) {
 
-            var msg = '';
+            var msg = '', color='';
             is_active = parseInt(is_active);
 
             if (is_active) {
                 msg = 'off';
+                color = '#C50101';
             } else {
                 msg = 'on';
+                color = '#01C579';
             }
 
             swal({
@@ -1002,7 +1004,7 @@
                     type: 'warning',
                     showCancelButton: true,
                     showSweetAlert: true,
-                    confirmButtonColor: '#DD6B55',
+                    confirmButtonColor: color,
                     confirmButtonText: 'Yes, turn ' + msg + '!',
                     cancelButtonText: 'No, cancel plx!',
                     closeOnConfirm: false,
@@ -1024,7 +1026,7 @@
                                             text: 'Your bridge has been turned ' + msg + '!',
                                             type: 'info',
                                             showSweetAlert: true,
-                                            confirmButtonColor: '#DD6B55',
+                                            confirmButtonColor: '#AEDEF4',
                                             confirmButtonText: 'Show Bridges',
                                             closeOnConfirm: false,
                                         },
@@ -1053,11 +1055,12 @@
                         type: 'warning',
                         showCancelButton: true,
                         showSweetAlert: true,
-                        confirmButtonColor: '#DD6B55',
+                        confirmButtonColor: '#C50101',
                         confirmButtonText: 'Yes, delete it!',
                         cancelButtonText: 'No, cancel plx!',
                         closeOnConfirm: false,
-                        closeOnCancel: true
+                        closeOnCancel: true,
+                        customClass: 'sweet-alert-asdf',
                     },
                     function (isConfirm) {
                         if (isConfirm) {
@@ -1074,7 +1077,7 @@
                                                 text: 'Your bridge has been deleted!',
                                                 type: 'info',
                                                 showSweetAlert: true,
-                                                confirmButtonColor: '#DD6B55',
+                                                confirmButtonColor: '#AEDEF4',
                                                 confirmButtonText: 'Show Bridges',
                                                 closeOnConfirm: false,
                                             },

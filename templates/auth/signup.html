@@ -67,10 +67,14 @@
                 <label for="any" class="form-check-label">Remember me</label>
             </div> -->
             <div class="form-group remember-check">
-                <input type="checkbox" id="html">
-                <label for="html">I agree with <a href="#" class="term-services">Terms of Service</a></label>
+                <input type="checkbox" id="terms_of_service">
+                <label for="terms_of_service">I agree with <a href="#" class="term-services">Terms of
+                    Service</a></label>
             </div>
             <a href="{% url "login" %}">Back to login</a>
+        </div>
+        <div class="invalid-feedback if-tos">
+            Check Terms of Service
         </div>
         <div class="form-group login-action">
             <a href="javascript:submit_form();" class="register-btn">REGISTER</a>
@@ -111,6 +115,14 @@
             const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             if (!re.test(email)) {
                 show_invalid_feedback_border("email");
+                return;
+            }
+
+            if (!document.getElementById('terms_of_service').checked) {
+                $('.if-tos').addClass('show');
+                setTimeout(function () {
+                    $('.if-tos').removeClass('show');
+                }, 3000);
                 return;
             }
 

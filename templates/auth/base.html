@@ -76,16 +76,9 @@
 
     function show_invalid_feedback_msg() {
 
-        var i, matches = document.getElementsByClassName("invalid-feedback");
-
-        for (i = 0; i < matches.length; i++) {
-            matches[i].classList.add("show");
-        }
-
+        $('.invalid-feedback').addClass('show');
         setTimeout(function () {
-            for (i = 0; i < matches.length; i++) {
-                matches[i].classList.remove("show");
-            }
+            $('.invalid-feedback').removeClass('show');
         }, 3000);
     }
 

@@ -977,12 +977,12 @@ a.term-services {
 
 .sweet-alert {
     box-shadow: 0 0 20px 0 #0000003b;
-    border: 2px solid #c50101;
+    border: 2px solid #828282;
 }
 
-.sweet-alert .confirm {
-    background: #C50101 !important;
-}
+/*.sweet-alert .confirm {*/
+/*    background: #C50101 !important;*/
+/*}*/
 
 .sweet-alert h2 {
     color: #000;
