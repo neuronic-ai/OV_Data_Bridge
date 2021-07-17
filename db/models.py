@@ -29,7 +29,6 @@ class TBLBridge(models.Model):
     format = models.TextField(blank=True, null=True)
     frequency = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
-    third_response = models.TextField(blank=True, null=True)
 
     class Meta:
         db_table = 'TBLBRIDGE'

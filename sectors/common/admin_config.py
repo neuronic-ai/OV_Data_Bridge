@@ -1,3 +1,9 @@
+TRACE_MODE = False
+
+BRIDGE_HANDLE = None
+
+LOCAL_CACHE_LIMIT = 100
+
 frequency = [
     {'name': '5s', 'second': 5},
     {'name': '1m', 'second': 60},

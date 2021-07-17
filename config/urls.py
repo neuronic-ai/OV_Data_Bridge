@@ -19,5 +19,7 @@ from django.urls.conf import include
 urlpatterns = [
     path('', include('sectors.ov.urls')),
     path('auth/', include('sectors.auth.urls')),
+    path('api/', include('api.urls')),
     path('webhook/', include('webhook.urls')),
+    # path('wsocket/', include('wsocket.urls')),
 ]

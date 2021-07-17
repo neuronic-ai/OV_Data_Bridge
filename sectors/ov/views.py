@@ -48,9 +48,6 @@ class DataBridgesView(TemplateView):
             if bridge_info['format'] is None:
                 bridge_info['format'] = ''
 
-            if bridge_info['third_response'] is None:
-                bridge_info['third_response'] = ''
-
             bridge_info['is_active'] = int(bridge_info['is_active'])
 
             del bridge_info['user_id']
@@ -93,10 +90,37 @@ def save_bridge(request):
             bridge.frequency = int(params['frequency'])
         bridge.save()
 
+        if bridge.is_active:
+            admin_config.BRIDGE_HANDLE.restart_bridge_by_id(bridge.id)
+
         return JsonResponse({
             'status_code': 200,
             'text': error.SUCCESS
         })
+    except Exception as e:
+        return JsonResponse({
+            'status_code': 500,
+            'text': str(e)
+        })
+
+
+def report_bridge(request):
+    params = request.POST
+    try:
+        bridge_id = int(params['id'])
+        bridge = TBLBridge.objects.get(id=bridge_id)
+        if bridge.user_id == request.user.id:
+            return JsonResponse({
+                'status_code': 200,
+                'text': error.SUCCESS,
+                'cache': admin_config.BRIDGE_HANDLE.get_bridge_cache(bridge_id)
+            })
+        else:
+            return JsonResponse({
+                'status_code': 401,
+                'text': error.PERMISSION_NOT_ALLOWED
+            })
+
     except Exception as e:
         return JsonResponse({
             'status_code': 500,
@@ -112,9 +136,12 @@ def power_bridge(request):
         is_active = int(params['is_active'])
         bridge = TBLBridge.objects.get(id=bridge_id)
         if bridge.user_id == request.user.id:
-            bridge.is_active = True
             if is_active:
                 bridge.is_active = False
+                admin_config.BRIDGE_HANDLE.stop_bridge_by_id(bridge_id)
+            else:
+                bridge.is_active = True
+                admin_config.BRIDGE_HANDLE.start_bridge_by_id(bridge_id)
 
             bridge.save()
 
@@ -143,6 +170,7 @@ def delete_bridge(request):
         bridge = TBLBridge.objects.get(id=bridge_id)
         if bridge.user_id == request.user.id:
             bridge.delete()
+            admin_config.BRIDGE_HANDLE.remove_bridge_by_id(bridge_id)
             return JsonResponse({
                 'status_code': 200,
                 'text': error.SUCCESS

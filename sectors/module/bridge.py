@@ -1,4 +1,5 @@
 import time
+import _thread as thread
 
 from . import ws2wh
 from sectors.common import error
@@ -18,25 +19,25 @@ class BridgeQueue:
         self.bridges_obj = []
 
     def fetch_all_bridges(self):
-        self.bridges_info = TBLBridge.objects.get(is_active=True)
+        self.bridges_info = list(TBLBridge.objects.filter(is_active=True).values())
 
     def open_bridge(self, bridge_info):
-        if bridge_info.type == 1:  # ws2wh
+        if bridge_info['type'] == 1:  # ws2wh
             b_obj = ws2wh.Bridge(bridge_info)
             b_obj.open()
-        elif bridge_info.type == 2:  # wh2ws
+        elif bridge_info['type'] == 2:  # wh2ws
             b_obj = None
-        elif bridge_info.type == 3:  # ws2api
+        elif bridge_info['type'] == 3:  # ws2api
             b_obj = None
-        elif bridge_info.type == 4:  # api2ws
+        elif bridge_info['type'] == 4:  # api2ws
             b_obj = None
         else:
             return False, error.UNKNOWN_BRIDGE_TYPE
 
         self.bridges_obj.append({
-            'id': bridge_info.id,
+            'id': bridge_info['id'],
             'obj': b_obj,
-            'status': True
+            'status': False
         })
 
         return True, error.SUCCESS
@@ -45,7 +46,7 @@ class BridgeQueue:
         for bridge_info in self.bridges_info:
             self.open_bridge(bridge_info)
 
-        self.update_connection_status()
+        thread.start_new_thread(self.update_connection_status, ())
 
     def update_connection_status(self):
         while True:
@@ -63,17 +64,14 @@ class BridgeQueue:
                 break
 
         if new_bridge:
-            bridge_info = TBLBridge.objects.get(id=bridge_id)
+            bridge_info = list(TBLBridge.objects.filter(id=bridge_id).values())[0]
             return self.open_bridge(bridge_info)
 
         return True, error.SUCCESS
 
     def restart_bridge_by_id(self, bridge_id):
-        res, text = self.remove_bridge_by_id(bridge_id)
-        if not res:
-            return res, text
-
-        bridge_info = TBLBridge.objects.get(id=bridge_id)
+        self.remove_bridge_by_id(bridge_id)
+        bridge_info = list(TBLBridge.objects.filter(id=bridge_id).values())[0]
         return self.open_bridge(bridge_info)
 
     def stop_bridge_by_id(self, bridge_id):
@@ -88,8 +86,25 @@ class BridgeQueue:
     def remove_bridge_by_id(self, bridge_id):
         for b_obj in self.bridges_obj:
             if b_obj['id'] == bridge_id:
-                b_obj['obj'].close()
+                if b_obj['status']:
+                    b_obj['obj'].close()
                 self.bridges_obj.remove(b_obj)
                 return True, error.SUCCESS
 
         return False, error.UNKNOWN_BRIDGE_ID
+
+    def get_bridge_cache(self, bridge_id):
+        cache = []
+        for b_obj in self.bridges_obj:
+            if b_obj['id'] == bridge_id:
+                cache = b_obj['obj'].get_cache()
+                break
+
+        return cache
+
+    # Test function
+    def send_message(self, bridge_id, message):
+        for b_obj in self.bridges_obj:
+            if b_obj['id'] == bridge_id:
+                b_obj['obj'].send_message(message)
+                break
