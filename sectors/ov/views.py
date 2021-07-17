@@ -15,7 +15,7 @@ from db.models import (
 
 class HomeView(TemplateView):
     def dispatch(self, request, *args, **kwargs):
-        return redirect('/dashboard')
+        return redirect('/data_bridges')
 
 
 class DashboardView(TemplateView):

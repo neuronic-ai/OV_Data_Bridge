@@ -17,7 +17,7 @@ class LoginView(TemplateView):
         user = authenticate(username=self.request.POST['username'], password=self.request.POST['password'])
         if user:
             django_login(self.request, user)
-            return redirect('/dashboard')
+            return redirect('/data_bridges')
         else:
             time.sleep(0.5)
             return render(self.request, self.template_name, {
@@ -51,7 +51,7 @@ class SignupView(TemplateView):
         user.save()
 
         django_login(self.request, user)
-        return redirect('/dashboard')
+        return redirect('/data_bridges')
 
 
 class PasswordResetView(TemplateView):
