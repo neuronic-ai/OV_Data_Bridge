@@ -25,13 +25,9 @@ def run_module(request):
         })
 
 
-# Test
-def send_message(request):
-    admin_config.BRIDGE_HANDLE.send_message(44, json.dumps({
-        'method': 'get_printer_list',
-        'printer': '',
-        'param': ''
-    }))
+# Test function
+def send_message(request, param1, param2):
+    admin_config.BRIDGE_HANDLE.send_message(param1, param2)
 
     return JsonResponse({
         'status_code': 200,
