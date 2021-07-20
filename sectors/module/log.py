@@ -20,7 +20,11 @@ class BridgeLog:
     def __init__(self, bridge_info):
         self.bridge_info = bridge_info
 
-        self.log_file = open(f"{admin_config.BRIDGE_LOG_PATH}/bridge_{bridge_info['id']}.log", 'a')
+        try:
+            self.log_file = open(f"{admin_config.BRIDGE_LOG_PATH}/bridge_{bridge_info['id']}.log", 'a')
+        except:
+            self.log_file = open(f"bridge_{bridge_info['id']}.log", 'a')
+
         self.quantity = 0
         self.mutex = Lock()
 
