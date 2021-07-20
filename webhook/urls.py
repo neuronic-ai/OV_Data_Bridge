@@ -3,5 +3,5 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path('<int:param1>/<int:param2>/', process_webhook, name='webhook'),
+    path('<str:param1>/<str:param2>', process_webhook, name='webhook'),
 ]

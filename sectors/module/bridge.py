@@ -1,7 +1,8 @@
 import time
 import _thread as thread
 
-from . import ws2wh
+from . import ws2wh, wh2ws
+
 from sectors.common import error
 
 from db.models import (
@@ -26,7 +27,8 @@ class BridgeQueue:
             b_obj = ws2wh.Bridge(bridge_info)
             b_obj.open()
         elif bridge_info['type'] == 2:  # wh2ws
-            b_obj = None
+            b_obj = wh2ws.Bridge(bridge_info)
+            b_obj.open()
         elif bridge_info['type'] == 3:  # ws2api
             b_obj = None
         elif bridge_info['type'] == 4:  # api2ws
@@ -102,9 +104,16 @@ class BridgeQueue:
 
         return cache
 
-    # Test function
     def send_message(self, bridge_id, message):
         for b_obj in self.bridges_obj:
             if b_obj['id'] == bridge_id:
                 b_obj['obj'].send_message(message)
+                break
+
+    # for wh2ws, api2ws
+    def notify_connection(self, bridge_id, status, text):
+        for b_obj in self.bridges_obj:
+            if b_obj['id'] == bridge_id:
+                b_obj['obj'].notify_connection(status, text)
+                b_obj['status'] = status
                 break

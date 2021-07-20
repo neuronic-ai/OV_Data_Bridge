@@ -5,6 +5,9 @@ from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
 import time
 
+from sectors.common import admin_config
+from sectors.common import error
+
 from db.models import (
     TBLUser,
 )
@@ -19,9 +22,9 @@ class LoginView(TemplateView):
             django_login(self.request, user)
             return redirect('/data_bridges')
         else:
-            time.sleep(0.5)
+            time.sleep(admin_config.DELAY_FOR_BAD_REQUEST)
             return render(self.request, self.template_name, {
-                'alert': 'These credentials do not match our records.'
+                'alert': error.WRONG_CREDENTIAL
             })
 
 
@@ -41,7 +44,7 @@ class SignupView(TemplateView):
         # check if email is already registered
         if TBLUser.objects.filter(username=username).exists() or TBLUser.objects.filter(email=email).exists():
             return render(self.request, self.template_name, {
-                'alert': 'This username or email is already registered.'
+                'alert': error.USER_EMAIL_DUPLICATED
             })
 
         user = TBLUser()
@@ -61,5 +64,5 @@ class PasswordResetView(TemplateView):
         email = self.request.POST['email']
 
         return render(self.request, self.template_name, {
-            'success': 'An email with a link to reset your password was sent to your email.'
+            'success': error.RESET_LINK_SENT
         })

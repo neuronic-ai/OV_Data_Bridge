@@ -2,7 +2,17 @@ TRACE_MODE = False
 
 BRIDGE_HANDLE = None
 
-LOCAL_CACHE_LIMIT = 100
+LOCAL_CACHE_LIMIT = 100             # qty
+DELAY_FOR_BAD_REQUEST = 0.5         # second
+
+BRIDGE_CONSUMER_PREFIX = 'bridge'
+
+BRIDGE_LOG_PATH = 'log'
+BRIDGE_LOG_ZIP_PATH = 'sectors/static/log_zip'
+BRIDGE_LOG_ZIP_DOWNLOAD = 'static/log_zip'
+BRIDGE_LOG_ZIP_FREQUENCY = 1
+# BRIDGE_LOG_MAX_SIZE = 2097152     # byte
+BRIDGE_LOG_MAX_SIZE = 1000          # byte
 
 frequency = [
     {'name': '5s', 'second': 5},

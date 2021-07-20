@@ -51,8 +51,8 @@
         </div>
         <div class="check-forgot">
             <div class="form-group remember-check">
-                <input type="checkbox" id="html">
-                <label for="html">Remember me</label>
+                <input type="checkbox" id="remember_me">
+                <label for="remember_me">Remember me</label>
             </div>
             <a href="{% url "password_reset" %}">Forgot password</a>
         </div>
@@ -67,28 +67,41 @@
     <script>
         $(document).ready(function () {
 
+            if (localStorage.remember_me) {
+                document.getElementsByName('username')[0].value = localStorage.username;
+                document.getElementById('remember_me').checked = true;
+            }
+
             {% if alert %}
-                show_invalid_feedback_border("username");
-                show_invalid_feedback_border("password");
-                document.getElementsByName("username")[0].focus();
+                show_invalid_feedback_border('username');
+                show_invalid_feedback_border('password');
+                document.getElementsByName('username')[0].focus();
             {% endif %}
 
-            document.getElementsByName("username")[0].focus();
+            document.getElementsByName('username')[0].focus();
         });
 
         function submit_form() {
 
-            var username = document.getElementsByName("username")[0].value;
-            var password = document.getElementsByName("password")[0].value;
+            var username = document.getElementsByName('username')[0].value;
+            var password = document.getElementsByName('password')[0].value;
 
             if (username === '') {
-                show_invalid_feedback_border("username");
+                show_invalid_feedback_border('username');
                 return;
             }
 
             if (password === '') {
-                show_invalid_feedback_border("password");
+                show_invalid_feedback_border('password');
                 return;
+            }
+
+            if (document.getElementById('remember_me').checked) {
+                localStorage.remember_me = 'checked';
+                localStorage.username = username;
+            } else {
+                localStorage.remember_me = '';
+                localStorage.username = '';
             }
 
             document.loginform.submit();

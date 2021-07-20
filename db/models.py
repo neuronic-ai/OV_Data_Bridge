@@ -32,3 +32,15 @@ class TBLBridge(models.Model):
 
     class Meta:
         db_table = 'TBLBRIDGE'
+
+
+class TBLLog(models.Model):
+    bridge = models.ForeignKey(TBLBridge, on_delete=models.CASCADE, blank=True, null=True)
+    filename = models.CharField(max_length=255, default='')
+    size = models.IntegerField(default=0)
+    date_from = models.DateTimeField(auto_now_add=True)
+    date_to = models.DateTimeField(auto_now_add=True)
+    is_full = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'TBLLOG'

@@ -1,9 +1,11 @@
 import websocket
 import _thread as thread
 import time
-import requests
 import json
+import requests
 from datetime import datetime
+
+from . import common, log
 
 from sectors.common import admin_config
 
@@ -27,6 +29,7 @@ class Bridge:
         self.connection_status = None
         self.connection_text = 'Waiting for connect'
         self.cache = []
+        self.log = log.BridgeLog(bridge_info)
 
     def run_forever(self):
         self.ws.run_forever()
@@ -57,15 +60,17 @@ class Bridge:
         self.add_cache(self.connection_text)
 
     def send_message(self, message):
-        self.add_cache(f'WS:Send - {message}')
-        try:
-            self.ws.send(message)
-        except Exception as e:
-            self.add_cache(f'WS:Send - Exception - {e}')
+        if self.connection_status:
+            self.add_cache(f'WS:Send - {message}')
+            try:
+                self.ws.send(message)
+            except Exception as e:
+                self.add_cache(f'WS:Send - Exception - {e}')
 
     def on_message(self, ws, message):
-        self.add_cache(f'WS:Recv - {message}')
-        self.call_webhook(message)
+        if self.connection_status:
+            self.add_cache(f'WS:Recv - {message}')
+            self.call_webhook(message)
 
     def on_error(self, ws, error):
         self.connection_status = False
@@ -79,30 +84,7 @@ class Bridge:
 
     def call_webhook(self, message):
         wh_address = self.bridge_info['dst_address']
-
-        content = {'content': message}
-        format_json = json.loads(self.bridge_info['format'])
-        search_word = format_json['search_word']
-        replace_word = format_json['replace_word']
-        any = format_json['any']
-
-        if search_word:
-            replaceable = False
-            if any:
-                search_word_array = search_word.split(',')
-                for sw in search_word_array:
-                    if sw.strip() in message:
-                        replaceable = True
-                        break
-            else:
-                if search_word in message:
-                    replaceable = True
-
-            if replaceable:
-                try:
-                    content = json.loads(replace_word)
-                except:
-                    content = {'content': replace_word}
+        content = common.get_formatted_content(message, self.bridge_info)
 
         # call WebHook
         try:
@@ -126,14 +108,19 @@ class Bridge:
         if len(self.cache) > admin_config.LOCAL_CACHE_LIMIT:
             self.cache.pop(0)
 
-        self.cache.append({
+        cache_data = {
             'date': datetime.now(),
             'data': data
-        })
+        }
+
+        self.cache.append(cache_data)
+
+        cache_data['date'] = cache_data['date'].strftime("%m/%d/%Y, %H:%M:%S")
+        self.log.write_log(json.dumps(cache_data))
 
     def get_cache(self):
         return self.cache
 
-    def trace(self, log):
+    def trace(self, trace_log):
         if admin_config.TRACE_MODE:
-            print(f"{datetime.now()}: {self.bridge_info['name']}_{self.bridge_info['user_id']}: {log}")
+            print(f"{datetime.now()}: {self.bridge_info['name']}_{self.bridge_info['user_id']}: {trace_log}")

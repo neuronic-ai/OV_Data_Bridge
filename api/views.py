@@ -1,7 +1,4 @@
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
-import time
-import json
+from django.http import JsonResponse
 
 from sectors.common import admin_config
 from sectors.module import bridge

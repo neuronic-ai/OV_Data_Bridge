@@ -1,15 +1,12 @@
 from django.shortcuts import render, redirect
 from django.views.generic.base import TemplateView
-from django.http import HttpResponse, JsonResponse
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
-import json
+from django.http import JsonResponse
 
-from sectors.common import error
-from sectors.common import admin_config
+from sectors.common import admin_config, error
 
 from db.models import (
     TBLBridge,
+    TBLLog
 )
 
 
@@ -60,19 +57,6 @@ class DataBridgesView(TemplateView):
 def save_bridge(request):
     params = request.POST
 
-    # channel_layer = get_channel_layer()
-    # async_to_sync(channel_layer.group_send)(
-    #     'wsconnection1',
-    #     {
-    #         'type': 'notify',
-    #         'cooker': 'jong',
-    #         'owner': 'ho',
-    #         'menu': 'jogaebap',
-    #         'when': 'tomorrow',
-    #         'where': '1st floor',
-    #     }
-    # )
-
     try:
         if int(params['id']) == 0:  # new bridge
             bridge = TBLBridge()
@@ -110,10 +94,18 @@ def report_bridge(request):
         bridge_id = int(params['id'])
         bridge = TBLBridge.objects.get(id=bridge_id)
         if bridge.user_id == request.user.id:
+            logs_info = list(TBLLog.objects.filter(bridge_id=bridge_id).values())
+
+            for log in logs_info:
+                log['date_from'] = log['date_from'].strftime('%m/%d, %H:%M:%S')
+                log['date_to'] = log['date_to'].strftime('%m/%d, %H:%M:%S')
+                log['url'] = f"{admin_config.BRIDGE_LOG_ZIP_DOWNLOAD}/{log['filename']}"
+
             return JsonResponse({
                 'status_code': 200,
                 'text': error.SUCCESS,
-                'cache': admin_config.BRIDGE_HANDLE.get_bridge_cache(bridge_id)
+                'cache': admin_config.BRIDGE_HANDLE.get_bridge_cache(bridge_id)[::-1],
+                'logs_info': logs_info[::-1]
             })
         else:
             return JsonResponse({
