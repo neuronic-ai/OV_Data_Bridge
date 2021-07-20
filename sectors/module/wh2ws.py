@@ -21,8 +21,8 @@ class Bridge:
 
         self.connection_status = None
         self.connection_text = 'Waiting for connect'
-        self.cache = []
         self.log = log.BridgeLog(bridge_info)
+        self.cache = self.log.get_last_log()
 
     def open(self):
         self.connection_status = True
@@ -62,12 +62,11 @@ class Bridge:
             self.cache.pop(0)
 
         cache_data = {
-            'date': datetime.now(),
+            'date': datetime.now().strftime('%m/%d/%Y, %H:%M:%S'),
             'data': data
         }
         self.cache.append(cache_data)
 
-        cache_data['date'] = cache_data['date'].strftime("%m/%d/%Y, %H:%M:%S")
         self.log.write_log(json.dumps(cache_data))
 
     def get_cache(self):
