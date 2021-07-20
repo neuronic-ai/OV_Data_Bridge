@@ -695,6 +695,10 @@
                 }
             },
             watch: {
+                name: function(cur_val, prev_val) {
+                    if (cur_Val.length > 64)
+                        this.name = prev_val;
+                },
                 ws_address: function (cur_val, prev_val) {
 
                 },
@@ -773,6 +777,12 @@
                 on_copy_ws: function () {
 
                     copy_text(this.ws_address);
+                }
+            },
+            watch: {
+                name: function(cur_val, prev_val) {
+                    if (cur_val.length > 64)
+                        this.name = prev_val;
                 }
             }
         });
@@ -855,6 +865,10 @@
                 },
             },
             watch: {
+                name: function(cur_val, prev_val) {
+                    if (cur_val.length > 64)
+                        this.name = prev_val;
+                },
                 ws_address: function (cur_val, prev_val) {
 
                 }
@@ -932,6 +946,10 @@
                 }
             },
             watch: {
+                name: function(cur_val, prev_val) {
+                    if (cur_val.length > 64)
+                        this.name = prev_val;
+                },
                 ws_address: function (cur_val, prev_val) {
 
                 }
