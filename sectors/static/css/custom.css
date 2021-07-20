@@ -1843,17 +1843,8 @@ a.grey-bg {
 }
 
 .integration-checklist__copy-button {
-    display: block;
     position: absolute;
-    width: 35px;
-    height: 35px;
-    background-image: url(../img/icons/copy.png);
-    background-size: 60% auto;
-    background-position: center center;
-    background-repeat: no-repeat;
-    border: none;
-    background-color: transparent;
-    right: 13px;
+    right: 2px;
 }
 
 .integration-checklist__copy-button:before {
@@ -1862,7 +1853,7 @@ a.grey-bg {
     position: absolute;
     z-index: 9998;
     top: 35px;
-    left: 15px;
+    left: -15px;
     width: 0;
     height: 0;
     border-left: 5px solid transparent;
