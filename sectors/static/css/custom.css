@@ -930,7 +930,7 @@ a.term-services {
     min-height: 264px;
 }
 
-input.form-control {
+.modal input.form-control {
     height: calc(1.5em + 10px + 0px);
 }
 
