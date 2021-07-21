@@ -12,9 +12,11 @@
           href="https://fonts.googleapis.com/css?family=Poppins:300,400,600,700&amp;lang=en">
     <link rel="stylesheet" href="{% static "css/style.css" %}" type="text/css">
     <link rel='stylesheet' href="https://cdn.rawgit.com/t4t5/sweetalert/v0.2.0/lib/sweet-alert.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
     <link rel="stylesheet" type="text/css" href="{% static "css/custom.css" %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel='stylesheet' href='https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css'>
 </head>
 
 <body>
@@ -116,24 +118,25 @@
                 <div class="collapse navbar-collapse" id="sidenav-collapse-main">
                     <!-- Nav items -->
                     <ul class="navbar-nav">
-{#                        <li class="nav-item">#}
-{#                            <a class="nav-link {% if page_name == 'dashboard' %}active{% endif %}" href="{% url "dashboard" %}">#}
-{#                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"#}
-{#                                     xmlns="http://www.w3.org/2000/svg">#}
-{#                                    <path d="M6.72719 0H1.27268C0.570886 0 0 0.588725 0 1.31244V4.68742C0 5.41127 0.570886 6 1.27268 6H6.72719C7.42911 6 8 5.41127 8 4.68742V1.31244C8 0.588725 7.42911 0 6.72719 0Z"#}
-{#                                          fill="#676765"/>#}
-{#                                    <path d="M6.72719 8H1.27268C0.570886 8 0 8.56069 0 9.25008V16.75C0 17.4393 0.570886 18 1.27268 18H6.72719C7.42911 18 8 17.4393 8 16.75V9.25008C8 8.56069 7.42911 8 6.72719 8Z"#}
-{#                                          fill="#676765"/>#}
-{#                                    <path d="M16.7273 12H11.2728C10.5709 12 10 12.5887 10 13.3126V16.6876C10 17.4113 10.5709 18 11.2728 18H16.7273C17.4291 18 18 17.4113 18 16.6876V13.3126C18 12.5887 17.4291 12 16.7273 12Z"#}
-{#                                          fill="#676765"/>#}
-{#                                    <path d="M16.7273 0H11.2728C10.5709 0 10 0.560693 10 1.24995V8.74992C10 9.43931 10.5709 10 11.2728 10H16.7273C17.4291 10 18 9.43931 18 8.74992V1.24995C18 0.560693 17.4291 0 16.7273 0V0Z"#}
-{#                                          fill="#676765"/>#}
-{#                                </svg>#}
-{#                                <span class="nav-link-text">Dashboard</span>#}
-{#                            </a>#}
-{#                        </li>#}
+                        {#                        <li class="nav-item">#}
+                        {#                            <a class="nav-link {% if page_name == 'dashboard' %}active{% endif %}" href="{% url "dashboard" %}">#}
+                        {#                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"#}
+                        {#                                     xmlns="http://www.w3.org/2000/svg">#}
+                        {#                                    <path d="M6.72719 0H1.27268C0.570886 0 0 0.588725 0 1.31244V4.68742C0 5.41127 0.570886 6 1.27268 6H6.72719C7.42911 6 8 5.41127 8 4.68742V1.31244C8 0.588725 7.42911 0 6.72719 0Z"#}
+                        {#                                          fill="#676765"/>#}
+                        {#                                    <path d="M6.72719 8H1.27268C0.570886 8 0 8.56069 0 9.25008V16.75C0 17.4393 0.570886 18 1.27268 18H6.72719C7.42911 18 8 17.4393 8 16.75V9.25008C8 8.56069 7.42911 8 6.72719 8Z"#}
+                        {#                                          fill="#676765"/>#}
+                        {#                                    <path d="M16.7273 12H11.2728C10.5709 12 10 12.5887 10 13.3126V16.6876C10 17.4113 10.5709 18 11.2728 18H16.7273C17.4291 18 18 17.4113 18 16.6876V13.3126C18 12.5887 17.4291 12 16.7273 12Z"#}
+                        {#                                          fill="#676765"/>#}
+                        {#                                    <path d="M16.7273 0H11.2728C10.5709 0 10 0.560693 10 1.24995V8.74992C10 9.43931 10.5709 10 11.2728 10H16.7273C17.4291 10 18 9.43931 18 8.74992V1.24995C18 0.560693 17.4291 0 16.7273 0V0Z"#}
+                        {#                                          fill="#676765"/>#}
+                        {#                                </svg>#}
+                        {#                                <span class="nav-link-text">Dashboard</span>#}
+                        {#                            </a>#}
+                        {#                        </li>#}
                         <li class="nav-item">
-                            <a class="nav-link {% if page_name == 'data_bridges' %}active{% endif %}" href="{% url "data_bridges" %}">
+                            <a class="nav-link {% if page_name == 'data_bridges' %}active{% endif %}"
+                               href="{% url "data_bridges" %}">
                                 <svg width="18" height="20" viewBox="0 0 20 20" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
                                     <path d="M20 5.02205V3.70337H0V5.02205H1.31868V6.78029H0V16.2968H2.90079V13.6697C2.90079 12.1121 4.16532 10.8494 5.72523 10.8494C7.28514 10.8494 8.54967 12.1121 8.54967 13.6697L8.54945 16.2968H11.4504V13.6697C11.4504 12.1121 12.7149 10.8494 14.2748 10.8494C15.8347 10.8494 17.0993 12.1121 17.0993 13.6697V16.2968H20V6.78029H18.6813V5.02205H20ZM9.34066 6.78029H2.63736V5.02205H9.34066V6.78029ZM17.3626 6.78029H10.6593V5.02205H17.3626V6.78029Z"
@@ -143,49 +146,27 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if page_name == 'profile' %}active{% endif %}" href="{% url "profile" %}">
-                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <g clip-path="url(#clip0)">
-                                        <path d="M14.9051 12.5928C13.6057 11.2734 11.8831 10.5469 10.0547 10.5469H7.94531C6.11691 10.5469 4.39432 11.2734 3.09495 12.5928C1.80193 13.9057 1.61719 14.1692 1.08984 16.1869C1.08984 16.4782 1.08984 16.7143 1.61719 16.7143H16.3125C16.9102 16.7143 16.9102 16.4782 16.9102 16.1869C16.3125 14.0625 16.1981 13.9057 14.9051 12.5928Z"
-                                              fill="#676765"/>
-                                        <path d="M15.7871 11.6859C11.7337 9.43803 6.26564 9.43803 2.21353 11.6859C1.46485 12.1002 1 12.8551 1 13.6557V17H17V13.6557C17 12.8551 16.5351 12.1002 15.7871 11.6859Z"
-                                              fill="#676765"/>
-                                        <path d="M12 1.31802C13.7574 3.07539 13.7574 5.92459 12 7.68197C10.2426 9.43934 7.39343 9.43934 5.63606 7.68197C3.87869 5.92459 3.87869 3.07539 5.63606 1.31802C7.39343 -0.439359 10.2426 -0.439319 12 1.31802Z"
-                                              fill="#676765"/>
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0">
-                                            <rect width="18" height="18" fill="white"/>
-                                        </clipPath>
-                                    </defs>
-                                </svg>
+                            <a class="nav-link {% if page_name == 'profile' %}active{% endif %}"
+                               href="{% url "profile" %}">
+                                <i class="fa fa-user" style="font-size: 21px"></i>
                                 <span class="nav-link-text">Profile</span>
                             </a>
                         </li>
-                        <li class="nav-item hide">
-                            <a class="nav-link" href="#">
-                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <g clip-path="url(#clip0)">
-                                        <path d="M16.9766 11.774C15.4335 10.8004 13.6667 10.2662 11.8408 10.1663C12.2629 10.3639 12.6808 10.5726 13.077 10.8226C14.0317 11.4241 14.625 12.5134 14.625 13.6647V16.8749H18V13.6647C18 12.8968 17.6078 12.1722 16.9766 11.774Z"
-                                              fill="#676765"/>
-                                        <path d="M12.4766 11.774C9.05659 9.61634 4.44288 9.61634 1.02392 11.774C0.392221 12.1717 0 12.8963 0 13.6648V16.875H13.5V13.6648C13.5 12.8963 13.1078 12.1717 12.4766 11.774Z"
-                                              fill="#676765"/>
-                                        <path d="M10.1185 8.81368C10.4822 8.92376 10.8575 9.00005 11.2501 9.00005C13.421 9.00005 15.1876 7.23345 15.1876 5.06254C15.1876 2.89164 13.421 1.125 11.2501 1.125C10.8575 1.125 10.4822 1.20129 10.1185 1.31137C11.1503 2.23875 11.8125 3.56907 11.8125 5.06251C11.8125 6.55594 11.1504 7.88626 10.1185 8.81368Z"
-                                              fill="#676765"/>
-                                        <path d="M9.53431 2.27827C11.072 3.81597 11.072 6.30903 9.53431 7.84673C7.9966 9.38444 5.50355 9.38444 3.96584 7.84673C2.42813 6.30903 2.42813 3.81597 3.96584 2.27827C5.50355 0.74056 7.9966 0.740595 9.53431 2.27827Z"
-                                              fill="#676765"/>
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0">
-                                            <rect width="18" height="18" fill="white"/>
-                                        </clipPath>
-                                    </defs>
-                                </svg>
-                                <span class="nav-link-text">Admin</span>
-                            </a>
-                        </li>
+                        {% if is_staff %}
+                            <li class="nav-item">
+                                <a class="nav-link {% if page_name == 'user' %}active{% endif %}"
+                                   href="{% url "user" %}">
+                                    <i class="fa fa-users" style="font-size: 16px"></i>
+                                    <span class="nav-link-text">Users</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fa fa-cogs" style="font-size: 16px"></i>
+                                    <span class="nav-link-text">Admin</span>
+                                </a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
                 <div class="logout-collapse">
@@ -228,6 +209,8 @@
 <script src="https://cdn.rawgit.com/t4t5/sweetalert/v0.2.0/lib/sweet-alert.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+<script src='https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js'></script>
+<script src='https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js'></script>
 <script src="{% static "js/main.js" %}"></script>
 
 {% block javascript %}

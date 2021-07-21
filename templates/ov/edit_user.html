@@ -1,0 +1,125 @@
+{% extends "ov/base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Edit User</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="main-content" id="panel">
+        <div class="user-edit-panel into-border">
+            <h3 class="user-title">Edit Users</h3>
+            <div class="user-dashboard-title">
+                <h2>API Bridges: <span>{{ api_bridges }}</span></h2>
+                <h2>WebHook Bridges: <span>{{ wh_bridges }}</span></h2>
+                <h2>Total Bridges: <span>{{ total_bridges }}</span></h2>
+            </div>
+        </div>
+        <div class="edit-user change-password change-password-panel">
+            <form>
+                <div class="row m-0">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" class="form-control" value="{{ email }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>User Name</label>
+                            <input type="text" class="form-control" value="{{ username }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Max Active Bridges</label>
+                            <input type="number" class="form-control" min=1 max=9999 value={{ permission.max_active_bridges }}>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Rate Limit Per URL</label>
+                            <input type="number" class="form-control" min=1 value={{ permission.rate_limit }}>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Allowed Frequency</label>
+                            <div class="check-url">
+                                <div class="check-forgot">
+                                    <div class="form-group remember-check">
+                                        <input type="checkbox" id="f1" checked>
+                                        <label for="f1">5S</label>
+                                    </div>
+                                </div>
+                                <div class="check-forgot">
+                                    <div class="form-group remember-check">
+                                        <input type="checkbox" id="f2" checked>
+                                        <label for="f2">1m</label>
+                                    </div>
+                                </div>
+                                <div class="check-forgot">
+                                    <div class="form-group remember-check">
+                                        <input type="checkbox" id="f3" checked>
+                                        <label for="f3">5m</label>
+                                    </div>
+                                </div>
+                                <div class="check-forgot">
+                                    <div class="form-group remember-check">
+                                        <input type="checkbox" id="f4" checked>
+                                        <label for="f4">1h</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Available Bridges</label>
+                            <div class="check-url">
+                                <div class="check-forgot">
+                                    <div class="form-group remember-check">
+                                        <input type="checkbox" id="WSS3" checked>
+                                        <label for="WSS3">WS>WH</label>
+                                    </div>
+                                </div>
+                                <div class="check-forgot">
+                                    <div class="form-group remember-check">
+                                        <input type="checkbox" id="WSS4" checked>
+                                        <label for="WSS4">WH>WS</label>
+                                    </div>
+                                </div>
+                                <div class="check-forgot">
+                                    <div class="form-group remember-check">
+                                        <input type="checkbox" id="WSS1" checked>
+                                        <label for="WSS1">WSS/WS>API</label>
+                                    </div>
+                                </div>
+                                <div class="check-forgot">
+                                    <div class="form-group remember-check">
+                                        <input type="checkbox" id="WSS2" checked>
+                                        <label for="WSS2">API>WS/WSS</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <div class="check-url edit-user-action">
+                                <a href="#" class="success-bg">Save User</a>
+                                <a href="#" class="grey-bg">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block javascript %}
+    <script>
+
+    </script>
+{% endblock %}

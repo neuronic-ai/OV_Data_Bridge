@@ -43,15 +43,17 @@ class Bridge:
     def send_message(self, message):
         self.add_cache(f'WH:Recv - {message}')
         try:
-            content = common.get_formatted_content(message, self.bridge_info)
+            replaceable, content = common.get_formatted_content(message, self.bridge_info)
+            if replaceable:
+                self.add_cache(f'WS:Send - {content}')
 
-            self.add_cache(f'WS:Send - {content}')
+                common.send_ws_message(f"{admin_config.BRIDGE_CONSUMER_PREFIX}_{self.bridge_info['id']}", content)
 
-            common.send_ws_message(f"{admin_config.BRIDGE_CONSUMER_PREFIX}_{self.bridge_info['id']}", content)
-
-            bridge = TBLBridge.objects.get(id=self.bridge_info['id'])
-            bridge.api_calls += 1
-            bridge.save()
+                bridge = TBLBridge.objects.get(id=self.bridge_info['id'])
+                bridge.api_calls += 1
+                bridge.save()
+            else:
+                self.add_cache(f'WS:Send - Ignored!')
         except Exception as e:
             self.add_cache(f'WS:Send - Exception - {e}')
 

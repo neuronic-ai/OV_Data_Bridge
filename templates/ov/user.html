@@ -1,0 +1,90 @@
+{% extends "ov/base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Users</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="main-content" id="panel">
+        <div class="user-edit-panel">
+            <h3 class="user-title">Users</h3>
+            <div class="user-dashboard-title">
+                <h2>Active API Bridges: <span>{{ bridges_status.active_api_bridges }}</span></h2>
+                <h2>Active WebHook Bridges: <span>{{ bridges_status.active_wh_bridges }}</span></h2>
+                <h2>Total Active Bridges: <span>{{ bridges_status.active_total_bridges }}</span></h2>
+            </div>
+        </div>
+        <div class="table-panel">
+            <table class="table table-bordered table-hover table-striped" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th style="width: 20px">#</th>
+                    <th>Email</th>
+                    <th>Name</th>
+                    <th>Date Joined</th>
+                    <th>Balance</th>
+                    <th>API Bridges (Total/Active/Inactive)</th>
+                    <th>WebHook Bridges (Total/Active/Inactive)</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users_info %}
+                    <tr>
+                        <td>{{ user.uid }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.date_joined }}</td>
+                        <td><b>$</b> {{ user.balance }}</td>
+                        <td>{{ user.total_api_bridges }} / {{ user.active_api_bridges }} / {{ user.inactive_api_bridges }}</td>
+                        <td>{{ user.total_wh_bridges }} / {{ user.active_wh_bridges }} / {{ user.inactive_wh_bridges }}</td>
+                        <td>
+                            <div class="actions-panel">
+                                <a href="{% url "edit_user" param1=user.id %}" class="blue-bg edit-user-info">
+                                    <i class="fa fa-pencil-square-o"></i>&nbsp;Edit</a>
+                                <span>Reset Password</span>
+                                <a class="red-bg delete-user-info" id={{ user.id }}>
+                                    <i class="fa fa-trash-o"></i>&nbsp;Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+            $('.table').DataTable({
+                //disable sorting on last column
+                "columnDefs": [
+                    {"orderable": false, "targets": 7}
+                ],
+                language: {
+                    //customize pagination prev and next buttons: use arrows instead of words
+                    'paginate': {
+                        'previous': '<span class="fa fa-chevron-left"></span>',
+                        'next': '<span class="fa fa-chevron-right"></span>'
+                    },
+                    //customize number of elements to be displayed
+                    "lengthMenu": 'Display <select class="form-control input-sm">' +
+                        '<option value="10">10</option>' +
+                        '<option value="20">20</option>' +
+                        '<option value="30">30</option>' +
+                        '<option value="40">40</option>' +
+                        '<option value="50">50</option>' +
+                        '<option value="-1">All</option>' +
+                        '</select> results'
+                }
+            });
+
+            $('a.delete-user-info').on('click', function (e) {
+
+            });
+        });
+    </script>
+{% endblock %}

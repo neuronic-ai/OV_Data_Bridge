@@ -21580,6 +21580,8 @@ textarea[resize='horizontal']
 .navbar-vertical.navbar-expand-xs .navbar-nav > .nav-item > .nav-link.active svg path,
 .navbar-vertical.navbar-expand-xs .navbar-nav > .nav-item > .nav-link:hover span,
 .navbar-vertical.navbar-expand-xs .navbar-nav > .nav-item > .nav-link.active span,
+.navbar-vertical.navbar-expand-xs .navbar-nav > .nav-item > .nav-link:hover i,
+.navbar-vertical.navbar-expand-xs .navbar-nav > .nav-item > .nav-link.active i,
 .navbar-vertical.navbar-expand-xs .navbar-nav > .nav-item > .nav-link:hover svg path{
     color: #01C579;
     stroke: #01C579;

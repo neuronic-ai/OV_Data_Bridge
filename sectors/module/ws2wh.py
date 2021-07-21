@@ -84,23 +84,27 @@ class Bridge:
 
     def call_webhook(self, message):
         wh_address = self.bridge_info['dst_address']
-        content = common.get_formatted_content(message, self.bridge_info)
+        replaceable, content = common.get_formatted_content(message, self.bridge_info)
 
-        # call WebHook
-        try:
-            self.add_cache(f'WH:Send - {content}')
-            res = requests.post(wh_address, json=content)
-            response = {
-                'status_code': res.status_code,
-                'text': res.text
-            }
-            self.add_cache(f'WH:Recv - {response}')
-        except Exception as e:
-            self.add_cache(f'WH:Send - Exception - {e}')
+        if replaceable:
+            # call WebHook
+            try:
+                self.add_cache(f'WH:Send - {content}')
+                res = requests.post(wh_address, json=content)
+                response = {
+                    'status_code': res.status_code,
+                    'text': res.text
+                }
+                self.add_cache(f'WH:Recv - {response}')
+            except Exception as e:
+                self.add_cache(f'WH:Send - Exception - {e}')
 
-        bridge = TBLBridge.objects.get(id=self.bridge_info['id'])
-        bridge.api_calls += 1
-        bridge.save()
+            bridge = TBLBridge.objects.get(id=self.bridge_info['id'])
+            bridge.api_calls += 1
+            bridge.save()
+        else:
+            self.add_cache(f'WH:Send - Ignored!')
+
 
     def add_cache(self, data):
         self.trace(data)

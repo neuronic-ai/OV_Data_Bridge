@@ -6,8 +6,18 @@ from sectors.common import admin_config, error
 
 from db.models import (
     TBLBridge,
-    TBLLog
+    TBLLog,
+    TBLUser
 )
+
+
+def put_base_info(request, context, page_name):
+    context['page_name'] = page_name
+    context['username'] = request.user.username
+    context['email'] = request.user.email
+    context['is_staff'] = request.user.is_staff
+
+    return context
 
 
 class HomeView(TemplateView):
@@ -23,8 +33,7 @@ class DashboardView(TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(DashboardView, self).get_context_data(*args, **kwargs)
-        context['page_name'] = 'dashboard'
-        context['username'] = self.request.user.username
+        context = put_base_info(self.request, context, 'dashboard')
 
         return context
 
@@ -34,8 +43,7 @@ class DataBridgesView(TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(DataBridgesView, self).get_context_data(*args, **kwargs)
-        context['page_name'] = 'data_bridges'
-        context['username'] = self.request.user.username
+        context = put_base_info(self.request, context, 'data_bridges')
         context['bridges_info'] = list(TBLBridge.objects.filter(user_id=self.request.user.id).values())
         for bridge_info in context['bridges_info']:
             bridge_info['description'] = admin_config.get_bridge_description(bridge_info['type'])['description']
@@ -185,9 +193,7 @@ class ProfileView(TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(ProfileView, self).get_context_data(*args, **kwargs)
-        context['page_name'] = 'profile'
-        context['username'] = self.request.user.username
-        context['email'] = self.request.user.email
+        context = put_base_info(self.request, context, 'profile')
 
         return context
 
@@ -197,7 +203,125 @@ class ChangePasswordView(TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(ChangePasswordView, self).get_context_data(*args, **kwargs)
-        context['page_name'] = 'profile'
-        context['username'] = self.request.user.username
+        context = put_base_info(self.request, context, 'profile')
 
+        return context
+
+
+class UserView(TemplateView):
+    template_name = 'ov/user.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return redirect('/404_page')
+        else:
+            return super(UserView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(UserView, self).get_context_data(*args, **kwargs)
+        put_base_info(self.request, context, 'user')
+        bridges_status = {
+            'active_api_bridges': 0,
+            'active_wh_bridges': 0,
+            'active_total_bridges': 0,
+            'inactive_api_bridges': 0,
+            'inactive_wh_bridges': 0,
+            'inactive_total_bridges': 0
+        }
+
+        bridges_info = list(TBLBridge.objects.filter().values('user_id', 'type', 'is_active'))
+        users_info = list(TBLUser.objects.filter().values('id', 'username', 'email', 'date_joined', 'permission'))
+        u_id = 1
+        for ui in users_info:
+            ui['uid'] = u_id
+            ui['balance'] = 0
+            ui['active_api_bridges'] = 0
+            ui['active_wh_bridges'] = 0
+            ui['active_total_bridges'] = 0
+            ui['inactive_api_bridges'] = 0
+            ui['inactive_wh_bridges'] = 0
+            ui['inactive_total_bridges'] = 0
+
+            for bi in bridges_info:
+                if bi['user_id'] == ui['id']:
+                    if bi['is_active']:
+                        if bi['type'] in [1, 2]:
+                            ui['active_wh_bridges'] += 1
+                            ui['active_total_bridges'] += 1
+                        elif bi['type'] in [3, 4]:
+                            ui['active_api_bridges'] += 1
+                            ui['active_total_bridges'] += 1
+                        else:
+                            pass
+                    else:
+                        if bi['type'] in [1, 2]:
+                            ui['inactive_wh_bridges'] += 1
+                            ui['inactive_total_bridges'] += 1
+                        elif bi['type'] in [3, 4]:
+                            ui['inactive_api_bridges'] += 1
+                            ui['inactive_total_bridges'] += 1
+                        else:
+                            pass
+
+            ui['total_api_bridges'] = ui['active_api_bridges'] + ui['inactive_api_bridges']
+            ui['total_wh_bridges'] = ui['active_wh_bridges'] + ui['inactive_wh_bridges']
+
+            bridges_status['active_api_bridges'] += ui['active_api_bridges']
+            bridges_status['active_wh_bridges'] += ui['active_wh_bridges']
+            bridges_status['active_total_bridges'] += ui['active_total_bridges']
+            bridges_status['inactive_api_bridges'] += ui['inactive_api_bridges']
+            bridges_status['inactive_wh_bridges'] += ui['inactive_wh_bridges']
+            bridges_status['inactive_total_bridges'] += ui['inactive_total_bridges']
+
+            u_id += 1
+
+        context['bridges_status'] = bridges_status
+        context['users_info'] = users_info
+
+        return context
+
+
+class EditUserView(TemplateView):
+    template_name = 'ov/edit_user.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        return super(EditUserView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(EditUserView, self).get_context_data(*args, **kwargs)
+        context = put_base_info(self.request, context, 'user')
+
+        user_id = kwargs['param1']
+        bridges_info = list(TBLBridge.objects.filter(user_id=user_id).values('user_id', 'type', 'is_active'))
+
+        context['api_bridges'] = 0
+        context['wh_bridges'] = 0
+        context['total_bridges'] = 0
+
+        for bi in bridges_info:
+            if bi['type'] in [1, 2]:
+                context['wh_bridges'] += 1
+            elif bi['type'] in [3, 4]:
+                context['api_bridges'] += 1
+            else:
+                pass
+
+            context['total_bridges'] += 1
+
+        context['permission'] = {
+            'max_active_bridges': 1,
+            'rate_limit': 14
+        }
+
+        return context
+
+
+class Page404View(TemplateView):
+    template_name = 'ov/404.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        return super(Page404View, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(Page404View, self).get_context_data(*args, **kwargs)
         return context

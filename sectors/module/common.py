@@ -19,23 +19,28 @@ def get_formatted_content(message, bridge_info):
 
     if search_word:
         replaceable = False
+        search_word_array = search_word.split(',')
         if any:
-            search_word_array = search_word.split(',')
             for sw in search_word_array:
                 if sw.strip() in message:
                     replaceable = True
                     break
         else:
-            if search_word in message:
-                replaceable = True
+            replaceable = True
+            for sw in search_word_array:
+                if sw.strip() not in message:
+                    replaceable = False
+                    break
 
         if replaceable:
             try:
                 content = json.loads(replace_word)
             except:
                 content = {'content': replace_word}
+    else:
+        replaceable = True
 
-    return content
+    return replaceable, content
 
 
 def thread_swm(group_name, content):

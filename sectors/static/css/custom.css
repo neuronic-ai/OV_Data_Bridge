@@ -301,7 +301,7 @@ svg {
     position: absolute;
     width: 100%;
     height: 100%;
-    background-image: url("../img/login-banner.png");
+    background-image: url("../img/login-banner.jpg");
     background-size: cover;
 }
 
@@ -930,7 +930,7 @@ a.term-services {
     min-height: 264px;
 }
 
-.modal input.form-control {
+input.form-control {
     height: calc(1.5em + 10px + 0px);
 }
 
@@ -1413,12 +1413,6 @@ div.dataTables_wrapper div.dataTables_filter input {
     box-shadow: none;
 }
 
-.table-panel .table tr.catch-child td:nth-child(4),
-.table-panel .table tr.catch-child td:nth-child(5) {
-    font-weight: 600;
-    font-size: 16px;
-}
-
 .table-panel .pagination {
     float: right;
     position: relative;
@@ -1497,10 +1491,6 @@ div.dataTables_wrapper div.dataTables_filter input {
     background: #1a66bd;
     cursor: pointer;
     color: #fff;
-}
-
-.blue-bg {
-    background: #1469ba;
 }
 
 .red-bg {
@@ -1659,11 +1649,6 @@ a.grey-bg {
 
 .bottom-form .form-group.edit-user-form {
     display: flex;
-}
-
-.bottom-form .form-group.edit-user-form label.col-form-label.fn-bold {
-    width: 244px;
-    padding-right: 30px;
 }
 
 .checkbox-user {
@@ -1943,7 +1928,7 @@ section#home {
 }
 
 .edit-user input:focus {
-    border-bottom: 1px solid #006BDD;
+    border-bottom: 1.5px solid #004288;
 }
 
 #docmodel .file-list-div .filelist-wra table tr td span svg {
