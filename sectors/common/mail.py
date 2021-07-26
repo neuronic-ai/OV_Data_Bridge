@@ -11,17 +11,17 @@ from db.models import (
 
 
 def test_smtp(request, smtp_setting):
-    try:
-        s = smtplib.SMTP(host=smtp_setting['smtp_server_name'], port=int(smtp_setting['smtp_port']))
-        s.ehlo()
-        #if smtp_setting['smtp_enable_starttls']:
+    # try:
+    s = smtplib.SMTP(host=smtp_setting['smtp_server_name'], port=int(smtp_setting['smtp_port']))
+    s.ehlo()
+    if smtp_setting['smtp_enable_starttls']:
         s.starttls()
-        s.login(smtp_setting['smtp_username'], smtp_setting['smtp_password'])
-    except Exception as e:
-        if admin_config.TRACE_MODE:
-            print(e)
-
-        return False, str(e)
+    s.login(smtp_setting['smtp_username'], smtp_setting['smtp_password'])
+    # except Exception as e:
+    #     if admin_config.TRACE_MODE:
+    #         print(e)
+    #
+    #     return False, str(e)
 
     return True, error.SUCCESS
 
