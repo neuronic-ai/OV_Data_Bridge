@@ -15,7 +15,8 @@ def test_smtp(request, smtp_setting):
         print(smtp_setting)
         print(smtp_setting['smtp_server_name'])
         print(smtp_setting['smtp_port'])
-        s = smtplib.SMTP(host=smtp_setting['smtp_server_name'], port=int(smtp_setting['smtp_port']))
+        # s = smtplib.SMTP(host=smtp_setting['smtp_server_name'], port=int(smtp_setting['smtp_port']))
+        s = smtplib.SMTP(host='smtp.gmail.com', port=587)
 
         print(smtp_setting['smtp_enable_starttls'])
         s.ehlo()
