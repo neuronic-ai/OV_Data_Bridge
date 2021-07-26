@@ -482,31 +482,31 @@ class SettingView(TemplateView):
 def test_smtp(request):
     params = request.POST
 
-    try:
-        if request.user.is_staff:
+    # try:
+    if request.user.is_staff:
 
-            status, text = mail.test_smtp(request, params)
-            if status:
-                return JsonResponse({
-                    'status_code': 200,
-                    'text': error.SUCCESS
-                })
-            else:
-                return JsonResponse({
-                    'status_code': 500,
-                    'text': text
-                })
+        status, text = mail.test_smtp(request, params)
+        if status:
+            return JsonResponse({
+                'status_code': 200,
+                'text': error.SUCCESS
+            })
         else:
             return JsonResponse({
-                'status_code': 401,
-                'text': error.PERMISSION_NOT_ALLOWED
+                'status_code': 500,
+                'text': text
             })
-
-    except Exception as e:
+    else:
         return JsonResponse({
-            'status_code': 500,
-            'text': str(e)
+            'status_code': 401,
+            'text': error.PERMISSION_NOT_ALLOWED
         })
+
+    # except Exception as e:
+    #     return JsonResponse({
+    #         'status_code': 500,
+    #         'text': str(e)
+    #     })
 
 
 def save_setting(request):
