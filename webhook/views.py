@@ -4,7 +4,7 @@ import time
 from sectors.common import admin_config, error
 
 from db.models import (
-    TBLBridge,
+    TBLBridge
 )
 
 

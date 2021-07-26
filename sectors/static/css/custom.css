@@ -731,7 +731,8 @@ input.form-control {
     height: 100%;
     background: #00000038;
 }*/
-.modal input.form-control:focus {
+
+input.form-control:focus {
     border-bottom: 1.5px solid #004288;
 }
 
@@ -934,6 +935,10 @@ a.term-services {
     height: calc(1.5em + 10px + 0px);
 }
 
+.col-lg-6 input.form-control {
+    height: calc(1.5em + 10px + 0px);
+}
+
 .form-section {
     margin-bottom: 35px;
     padding-right: 20px;
@@ -1013,6 +1018,10 @@ a.term-services {
 .copybutton {
     display: flex;
     position: relative;
+}
+
+.hand {
+    cursor: pointer;
 }
 
 .copy-icon {
@@ -1581,6 +1590,11 @@ a.success-bg {
     color: #fff;
 }
 
+a.yellow-bg {
+    background-color: #E0CA00;
+    color: #fff;
+}
+
 a.grey-bg {
     background: #f3f3f1;
     color: #484848;
@@ -1605,6 +1619,11 @@ a.grey-bg {
 
 .edit-user-action {
     margin-top: 40px;
+}
+
+.delete-user {
+    color: white !important;
+    cursor: pointer;
 }
 
 .p-0 {
@@ -1651,17 +1670,8 @@ a.grey-bg {
     display: flex;
 }
 
-.checkbox-user {
-    width: 100%;
-    margin-top: 12px;
-}
-
-.checkbox-user .check-forgot {
+.check-forgot {
     padding-right: 20px;
-}
-
-.ck-panel, .es-check {
-    display: flex;
 }
 
 .bottom-form {
@@ -2396,11 +2406,11 @@ section#home {
         font-size: 10px;
     }
 
-    .ck-panel, .es-check, .check-url {
+    .check-url {
         display: block;
     }
 
-    .check-url .check-forgot, .checkbox-user .check-forgot {
+    .check-url .check-forgot, .check-forgot {
         margin-bottom: 5px;
     }
 }

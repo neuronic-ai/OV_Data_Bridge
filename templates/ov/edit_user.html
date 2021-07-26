@@ -6,7 +6,7 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="main-content" id="panel">
+    <div class="main-content">
         <div class="user-edit-panel into-border">
             <h3 class="user-title">Edit Users</h3>
             <div class="user-dashboard-title">
@@ -16,30 +16,30 @@
             </div>
         </div>
         <div class="edit-user change-password change-password-panel">
-            <form>
+            <form id="edit_user_form">
                 <div class="row m-0">
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" class="form-control" value="{{ email }}" readonly>
+                            <input type="email" class="form-control" value="{{ edit_email }}" readonly>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label>User Name</label>
-                            <input type="text" class="form-control" value="{{ username }}" readonly>
+                            <input type="text" class="form-control" value="{{ edit_username }}" readonly>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label>Max Active Bridges</label>
-                            <input type="number" class="form-control" min=1 max=9999 value={{ permission.max_active_bridges }}>
+                            <input v-model="max_active_bridges" type="number" class="form-control" min=1 max=9999>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label>Rate Limit Per URL</label>
-                            <input type="number" class="form-control" min=1 value={{ permission.rate_limit }}>
+                            <input v-model="rate_limit_per_url" type="number" class="form-control" min=1>
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -48,26 +48,26 @@
                             <div class="check-url">
                                 <div class="check-forgot">
                                     <div class="form-group remember-check">
-                                        <input type="checkbox" id="f1" checked>
-                                        <label for="f1">5S</label>
+                                        <input v-model="af1" v-on:click="on_check_af1" type="checkbox" id="af1">
+                                        <label for="af1">5s</label>
                                     </div>
                                 </div>
                                 <div class="check-forgot">
                                     <div class="form-group remember-check">
-                                        <input type="checkbox" id="f2" checked>
-                                        <label for="f2">1m</label>
+                                        <input v-model="af2" v-on:click="on_check_af2" type="checkbox" id="af2">
+                                        <label for="af2">1m</label>
                                     </div>
                                 </div>
                                 <div class="check-forgot">
                                     <div class="form-group remember-check">
-                                        <input type="checkbox" id="f3" checked>
-                                        <label for="f3">5m</label>
+                                        <input v-model="af3" v-on:click="on_check_af3" type="checkbox" id="af3">
+                                        <label for="af3">5m</label>
                                     </div>
                                 </div>
                                 <div class="check-forgot">
                                     <div class="form-group remember-check">
-                                        <input type="checkbox" id="f4" checked>
-                                        <label for="f4">1h</label>
+                                        <input v-model="af4" v-on:click="on_check_af4" type="checkbox" id="af4">
+                                        <label for="af4">1h</label>
                                     </div>
                                 </div>
                             </div>
@@ -79,26 +79,26 @@
                             <div class="check-url">
                                 <div class="check-forgot">
                                     <div class="form-group remember-check">
-                                        <input type="checkbox" id="WSS3" checked>
-                                        <label for="WSS3">WS>WH</label>
+                                        <input v-model="ab1" v-on:click="on_check_ab1" type="checkbox" id="ab1">
+                                        <label for="ab1">WSS/WS>WH</label>
                                     </div>
                                 </div>
                                 <div class="check-forgot">
                                     <div class="form-group remember-check">
-                                        <input type="checkbox" id="WSS4" checked>
-                                        <label for="WSS4">WH>WS</label>
+                                        <input v-model="ab2" v-on:click="on_check_ab2" type="checkbox" id="ab2">
+                                        <label for="ab2">WH>WSS/WS</label>
                                     </div>
                                 </div>
                                 <div class="check-forgot">
                                     <div class="form-group remember-check">
-                                        <input type="checkbox" id="WSS1" checked>
-                                        <label for="WSS1">WSS/WS>API</label>
+                                        <input v-model="ab3" v-on:click="on_check_ab3" type="checkbox" id="ab3">
+                                        <label for="ab3">WSS/WS>API</label>
                                     </div>
                                 </div>
                                 <div class="check-forgot">
                                     <div class="form-group remember-check">
-                                        <input type="checkbox" id="WSS2" checked>
-                                        <label for="WSS2">API>WS/WSS</label>
+                                        <input v-model="ab4" v-on:click="on_check_ab4" type="checkbox" id="ab4">
+                                        <label for="ab4">API>WS/WSS</label>
                                     </div>
                                 </div>
                             </div>
@@ -107,8 +107,8 @@
                     <div class="col-lg-6">
                         <div class="form-group">
                             <div class="check-url edit-user-action">
-                                <a href="#" class="success-bg">Save User</a>
-                                <a href="#" class="grey-bg">Cancel</a>
+                                <a href="#" v-on:click="on_save" class="success-bg">Save User</a>
+                                <a href="{% url "user" %}" class="grey-bg">Cancel</a>
                             </div>
                         </div>
                     </div>
@@ -120,6 +120,104 @@
 
 {% block javascript %}
     <script>
+        var permission = {{ edit_permission|safe }};
+        var allowed_frequency = JSON.parse(permission.allowed_frequency);
+        var available_bridges = JSON.parse(permission.available_bridges);
 
+        var user_edit_vue = new Vue({
+            delimiters: ['[[', ']]'],
+            el: '#edit_user_form',
+            data: {
+                max_active_bridges: permission.max_active_bridges,
+                rate_limit_per_url: permission.rate_limit_per_url,
+                af1: allowed_frequency['af1'],
+                af2: allowed_frequency['af2'],
+                af3: allowed_frequency['af3'],
+                af4: allowed_frequency['af4'],
+                ab1: available_bridges['ab1'],
+                ab2: available_bridges['ab2'],
+                ab3: available_bridges['ab3'],
+                ab4: available_bridges['ab4'],
+            },
+            methods: {
+                on_check_af1: function () {
+
+                    this.af1 = !this.af1;
+                },
+                on_check_af2: function () {
+
+                    this.af2 = !this.af2;
+                },
+                on_check_af3: function () {
+
+                    this.af3 = !this.af3;
+                },
+                on_check_af4: function () {
+
+                    this.af4 = !this.af4;
+                },
+                on_check_ab1: function () {
+
+                    this.ab1 = !this.ab1;
+                },
+                on_check_ab2: function () {
+
+                    this.ab2 = !this.ab2;
+                },
+                on_check_ab3: function () {
+
+                    this.ab3 = !this.ab3;
+                },
+                on_check_ab4: function () {
+
+                    this.ab4 = !this.ab4;
+                },
+                on_save: function () {
+
+                    $.ajax({
+                        url: '{% url 'save_user' %}',
+                        type: 'POST',
+                        data: {
+                            'user_id': {{ edit_user_id }},
+                            'max_active_bridges': user_edit_vue.max_active_bridges,
+                            'rate_limit_per_url': user_edit_vue.rate_limit_per_url,
+                            'allowed_frequency': JSON.stringify({
+                                'af1': user_edit_vue.af1,
+                                'af2': user_edit_vue.af2,
+                                'af3': user_edit_vue.af3,
+                                'af4': user_edit_vue.af4
+                            }),
+                            'available_bridges': JSON.stringify({
+                                'ab1': user_edit_vue.ab1,
+                                'ab2': user_edit_vue.ab2,
+                                'ab3': user_edit_vue.ab3,
+                                'ab4': user_edit_vue.ab4
+                            })
+                        },
+                        success: function (res) {
+                            if (res.status_code === 200) {
+                                swal({
+                                        title: "Saved!",
+                                        text: "User has been saved!",
+                                        type: "success",
+                                        showSweetAlert: true,
+                                        confirmButtonColor: '#AEDEF4',
+                                        confirmButtonText: 'Show Users',
+                                        closeOnConfirm: false,
+                                    },
+                                    function (isConfirm) {
+                                        if (isConfirm) {
+                                            window.location.href = '{% url 'user' %}';
+                                        }
+                                    });
+                            } else {
+                                swal('Error!', res.text, 'error');
+                            }
+                        }
+                    });
+                }
+            },
+            watch: {}
+        });
     </script>
 {% endblock %}

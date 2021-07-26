@@ -1,18 +1,39 @@
-TRACE_MODE = False
+import config.settings.base as base
+
+HOST_URL = 'http://127.0.0.1:8000/'
+TRACE_MODE = True
+DELETE_LOG_AFTER_BRIDGE_DELETED = True
 
 BRIDGE_HANDLE = None
 
-LOCAL_CACHE_LIMIT = 100             # qty
-DELAY_FOR_BAD_REQUEST = 0.5         # second
+LOCAL_CACHE_LIMIT = 100  # qty
+DELAY_FOR_BAD_REQUEST = 0.5  # second
 
 BRIDGE_CONSUMER_PREFIX = 'bridge'
+BRIDGE_LOG_PREFIX = 'bridge'
 
-BRIDGE_LOG_PATH = 'log'
-BRIDGE_LOG_ZIP_PATH = 'sectors/static/log_zip'
+BRIDGE_LOG_PATH = f'{base.BASE_DIR}/log'
+BRIDGE_LOG_ZIP_PATH = f'{base.BASE_DIR}/sectors/static/log_zip'
 BRIDGE_LOG_ZIP_DOWNLOAD = 'static/log_zip'
+
 BRIDGE_LOG_ZIP_FREQUENCY = 1
 # BRIDGE_LOG_MAX_SIZE = 2097152     # byte
-BRIDGE_LOG_MAX_SIZE = 1000          # byte
+BRIDGE_LOG_MAX_SIZE = 1000  # byte
+
+DEFAULT_MAX_ACTIVE_BRIDGES = 1
+DEFAULT_RATE_LIMIT_PER_URL = 14
+DEFAULT_ALLOWED_FREQUENCY = {
+    'af1': True,
+    'af2': True,
+    'af3': True,
+    'af4': True
+}
+DEFAULT_AVAILABLE_BRIDGE = {
+    'ab1': True,
+    'ab2': True,
+    'ab3': True,
+    'ab4': True
+}
 
 frequency = [
     {'name': '5s', 'second': 5},

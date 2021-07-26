@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect
 from django.views.generic.base import TemplateView
 from django.http import JsonResponse
+import json
+import os
 
-from sectors.common import admin_config, error
+from sectors.common import admin_config, error, mail
 
 from db.models import (
     TBLBridge,
     TBLLog,
-    TBLUser
+    TBLUser,
+    TBLSetting
 )
 
 
@@ -44,18 +47,26 @@ class DataBridgesView(TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super(DataBridgesView, self).get_context_data(*args, **kwargs)
         context = put_base_info(self.request, context, 'data_bridges')
-        context['bridges_info'] = list(TBLBridge.objects.filter(user_id=self.request.user.id).values())
-        for bridge_info in context['bridges_info']:
-            bridge_info['description'] = admin_config.get_bridge_description(bridge_info['type'])['description']
-            bridge_info['date_created'] = bridge_info['date_created'].strftime('%B %d, %Y')
-            bridge_info['date_updated'] = bridge_info['date_updated'].strftime('%B %d, %Y')
+        context['permission'] = json.loads(self.request.user.permission)
 
-            if bridge_info['format'] is None:
-                bridge_info['format'] = ''
+        bridge_type = []
+        for i in range(1, 5):
+            if context['permission']['available_bridges'][f'ab{i}']:
+                bridge_type.append(i)
 
-            bridge_info['is_active'] = int(bridge_info['is_active'])
+        context['bridges_info'] = list(TBLBridge.objects.filter(user_id=self.request.user.id,
+                                                                type__in=bridge_type).values())
+        for bi in context['bridges_info']:
+            bi['description'] = admin_config.get_bridge_description(bi['type'])['description']
+            bi['date_created'] = bi['date_created'].strftime('%B %d, %Y')
+            bi['date_updated'] = bi['date_updated'].strftime('%B %d, %Y')
 
-            del bridge_info['user_id']
+            if bi['format'] is None:
+                bi['format'] = ''
+
+            bi['is_active'] = int(bi['is_active'])
+
+            del bi['user_id']
 
         context['frequency'] = admin_config.frequency
 
@@ -140,8 +151,16 @@ def power_bridge(request):
                 bridge.is_active = False
                 admin_config.BRIDGE_HANDLE.stop_bridge_by_id(bridge_id)
             else:
-                bridge.is_active = True
-                admin_config.BRIDGE_HANDLE.start_bridge_by_id(bridge_id)
+                bridge_qty = TBLBridge.objects.filter(user_id=bridge.user_id, is_active=True).count()
+                max_active_bridges = json.loads(request.user.permission)['max_active_bridges']
+                if max_active_bridges > bridge_qty:
+                    bridge.is_active = True
+                    admin_config.BRIDGE_HANDLE.start_bridge_by_id(bridge_id)
+                else:
+                    return JsonResponse({
+                        'status_code': 401,
+                        'text': error.MAX_ACTIVE_BRIDGES_EXCEED
+                    })
 
             bridge.save()
 
@@ -149,6 +168,7 @@ def power_bridge(request):
                 'status_code': 200,
                 'text': error.SUCCESS
             })
+
         else:
             return JsonResponse({
                 'status_code': 401,
@@ -162,6 +182,14 @@ def power_bridge(request):
         })
 
 
+def delete_bridge_log(request, bridge_id):
+    if admin_config.DELETE_LOG_AFTER_BRIDGE_DELETED:
+        try:
+            os.remove(f'{admin_config.BRIDGE_LOG_PATH}/{admin_config.BRIDGE_LOG_PREFIX}_{bridge_id}.log')
+        except:
+            pass
+
+
 def delete_bridge(request):
     params = request.POST
 
@@ -171,6 +199,9 @@ def delete_bridge(request):
         if bridge.user_id == request.user.id:
             bridge.delete()
             admin_config.BRIDGE_HANDLE.remove_bridge_by_id(bridge_id)
+
+            delete_bridge_log(request, bridge_id)
+
             return JsonResponse({
                 'status_code': 200,
                 'text': error.SUCCESS
@@ -285,13 +316,25 @@ class EditUserView(TemplateView):
     template_name = 'ov/edit_user.html'
 
     def dispatch(self, request, *args, **kwargs):
-        return super(EditUserView, self).dispatch(request, *args, **kwargs)
+        if not request.user.is_staff:
+            return redirect('/404_page')
+        else:
+            return super(EditUserView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
         context = super(EditUserView, self).get_context_data(*args, **kwargs)
         context = put_base_info(self.request, context, 'user')
 
         user_id = kwargs['param1']
+
+        user = TBLUser.objects.get(id=user_id)
+        context['edit_user_id'] = user.id
+        context['edit_username'] = user.username
+        context['edit_email'] = user.email
+        context['edit_permission'] = json.loads(user.permission)
+        context['edit_permission']['allowed_frequency'] = json.dumps(context['edit_permission']['allowed_frequency'])
+        context['edit_permission']['available_bridges'] = json.dumps(context['edit_permission']['available_bridges'])
+
         bridges_info = list(TBLBridge.objects.filter(user_id=user_id).values('user_id', 'type', 'is_active'))
 
         context['api_bridges'] = 0
@@ -308,12 +351,195 @@ class EditUserView(TemplateView):
 
             context['total_bridges'] += 1
 
-        context['permission'] = {
-            'max_active_bridges': 1,
-            'rate_limit': 14
-        }
+        return context
+
+
+def save_user(request):
+    params = request.POST
+
+    try:
+        user_id = int(params['user_id'])
+
+        if request.user.is_staff:
+            user = TBLUser.objects.get(id=user_id)
+            available_bridges = json.loads(params['available_bridges'])
+            user.permission = json.dumps({
+                'max_active_bridges': int(params['max_active_bridges']),
+                'rate_limit_per_url': int(params['rate_limit_per_url']),
+                'allowed_frequency': json.loads(params['allowed_frequency']),
+                'available_bridges': available_bridges
+            })
+            user.save()
+
+            # bridge_type = []
+            # for i in range(1, 5):
+            #     if not available_bridges[f'ab{i}']:
+            #         bridge_type.append(i)
+            #
+            # TBLBridge.objects.filter(user_id=user_id, type__in=bridge_type).update(is_active=False)
+
+            return JsonResponse({
+                'status_code': 200,
+                'text': error.SUCCESS
+            })
+        else:
+            return JsonResponse({
+                'status_code': 401,
+                'text': error.PERMISSION_NOT_ALLOWED
+            })
+
+    except Exception as e:
+        return JsonResponse({
+            'status_code': 500,
+            'text': str(e)
+        })
+
+
+def delete_user(request):
+    params = request.POST
+
+    try:
+        user_id = int(params['user_id'])
+
+        if request.user.is_staff:
+            bridges_info = list(TBLBridge.objects.filter(user_id=user_id).values('id'))
+            for bi in bridges_info:
+                admin_config.BRIDGE_HANDLE.remove_bridge_by_id(bi['id'])
+
+            user = TBLUser.objects.get(id=user_id)
+            user.delete()
+
+            return JsonResponse({
+                'status_code': 200,
+                'text': error.SUCCESS
+            })
+        else:
+            return JsonResponse({
+                'status_code': 401,
+                'text': error.PERMISSION_NOT_ALLOWED
+            })
+
+    except Exception as e:
+        return JsonResponse({
+            'status_code': 500,
+            'text': str(e)
+        })
+
+
+class SettingView(TemplateView):
+    template_name = 'ov/setting.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return redirect('/404_page')
+        else:
+            return super(SettingView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(SettingView, self).get_context_data(*args, **kwargs)
+        context = put_base_info(self.request, context, 'setting')
+
+        setting = list(TBLSetting.objects.filter().values())
+
+        if len(setting) == 0:
+            setting_data = {
+                'server_setting': json.dumps({
+                    'server_name': '',
+                    'priv_key_directory': '',
+                    'cert_directory': '',
+                    'privacy_link': '',
+                    'user_link': ''
+                }),
+                'max_active_bridges': admin_config.DEFAULT_MAX_ACTIVE_BRIDGES,
+                'rate_limit_per_url': admin_config.DEFAULT_RATE_LIMIT_PER_URL,
+                'allowed_frequency': json.dumps(admin_config.DEFAULT_ALLOWED_FREQUENCY),
+                'available_bridges': json.dumps(admin_config.DEFAULT_AVAILABLE_BRIDGE),
+                'smtp_setting': json.dumps({
+                    'smtp_server_name': '',
+                    'smtp_port': '',
+                    'smtp_authentication': True,
+                    'smtp_enable_starttls': True,
+                    'smtp_username': '',
+                    'smtp_password': '',
+                })
+            }
+        else:
+            setting = setting[0]
+            setting_data = {
+                'server_setting': setting['server_setting'],
+                'max_active_bridges': setting['max_active_bridges'],
+                'rate_limit_per_url': setting['rate_limit_per_url'],
+                'allowed_frequency': setting['allowed_frequency'],
+                'available_bridges': setting['available_bridges'],
+                'smtp_setting': setting['smtp_setting']
+            }
+
+        context['setting_data'] = setting_data
 
         return context
+
+
+def test_smtp(request):
+    params = request.POST
+
+    try:
+        if request.user.is_staff:
+
+            status, text = mail.test_smtp(request, params)
+            if status:
+                return JsonResponse({
+                    'status_code': 200,
+                    'text': error.SUCCESS
+                })
+            else:
+                return JsonResponse({
+                    'status_code': 500,
+                    'text': text
+                })
+        else:
+            return JsonResponse({
+                'status_code': 401,
+                'text': error.PERMISSION_NOT_ALLOWED
+            })
+
+    except Exception as e:
+        return JsonResponse({
+            'status_code': 500,
+            'text': str(e)
+        })
+
+
+def save_setting(request):
+    params = request.POST
+
+    try:
+        if request.user.is_staff:
+            TBLSetting.objects.all().delete()
+
+            setting = TBLSetting()
+            setting.server_setting = params['server_setting']
+            setting.max_active_bridges = int(params['max_active_bridges'])
+            setting.rate_limit_per_url = int(params['rate_limit_per_url'])
+            setting.allowed_frequency = params['allowed_frequency']
+            setting.available_bridges = params['available_bridges']
+            setting.smtp_setting = params['smtp_setting']
+            setting.save()
+
+            return JsonResponse({
+                'status_code': 200,
+                'text': error.SUCCESS
+            })
+        else:
+            return JsonResponse({
+                'status_code': 401,
+                'text': error.PERMISSION_NOT_ALLOWED
+            })
+
+    except Exception as e:
+        return JsonResponse({
+            'status_code': 500,
+            'text': str(e)
+        })
 
 
 class Page404View(TemplateView):

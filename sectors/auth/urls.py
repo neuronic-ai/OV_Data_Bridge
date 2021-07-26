@@ -7,4 +7,5 @@ urlpatterns = [
     path('logout', logout, name='logout'),
     path('signup', SignupView.as_view(), name='signup'),
     path('password_reset', PasswordResetView.as_view(), name='password_reset'),
+    path('change_password/<str:param1>', ChangePasswordView.as_view(), name='change_password'),
 ]

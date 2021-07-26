@@ -6,7 +6,7 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="main-content" id="panel">
+    <div class="main-content">
         <div class="user-edit-panel">
             <h3 class="user-title">Users</h3>
             <div class="user-dashboard-title">
@@ -37,14 +37,16 @@
                         <td>{{ user.username }}</td>
                         <td>{{ user.date_joined }}</td>
                         <td><b>$</b> {{ user.balance }}</td>
-                        <td>{{ user.total_api_bridges }} / {{ user.active_api_bridges }} / {{ user.inactive_api_bridges }}</td>
-                        <td>{{ user.total_wh_bridges }} / {{ user.active_wh_bridges }} / {{ user.inactive_wh_bridges }}</td>
+                        <td>{{ user.total_api_bridges }} / {{ user.active_api_bridges }}
+                            / {{ user.inactive_api_bridges }}</td>
+                        <td>{{ user.total_wh_bridges }} / {{ user.active_wh_bridges }}
+                            / {{ user.inactive_wh_bridges }}</td>
                         <td>
                             <div class="actions-panel">
-                                <a href="{% url "edit_user" param1=user.id %}" class="blue-bg edit-user-info">
+                                <a href="{% url "edit_user" param1=user.id %}" class="blue-bg">
                                     <i class="fa fa-pencil-square-o"></i>&nbsp;Edit</a>
-{#                                <span>Reset Password</span>#}
-                                <a class="red-bg delete-user-info" id={{ user.id }}>
+                                {#                                <span>Reset Password</span>#}
+                                <a class="red-bg delete-user" id={{ user.id }}>
                                     <i class="fa fa-trash-o"></i>&nbsp;Delete</a>
                             </div>
                         </td>
@@ -82,8 +84,51 @@
                 }
             });
 
-            $('a.delete-user-info').on('click', function (e) {
-
+            $('a.delete-user').on('click', function (e) {
+                var user_id = this.id;
+                swal({
+                        title: 'Are you sure?',
+                        text: 'You will not be able to recover this user!',
+                        type: 'warning',
+                        showCancelButton: true,
+                        showSweetAlert: true,
+                        confirmButtonColor: '#C50101',
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'No, cancel plx!',
+                        closeOnConfirm: false,
+                        closeOnCancel: true
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $.ajax({
+                                url: '{% url 'delete_user' %}',
+                                type: 'POST',
+                                data: {
+                                    'user_id': user_id,
+                                },
+                                success: function (res) {
+                                    if (res.status_code === 200) {
+                                        swal({
+                                                title: 'Deleted!',
+                                                text: 'User has been deleted!',
+                                                type: 'success',
+                                                showSweetAlert: true,
+                                                confirmButtonColor: '#AEDEF4',
+                                                confirmButtonText: 'Show Users',
+                                                closeOnConfirm: false,
+                                            },
+                                            function (isConfirm) {
+                                                if (isConfirm) {
+                                                    window.location.href = '{% url 'user' %}';
+                                                }
+                                            });
+                                    } else {
+                                        swal('Error!', res.text, 'error');
+                                    }
+                                }
+                            });
+                        }
+                    });
             });
         });
     </script>

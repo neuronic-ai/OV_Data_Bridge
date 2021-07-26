@@ -4,7 +4,7 @@ from asgiref.sync import async_to_sync
 
 from sectors.common import admin_config
 from db.models import (
-    TBLBridge,
+    TBLBridge
 )
 
 

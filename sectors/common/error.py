@@ -8,4 +8,11 @@ UNKNOWN_BRIDGE_ID = 'Unknown Bridge ID'
 UNKNOWN_BRIDGE_TYPE = 'Unknown Bridge Type'
 
 PERMISSION_NOT_ALLOWED = 'Permission not allowed.'
+MAX_ACTIVE_BRIDGES_EXCEED = 'Max active bridges exceed.'
 INVALID_URL = 'Invalid URL.'
+
+SMTP_SETTING_NOT_AVAILABLE = 'SMTP setting not available.'
+UNKNOWN_EMAIL_TYPE = 'Unknown Email Type'
+
+UNKNOWN_PROBLEM = 'Something went wrong, Please contact to Admin.'
+

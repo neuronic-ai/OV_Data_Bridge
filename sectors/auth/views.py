@@ -4,12 +4,13 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
 import time
+import json
 
-from sectors.common import admin_config
-from sectors.common import error
+from sectors.common import admin_config, error, mail, common
 
 from db.models import (
     TBLUser,
+    TBLSetting
 )
 
 
@@ -36,6 +37,16 @@ def logout(request):
 class SignupView(TemplateView):
     template_name = 'auth/signup.html'
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(SignupView, self).get_context_data(*args, **kwargs)
+        context['terms_of_service'] = '#'
+        setting = list(TBLSetting.objects.filter().values())
+        if len(setting):
+            setting = setting[0]
+            context['terms_of_service'] = json.loads(setting['server_setting'])['user_link']
+
+        return context
+
     def post(self, *args, **kwargs):
         email = self.request.POST['email']
         username = self.request.POST['username']
@@ -51,6 +62,24 @@ class SignupView(TemplateView):
         user.email = email
         user.username = username
         user.set_password(password)
+
+        setting = list(TBLSetting.objects.filter().values())
+        if len(setting) == 0:
+            user.permission = json.dumps({
+                'max_active_bridges': admin_config.DEFAULT_MAX_ACTIVE_BRIDGES,
+                'rate_limit_per_url': admin_config.DEFAULT_RATE_LIMIT_PER_URL,
+                'allowed_frequency': admin_config.DEFAULT_ALLOWED_FREQUENCY,
+                'available_bridges': admin_config.DEFAULT_AVAILABLE_BRIDGE
+            })
+        else:
+            setting = setting[0]
+            user.permission = json.dumps({
+                'max_active_bridges': setting['max_active_bridges'],
+                'rate_limit_per_url': setting['rate_limit_per_url'],
+                'allowed_frequency': json.loads(setting['allowed_frequency']),
+                'available_bridges': json.loads(setting['available_bridges'])
+            })
+
         user.save()
 
         django_login(self.request, user)
@@ -62,7 +91,61 @@ class PasswordResetView(TemplateView):
 
     def post(self, *args, **kwargs):
         email = self.request.POST['email']
+        if TBLUser.objects.filter(email=email).exists():
+            user = TBLUser.objects.get(email=email)
+            reset_link = common.generate_random_string(32)
+            user.reset_link = reset_link
+            user.save()
 
-        return render(self.request, self.template_name, {
-            'success': error.RESET_LINK_SENT
-        })
+            reset_url = f'{admin_config.HOST_URL}auth/change_password/{reset_link}'
+            content = f'Please use below link to reset your password.\n{reset_url}'
+
+            status, text = mail.send_email(self.request, email, 'RESET_PASSWORD', content)
+        else:
+            status, text = True, ''
+
+        if status:
+            response = {
+                'success': error.RESET_LINK_SENT
+            }
+        else:
+            response = {
+                'alert': error.UNKNOWN_PROBLEM
+            }
+            if admin_config.TRACE_MODE:
+                print(text)
+
+        return render(self.request, self.template_name, response)
+
+
+class ChangePasswordView(TemplateView):
+    template_name = 'auth/change_password.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        reset_link = kwargs['param1']
+        if not TBLUser.objects.filter(reset_link=reset_link).exists():
+            return redirect('/404_page')
+        else:
+            return super(ChangePasswordView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ChangePasswordView, self).get_context_data(*args, **kwargs)
+        context['reset_link'] = kwargs['param1']
+
+        return context
+
+    def post(self, *args, **kwargs):
+        password = self.request.POST['password']
+        reset_link = self.request.POST['reset_link']
+        if not reset_link or not TBLUser.objects.filter(reset_link=reset_link).exists():
+            response = {
+                'alert': error.UNKNOWN_PROBLEM
+            }
+            return render(self.request, self.template_name, response)
+        else:
+            user = TBLUser.objects.get(reset_link=reset_link)
+            user.set_password(password)
+            user.reset_link = ''
+            user.save()
+            django_login(self.request, user)
+            return redirect('/data_bridges')

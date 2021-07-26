@@ -6,7 +6,7 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="main-content" id="panel">
+    <div class="main-content">
         <div class="header">
             <div class="">
                 <div class="header-body">
@@ -110,313 +110,336 @@
                 </div>
                 <div class="modal-body">
                     <div id="bridge_form" class="row m-0">
-                        <div class="col-lg-6 p-0">
-                            <a v-on:click="on_ws2wh" href="#" class="bridge-button" data-toggle="modal"
-                               data-target="#ws2wh">WebSocket to WebHook</a>
-                        </div>
-                        <div class="col-lg-6 p-0">
-                            <a v-on:click="on_wh2ws" href="#" class="bridge-button mr-0" data-toggle="modal"
-                               data-target="#wh2ws">WebHook to WebSocket</a>
-                        </div>
-                        <div class="col-lg-6 p-0">
-                            <a v-on:click="on_ws2api" href="#" class="bridge-button" data-toggle="modal"
-                               data-target="#ws2api">WebSocket to API</a>
-                        </div>
-                        <div class="col-lg-6 p-0">
-                            <a v-on:click="on_api2ws" href="#" class="bridge-button mr-0">API to WebSocket</a>
-                        </div>
+                        {% if permission.available_bridges.ab1 %}
+                            <div class="col-lg-6 p-0">
+                                <a v-on:click="on_ws2wh" href="#" class="bridge-button">WebSocket to WebHook</a>
+                            </div>
+                        {% endif %}
+                        {% if permission.available_bridges.ab2 %}
+                            <div class="col-lg-6 p-0">
+                                <a v-on:click="on_wh2ws" href="#" class="bridge-button mr-0">WebHook to WebSocket</a>
+                            </div>
+                        {% endif %}
+                        {% if permission.available_bridges.ab3 %}
+                            <div class="col-lg-6 p-0">
+                                <a v-on:click="on_ws2api" href="#" class="bridge-button">WebSocket to API</a>
+                            </div>
+                        {% endif %}
+                        {% if permission.available_bridges.ab4 %}
+                            <div class="col-lg-6 p-0">
+                                <a v-on:click="on_api2ws" href="#" class="bridge-button mr-0">API to WebSocket</a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="modal fade" id="ws2wh" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">WebSocket to WebHook</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="websocket-panel">
-                        <div class="change-password">
-                            <form id="ws2wh_form">
-                                <div class="left-panel">
-                                    <div class="form-group formate-section name-formate">
-                                        <div class="name-formate-div">
-                                            <label>Name</label>
-                                            <input v-model="name" id="ws2wh_name" type="text" class="form-control"
-                                                   placeholder="Enter here">
+    {% if permission.available_bridges.ab1 %}
+        <div class="modal fade" id="ws2wh" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">WebSocket to WebHook</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="websocket-panel">
+                            <div class="change-password">
+                                <form id="ws2wh_form">
+                                    <div class="left-panel">
+                                        <div class="form-group formate-section name-formate">
+                                            <div class="name-formate-div">
+                                                <label>Name</label>
+                                                <input v-model="name" id="ws2wh_name" type="text" class="form-control"
+                                                       placeholder="Enter here">
+                                            </div>
+                                            <a href="#" v-on:click="on_format" class="formate blue-bg"
+                                               data-toggle="modal" data-target="#formate">Format</a>
                                         </div>
-                                        <a href="#" v-on:click="on_format" class="formate blue-bg" data-toggle="modal"
-                                           data-target="#formate">Format</a>
+                                        <div class="form-group">
+                                            <label>WebSocket Address</label>
+                                            <input v-model="ws_address" id="ws2wh_ws_address" type="text"
+                                                   class="form-control" placeholder="Enter here">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>WebHook Address</label>
+                                            <input v-model="wh_address" id="ws2wh_wh_address" type="text"
+                                                   class="form-control" placeholder="Enter here">
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label>WebSocket Address</label>
-                                        <input v-model="ws_address" id="ws2wh_ws_address" type="text"
-                                               class="form-control" placeholder="Enter here">
+                                    <div class="right-button-panel example">
+                                        <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
+                                        <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
+                                        <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
                                     </div>
-                                    <div class="form-group">
-                                        <label>WebHook Address</label>
-                                        <input v-model="wh_address" id="ws2wh_wh_address" type="text"
-                                               class="form-control" placeholder="Enter here">
-                                    </div>
-                                </div>
-                                <div class="right-button-panel example">
-                                    <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
-                                    <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
-                                    <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 
-    <div class="modal fade" id="wh2ws" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">WebHook to WebSocket</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="websocket-panel">
-                        <div class="change-password">
-                            <form id="wh2ws_form">
-                                <div class="left-panel">
-                                    <div class="form-group formate-section name-formate">
-                                        <div class="name-formate-div">
-                                            <label>Name</label>
-                                            <input v-model="name" id="wh2ws_name" type="text" class="form-control"
-                                                   placeholder="Enter here">
+    {% if permission.available_bridges.ab2 %}
+        <div class="modal fade" id="wh2ws" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">WebHook to WebSocket</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="websocket-panel">
+                            <div class="change-password">
+                                <form id="wh2ws_form">
+                                    <div class="left-panel">
+                                        <div class="form-group formate-section name-formate">
+                                            <div class="name-formate-div">
+                                                <label>Name</label>
+                                                <input v-model="name" id="wh2ws_name" type="text" class="form-control"
+                                                       placeholder="Enter here">
+                                            </div>
+                                            <a href="#" v-on:click="on_format" class="formate blue-bg"
+                                               data-toggle="modal" data-target="#formate">Format</a>
                                         </div>
-                                        <a href="#" v-on:click="on_format" class="formate blue-bg" data-toggle="modal"
-                                           data-target="#formate">Format</a>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>WebHook Address</label>
-                                        <div class="copybutton">
-                                            <input v-model="wh_address" type="text" class="form-control"
-                                                   placeholder="Enter here" readonly>
-                                            <div v-on:click="on_copy_wh" class="copy-icon integration-checklist__copy-button">
-                                                <img src="{% static "img/icons/copy.png" %}">
+                                        <div class="form-group">
+                                            <label>WebHook Address</label>
+                                            <div class="copybutton">
+                                                <input v-model="wh_address" type="text" class="form-control"
+                                                       placeholder="Enter here" readonly>
+                                                <div v-on:click="on_copy_wh"
+                                                     class="copy-icon integration-checklist__copy-button">
+                                                    <img src="{% static "img/icons/copy.png" %}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>WebSocket Address</label>
+                                            <div class="copybutton">
+                                                <input v-model="ws_address" type="text" class="form-control"
+                                                       placeholder="Enter here" readonly>
+                                                <div v-on:click="on_copy_ws"
+                                                     class="copy-icon integration-checklist__copy-button">
+                                                    <img class="integration-checklist__copy-button"
+                                                         src="{% static "img/icons/copy.png" %}">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label>WebSocket Address</label>
-                                        <div class="copybutton">
-                                            <input v-model="ws_address" type="text" class="form-control"
-                                                   placeholder="Enter here" readonly>
-                                            <div v-on:click="on_copy_ws" class="copy-icon integration-checklist__copy-button">
-                                                <img class="integration-checklist__copy-button" src="{% static "img/icons/copy.png" %}">
-                                            </div>
-                                        </div>
+                                    <div class="right-button-panel example">
+                                        <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
+                                        <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
+                                        <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
                                     </div>
-                                </div>
-                                <div class="right-button-panel example">
-                                    <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
-                                    <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
-                                    <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 
-    <div class="formate-popup modal fade" id="formate" role="dialog" aria-labelledby="exampleModalCenterTitle"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered format-modal" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Format</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="websocket-panel">
-                        <div class="change-password">
-                            <form id="format_form">
-                                <div class="left-panel">
-                                    <div class="form-section">
-                                        <label>Comma delimited search words</label>
-                                        <div class="data-formate-section formate-section remember-forgot">
-                                            <input v-model="search_word" id="search_word" type="text"
-                                                   class="form-control"
-                                                   placeholder="Enter here">
-                                            <div class="form-group remember-check">
-                                                <input v-model="any" v-on:click="on_check_any" type="checkbox" id="any">
-                                                <label for="any">Any</label>
+    {% if permission.available_bridges.ab1 or permission.available_bridges.ab2 %}
+        <div class="formate-popup modal fade" id="formate" role="dialog" aria-labelledby="exampleModalCenterTitle"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered format-modal" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Format</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="websocket-panel">
+                            <div class="change-password">
+                                <form id="format_form">
+                                    <div class="left-panel">
+                                        <div class="form-section">
+                                            <label>Comma delimited search words</label>
+                                            <div class="data-formate-section formate-section remember-forgot">
+                                                <input v-model="search_word" id="search_word" type="text"
+                                                       class="form-control" placeholder="Enter here">
+                                                <div class="form-group remember-check">
+                                                    <input v-model="any" v-on:click="on_check_any" type="checkbox"
+                                                           id="any">
+                                                    <label for="any">Any</label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <input v-model="replace_word" type="text" class="form-control"
-                                               placeholder="Enter here">
-                                    </div>
-                                </div>
-                                <div class="right-button-section">
-                                    <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
-                                    <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
-                                    <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="ws2api" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">WebSocket to API</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="websocket-panel">
-                        <div class="change-password">
-                            <form id="ws2api_form">
-                                <div class="left-panel">
-                                    <div class="form-group formate-section name-formate">
-                                        <div class="name-formate-div">
-                                            <label>Name</label>
-                                            <input v-model="name" id="ws2api_name" type="text" class="form-control"
+                                        <div class="form-group">
+                                            <input v-model="replace_word" type="text" class="form-control"
                                                    placeholder="Enter here">
                                         </div>
-                                        <div class="frequency-dropdown">
-                                            <label>Frequency</label>
-                                            <select v-model="frequency" class="selectpicker form-control"
-                                                    data-dropup-auto="false" data-size="4">
-                                                {% for f in frequency %}
-                                                    <option value={{ f.second }}>{{ f.name }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label>WebSocket Address</label>
-                                        <input v-model="ws_address" id="ws2api_ws_address" type="text"
-                                               class="form-control"
-                                               placeholder="Enter here">
+                                    <div class="right-button-section">
+                                        <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
+                                        <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
+                                        <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
                                     </div>
-                                    <div class="form-group">
-                                        <label>API Feed</label>
-                                        <div class="copybutton">
-                                            <input v-model="api_feed" type="text" class="form-control"
-                                                   placeholder="Enter here" readonly>
-                                            <div v-on:click="on_copy_api" class="copy-icon integration-checklist__copy-button">
-                                                <img src="{% static "img/icons/copy.png" %}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="right-button-panel example">
-                                    <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
-                                    <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
-                                    <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 
-    <div class="modal fade" id="api2ws" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">API to WebSocket</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="websocket-panel">
-                        <div class="change-password">
-                            <form id="api2ws_form">
-                                <div class="left-panel">
-                                    <div class="form-group formate-section name-formate">
-                                        <div class="name-formate-div">
-                                            <label>Name</label>
-                                            <input v-model="name" id="api2ws_name" type="text" class="form-control"
-                                                   placeholder="Enter here">
+    {% if permission.available_bridges.ab3 %}
+        <div class="modal fade" id="ws2api" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">WebSocket to API</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="websocket-panel">
+                            <div class="change-password">
+                                <form id="ws2api_form">
+                                    <div class="left-panel">
+                                        <div class="form-group formate-section name-formate">
+                                            <div class="name-formate-div">
+                                                <label>Name</label>
+                                                <input v-model="name" id="ws2api_name" type="text" class="form-control"
+                                                       placeholder="Enter here">
+                                            </div>
+                                            <div class="frequency-dropdown">
+                                                <label>Frequency</label>
+                                                <select v-model="frequency" class="selectpicker form-control"
+                                                        data-dropup-auto="false" data-size="4">
+                                                    {% for f in frequency %}
+                                                        <option value={{ f.second }}>{{ f.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div class="frequency-dropdown">
-                                            <label>Frequency</label>
-                                            <select v-model="frequency" class="selectpicker form-control"
-                                                    data-dropup-auto="false" data-size="4">
-                                                {% for f in frequency %}
-                                                    <option value={{ f.second }}>{{ f.name }}</option>
-                                                {% endfor %}
-                                            </select>
+                                        <div class="form-group">
+                                            <label>WebSocket Address</label>
+                                            <input v-model="ws_address" id="ws2api_ws_address" type="text"
+                                                   class="form-control" placeholder="Enter here">
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>API Feed</label>
-                                        <input v-model="api_feed" id="api2ws_api_feed" type="text"
-                                               class="form-control" placeholder="Enter here">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>WebSocket Address</label>
-                                        <div class="copybutton">
-                                            <input v-model="ws_address" type="text" class="form-control"
-                                                   placeholder="Enter here" readonly>
-                                            <div v-on:click="on_copy_ws" class="copy-icon integration-checklist__copy-button">
-                                                <img src="{% static "img/icons/copy.png" %}">
+                                        <div class="form-group">
+                                            <label>API Feed</label>
+                                            <div class="copybutton">
+                                                <input v-model="api_feed" type="text" class="form-control"
+                                                       placeholder="Enter here" readonly>
+                                                <div v-on:click="on_copy_api"
+                                                     class="copy-icon integration-checklist__copy-button">
+                                                    <img src="{% static "img/icons/copy.png" %}">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div v-on:click="on_download_html" class="html-button">
-                                        <img src="{% static "img/icons/drop-black.png" %}">
-                                        <span>HTML</span>
+                                    <div class="right-button-panel example">
+                                        <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
+                                        <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
+                                        <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
                                     </div>
-                                </div>
-                                <div class="right-button-panel example">
-                                    <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
-                                    <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
-                                    <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    {% endif %}
+
+    {% if permission.available_bridges.ab4 %}
+        <div class="modal fade" id="api2ws" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">API to WebSocket</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="websocket-panel">
+                            <div class="change-password">
+                                <form id="api2ws_form">
+                                    <div class="left-panel">
+                                        <div class="form-group formate-section name-formate">
+                                            <div class="name-formate-div">
+                                                <label>Name</label>
+                                                <input v-model="name" id="api2ws_name" type="text" class="form-control"
+                                                       placeholder="Enter here">
+                                            </div>
+                                            <div class="frequency-dropdown">
+                                                <label>Frequency</label>
+                                                <select v-model="frequency" class="selectpicker form-control"
+                                                        data-dropup-auto="false" data-size="4">
+                                                    {% for f in frequency %}
+                                                        <option value={{ f.second }}>{{ f.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>API Feed</label>
+                                            <input v-model="api_feed" id="api2ws_api_feed" type="text"
+                                                   class="form-control" placeholder="Enter here">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>WebSocket Address</label>
+                                            <div class="copybutton">
+                                                <input v-model="ws_address" type="text" class="form-control"
+                                                       placeholder="Enter here" readonly>
+                                                <div v-on:click="on_copy_ws"
+                                                     class="copy-icon integration-checklist__copy-button">
+                                                    <img src="{% static "img/icons/copy.png" %}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div v-on:click="on_download_html" class="html-button">
+                                            <img src="{% static "img/icons/drop-black.png" %}">
+                                            <span>HTML</span>
+                                        </div>
+                                    </div>
+                                    <div class="right-button-panel example">
+                                        <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
+                                        <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
+                                        <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
     <div class="modal fade" id="docmodel" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
@@ -695,8 +718,8 @@
                 }
             },
             watch: {
-                name: function(cur_val, prev_val) {
-                    if (cur_Val.length > 64)
+                name: function (cur_val, prev_val) {
+                    if (cur_val.length > 64)
                         this.name = prev_val;
                 },
                 ws_address: function (cur_val, prev_val) {
@@ -780,7 +803,7 @@
                 }
             },
             watch: {
-                name: function(cur_val, prev_val) {
+                name: function (cur_val, prev_val) {
                     if (cur_val.length > 64)
                         this.name = prev_val;
                 }
@@ -865,7 +888,7 @@
                 },
             },
             watch: {
-                name: function(cur_val, prev_val) {
+                name: function (cur_val, prev_val) {
                     if (cur_val.length > 64)
                         this.name = prev_val;
                 },
@@ -946,7 +969,7 @@
                 }
             },
             watch: {
-                name: function(cur_val, prev_val) {
+                name: function (cur_val, prev_val) {
                     if (cur_val.length > 64)
                         this.name = prev_val;
                 },
@@ -981,7 +1004,7 @@
         function save_bridge(bridge_info) {
 
             $.ajax({
-                url: 'save_bridge',
+                url: '{% url 'save_bridge' %}',
                 type: 'POST',
                 data: bridge_info,
                 success: function (res) {
@@ -989,7 +1012,7 @@
                         swal({
                                 title: "Saved!",
                                 text: "Your bridge saved successfully!",
-                                type: "info",
+                                type: "success",
                                 showSweetAlert: true,
                                 confirmButtonColor: '#AEDEF4',
                                 confirmButtonText: 'Show Bridges',
@@ -997,7 +1020,7 @@
                             },
                             function (isConfirm) {
                                 if (isConfirm) {
-                                    window.location.href = 'data_bridges';
+                                    window.location.href = '{% url 'data_bridges' %}';
                                 }
                             });
                     } else {
@@ -1096,7 +1119,7 @@
         function open_report_modal(bridge_id) {
 
             $.ajax({
-                url: 'report_bridge',
+                url: '{% url 'report_bridge' %}',
                 type: 'POST',
                 data: {
                     'id': bridge_id
@@ -1160,7 +1183,7 @@
                 function (isConfirm) {
                     if (isConfirm) {
                         $.ajax({
-                            url: 'power_bridge',
+                            url: '{% url 'power_bridge' %}',
                             type: 'POST',
                             data: {
                                 'id': bridge_id,
@@ -1179,7 +1202,7 @@
                                         },
                                         function (isConfirm) {
                                             if (isConfirm) {
-                                                window.location.href = 'data_bridges';
+                                                window.location.href = '{% url 'data_bridges' %}';
                                             }
                                         });
                                 } else {
@@ -1211,7 +1234,7 @@
                     function (isConfirm) {
                         if (isConfirm) {
                             $.ajax({
-                                url: 'delete_bridge',
+                                url: '{% url 'delete_bridge' %}',
                                 type: 'POST',
                                 data: {
                                     'id': bridge_id,
@@ -1229,7 +1252,7 @@
                                             },
                                             function (isConfirm) {
                                                 if (isConfirm) {
-                                                    window.location.href = 'data_bridges';
+                                                    window.location.href = '{% url 'data_bridges' %}';
                                                 }
                                             });
                                     } else {

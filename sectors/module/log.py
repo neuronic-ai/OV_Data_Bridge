@@ -4,12 +4,10 @@ from threading import Lock
 from zipfile import ZIP_DEFLATED, ZipFile
 from datetime import datetime
 
-from . import common
-
-from sectors.common import admin_config
+from sectors.common import admin_config, common
 
 from db.models import (
-    TBLLog,
+    TBLLog
 )
 
 
@@ -21,7 +19,8 @@ class BridgeLog:
     def __init__(self, bridge_info):
         self.bridge_info = bridge_info
 
-        self.log_file = open(f"{admin_config.BRIDGE_LOG_PATH}/bridge_{bridge_info['id']}.log", 'a')
+        self.log_file_name = f"{admin_config.BRIDGE_LOG_PATH}/{admin_config.BRIDGE_LOG_PREFIX}_{bridge_info['id']}.log"
+        self.log_file = open(self.log_file_name, 'a')
 
         self.quantity = 0
         self.mutex = Lock()
@@ -31,6 +30,9 @@ class BridgeLog:
             self.zip_file_name = log.filename
         except:
             self.add_new_log()
+
+    def close(self):
+        self.log_file.close()
 
     def add_new_log(self):
         self.zip_file_name = f'{common.generate_random_string()}.zip'
@@ -45,13 +47,13 @@ class BridgeLog:
         last_log = []
 
         try:
-            fname = f"{admin_config.BRIDGE_LOG_PATH}/bridge_{self.bridge_info['id']}.log"
+            f_name = self.log_file_name
 
             step_size = 2048
-            file_size = os.stat(fname).st_size
+            file_size = os.stat(f_name).st_size
             iter = 0
 
-            with open(fname) as file:
+            with open(f_name) as file:
                 if step_size > file_size:
                     move_buf_size = file_size - 1
                 else:

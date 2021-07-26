@@ -1,3 +1,4 @@
+import json
 import time
 import _thread as thread
 
@@ -6,7 +7,8 @@ from . import ws2wh, wh2ws
 from sectors.common import error
 
 from db.models import (
-    TBLBridge,
+    TBLUser,
+    TBLBridge
 )
 
 
@@ -90,6 +92,7 @@ class BridgeQueue:
             if b_obj['id'] == bridge_id:
                 if b_obj['status']:
                     b_obj['obj'].close()
+                b_obj['obj'].close_log()
                 self.bridges_obj.remove(b_obj)
                 return True, error.SUCCESS
 

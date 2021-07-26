@@ -10,7 +10,7 @@ from . import common, log
 from sectors.common import admin_config
 
 from db.models import (
-    TBLBridge,
+    TBLBridge
 )
 
 
@@ -43,6 +43,9 @@ class Bridge:
                                              on_close=self.on_close)
         if not self.connection_status:
             thread.start_new_thread(self.run_forever, ())
+
+    def close_log(self):
+        self.log.close()
 
     def close(self):
         self.connection_status = False

@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class TBLUser(AbstractUser):
+    reset_link = models.CharField(max_length=255, default='')
     permission = models.TextField(blank=True, null=True)
 
     class Meta:
@@ -44,3 +45,15 @@ class TBLLog(models.Model):
 
     class Meta:
         db_table = 'TBLLOG'
+
+
+class TBLSetting(models.Model):
+    server_setting = models.TextField(blank=True, null=True)
+    max_active_bridges = models.IntegerField(default=0)
+    rate_limit_per_url = models.IntegerField(default=0)
+    allowed_frequency = models.TextField(blank=True, null=True)
+    available_bridges = models.TextField(blank=True, null=True)
+    smtp_setting = models.TextField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'TBLSETTING'

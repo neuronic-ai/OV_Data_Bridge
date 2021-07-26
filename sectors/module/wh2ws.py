@@ -7,7 +7,7 @@ from . import common, log
 from sectors.common import admin_config
 
 from db.models import (
-    TBLBridge,
+    TBLBridge
 )
 
 
@@ -29,7 +29,11 @@ class Bridge:
         self.connection_text = 'WH:Open - Ready'
         self.add_cache(self.connection_text)
 
+    def close_log(self):
+        self.log.close()
+
     def close(self):
+        self.log.close()
         self.connection_status = False
         self.connection_text = f'WH:Closed'
         self.add_cache(self.connection_text)
