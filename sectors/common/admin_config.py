@@ -1,6 +1,7 @@
 import config.settings.base as base
 
-HOST_URL = 'http://127.0.0.1:8000/'
+# HOST_URL = 'http://127.0.0.1:8000/'
+HOST_URL = 'http://http://35.193.25.247/'
 TRACE_MODE = True
 DELETE_LOG_AFTER_BRIDGE_DELETED = True
 
