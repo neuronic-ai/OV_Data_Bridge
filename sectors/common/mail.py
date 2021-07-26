@@ -12,6 +12,7 @@ from db.models import (
 
 def test_smtp(request, smtp_setting):
     try:
+        print(smtp_setting)
         s = smtplib.SMTP(host=smtp_setting['smtp_server_name'], port=int(smtp_setting['smtp_port']))
         s.ehlo()
         if smtp_setting['smtp_enable_starttls']:
