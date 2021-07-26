@@ -264,12 +264,14 @@
                         url: '{% url 'test_smtp' %}',
                         type: 'POST',
                         data: {
-                            'smtp_server_name': setting_vue.smtp_server_name,
-                            'smtp_port': setting_vue.smtp_port,
-                            'smtp_authentication': setting_vue.smtp_authentication,
-                            'smtp_enable_starttls': setting_vue.smtp_enable_starttls,
-                            'smtp_username': setting_vue.smtp_username,
-                            'smtp_password': setting_vue.smtp_password
+                            'smtp_setting': JSON.stringify({
+                                'smtp_server_name': setting_vue.smtp_server_name,
+                                'smtp_port': setting_vue.smtp_port,
+                                'smtp_authentication': setting_vue.smtp_authentication,
+                                'smtp_enable_starttls': setting_vue.smtp_enable_starttls,
+                                'smtp_username': setting_vue.smtp_username,
+                                'smtp_password': setting_vue.smtp_password
+                            })
                         },
                         success: function (res) {
                             if (res.status_code === 200) {
