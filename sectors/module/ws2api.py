@@ -44,7 +44,6 @@ class Bridge:
             if count >= self.REDIS_CACHE_TTL:
                 try:
                     cache.set(self.REDIS_CACHE_ID, self.REDIS_QUEUE, timeout=self.REDIS_CACHE_TTL + 1)
-                    print(cache.get(self.REDIS_CACHE_ID))
                     self.add_cache(f'REDIS QUEUE:Update - {self.REDIS_QUEUE}')
                     self.REDIS_QUEUE = []
                     count = 0
