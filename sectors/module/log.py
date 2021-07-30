@@ -55,7 +55,7 @@ class BridgeLog:
 
             with open(f_name) as file:
                 if step_size > file_size:
-                    move_buf_size = file_size - 1
+                    move_buf_size = file_size
                 else:
                     move_buf_size = step_size
 
@@ -99,7 +99,8 @@ class BridgeLog:
             if self.quantity % admin_config.BRIDGE_LOG_ZIP_FREQUENCY == 0:
                 zip_filepath = f'{admin_config.BRIDGE_LOG_ZIP_PATH}/{self.zip_file_name}'
                 zip_obj = ZipFile(zip_filepath, 'w', ZIP_DEFLATED)
-                zip_obj.write(self.log_file.name)
+                head, tail = os.path.split(self.log_file.name)
+                zip_obj.write(self.log_file.name, tail)
                 zip_obj.close()
                 zip_size = os.path.getsize(zip_filepath)
 

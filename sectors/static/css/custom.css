@@ -732,7 +732,7 @@ input.form-control {
     background: #00000038;
 }*/
 
-input.form-control:focus {
+.modal input.form-control:focus {
     border-bottom: 1.5px solid #004288;
 }
 
@@ -936,6 +936,10 @@ a.term-services {
 }
 
 .col-lg-6 input.form-control {
+    height: calc(1.5em + 10px + 0px);
+}
+
+.profile-page input.form-control {
     height: calc(1.5em + 10px + 0px);
 }
 
@@ -1757,7 +1761,7 @@ a.grey-bg {
 }
 
 #docmodel .WebSocket-modal {
-    max-width: 1200px;
+    max-width: 1280px;
 }
 
 #docmodel .file-list-div .down-btn {
@@ -1939,6 +1943,10 @@ section#home {
 }
 
 .edit-user input:focus {
+    border-bottom: 1.5px solid #004288;
+}
+
+.profile-page input:focus {
     border-bottom: 1.5px solid #004288;
 }
 

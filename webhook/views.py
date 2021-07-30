@@ -1,3 +1,5 @@
+from rest_framework.decorators import api_view
+from rest_framework import status
 from django.http import JsonResponse
 import time
 
@@ -8,15 +10,16 @@ from db.models import (
 )
 
 
+@api_view(['POST'])
 def process_webhook(request, param1, param2):
     try:
         bridge = TBLBridge.objects.get(src_address__icontains=request.path, is_active=True)
     except:
         time.sleep(admin_config.DELAY_FOR_BAD_REQUEST)
         return JsonResponse({
-            'status_code': 401,
+            'status_code': status.HTTP_400_BAD_REQUEST,
             'text': error.INVALID_URL
-        })
+        }, status=status.HTTP_400_BAD_REQUEST)
 
     if isinstance(request.body, bytes):
         message = request.body.decode()
@@ -27,4 +30,4 @@ def process_webhook(request, param1, param2):
 
     admin_config.BRIDGE_HANDLE.send_message(bridge.id, message)
 
-    return JsonResponse({}, status=204)
+    return JsonResponse({}, status=status.HTTP_204_NO_CONTENT)

@@ -2,7 +2,7 @@ import json
 import time
 import _thread as thread
 
-from . import ws2wh, wh2ws
+from . import ws2wh, wh2ws, ws2api, api2ws
 
 from sectors.common import error
 
@@ -32,9 +32,11 @@ class BridgeQueue:
             b_obj = wh2ws.Bridge(bridge_info)
             b_obj.open()
         elif bridge_info['type'] == 3:  # ws2api
-            b_obj = None
+            b_obj = ws2api.Bridge(bridge_info)
+            b_obj.open()
         elif bridge_info['type'] == 4:  # api2ws
-            b_obj = None
+            b_obj = api2ws.Bridge(bridge_info)
+            b_obj.open()
         else:
             return False, error.UNKNOWN_BRIDGE_TYPE
 
@@ -111,12 +113,4 @@ class BridgeQueue:
         for b_obj in self.bridges_obj:
             if b_obj['id'] == bridge_id:
                 b_obj['obj'].send_message(message)
-                break
-
-    # for wh2ws, api2ws
-    def notify_connection(self, bridge_id, status, text):
-        for b_obj in self.bridges_obj:
-            if b_obj['id'] == bridge_id:
-                b_obj['obj'].notify_connection(status, text)
-                b_obj['status'] = status
                 break

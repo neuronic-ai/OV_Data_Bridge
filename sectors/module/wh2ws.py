@@ -13,7 +13,7 @@ from db.models import (
 
 class Bridge:
     """
-    WebSocket to WebHook Data Bridge
+    WebHook to WebSocket Data Bridge
     """
 
     def __init__(self, bridge_info):
