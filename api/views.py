@@ -52,7 +52,9 @@ def process_api(request, param1, param2):
         }, status=status.HTTP_400_BAD_REQUEST)
 
     redis_cache_id = f'{admin_config.BRIDGE_REDIS_CACHE_PREFIX}_{bridge.id}'
+    print(redis_cache_id)
     if redis_cache_id in cache:
+        print('exist')
         data = cache.get(redis_cache_id)
     else:
         data = []
