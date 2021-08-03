@@ -1001,18 +1001,6 @@ a.term-services {
     font-weight: 400;
 }
 
-.showSweetAlert:after {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background-image: url(../img/icons/sweetalert.png);
-    top: 15px;
-    background-repeat: no-repeat;
-    right: 10px;
-    cursor: pointer;
-}
-
 .copy-icon img {
     width: 20px;
     position: absolute;
