@@ -1,7 +1,7 @@
 import config.settings.base as base
 
 # HOST_URL = 'http://127.0.0.1:8000/'
-HOST_URL = 'http://35.193.25.247/'
+HOST_URL = 'https://bridge.vantagecrypto.com/'
 TRACE_MODE = False
 DELETE_LOG_AFTER_BRIDGE_DELETED = True
 
@@ -13,6 +13,7 @@ DELAY_FOR_BAD_REQUEST = 0.5  # second
 BRIDGE_CONSUMER_PREFIX = 'bridge'
 BRIDGE_LOG_PREFIX = 'bridge'
 BRIDGE_REDIS_CACHE_PREFIX = 'bridge'
+RATE_LIMIT_REDIS_CACHE_PREFIX = 'rate_limit'
 
 BRIDGE_LOG_PATH = f'{base.BASE_DIR}/log'
 BRIDGE_LOG_ZIP_PATH = f'{base.BASE_DIR}/sectors/static/log_zip'

@@ -9,6 +9,7 @@ UNKNOWN_BRIDGE_TYPE = 'Unknown Bridge Type'
 
 PERMISSION_NOT_ALLOWED = 'Permission not allowed.'
 MAX_ACTIVE_BRIDGES_EXCEED = 'Max active bridges exceed.'
+RATE_LIMIT_PER_URL_EXCEED = 'Rate limit per url exceed.'
 INVALID_URL = 'Invalid URL.'
 
 SMTP_SETTING_NOT_AVAILABLE = 'SMTP setting not available.'
