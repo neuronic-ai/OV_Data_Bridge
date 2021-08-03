@@ -39,7 +39,7 @@ class Bridge:
             if count == 0 or count >= self.REDIS_CACHE_TTL:
                 try:
                     self.add_cache(f"API:Call - {self.bridge_info['src_address']}")
-                    res = requests.get(self.bridge_info['src_address'])
+                    res = requests.get(self.bridge_info['src_address'], verify=False)
                     try:
                         cache.set(self.REDIS_CACHE_ID, res.json(), timeout=self.REDIS_CACHE_TTL)
                         self.add_cache(f'REDIS QUEUE:Update - {res.json()}')
