@@ -504,11 +504,11 @@
 
 {% block javascript %}
     <script>
-        /*
+    /*
         var socket;
         $(document).ready(function () {
 
-            socket = new WebSocket('ws://' + window.location.host + '/websocket/r7frydsdlz/bc1wo9slwfvcz0xq05s8');
+            socket = new WebSocket('ws://127.0.0.1:8000/websocket/49n9esjfl5/bkraus9prj7kgztg0c73');
 
             socket.onmessage = function (e) {
                 console.log(e);
@@ -526,8 +526,7 @@
                 console.log("connection closed");
                 console.log(e);
             };
-        });
-         */
+        });*/
 
         var i;
         var g_bridges_info = {{ bridges_info|safe }};
@@ -592,8 +591,8 @@
                             showCancelButton: true,
                             showSweetAlert: true,
                             confirmButtonColor: '#C50101',
-                            confirmButtonText: 'Yes, delete it!',
-                            cancelButtonText: 'No, cancel plx!',
+                            confirmButtonText: 'Delete',
+                            cancelButtonText: 'Cancel',
                             closeOnConfirm: true,
                             closeOnCancel: true
                         },
@@ -613,8 +612,8 @@
                             showCancelButton: true,
                             showSweetAlert: true,
                             confirmButtonColor: '#E0CA00',
-                            confirmButtonText: 'Yes, reset it!',
-                            cancelButtonText: 'No, cancel plx!',
+                            confirmButtonText: 'Reset',
+                            cancelButtonText: 'Cancel',
                             closeOnConfirm: true,
                             closeOnCancel: true
                         },
@@ -685,8 +684,8 @@
                             showCancelButton: true,
                             showSweetAlert: true,
                             confirmButtonColor: '#E0CA00',
-                            confirmButtonText: 'Yes, reset it!',
-                            cancelButtonText: 'No, cancel plx!',
+                            confirmButtonText: 'Reset',
+                            cancelButtonText: 'Cancel',
                             closeOnConfirm: true,
                             closeOnCancel: true
                         },
@@ -772,8 +771,8 @@
                             showCancelButton: true,
                             showSweetAlert: true,
                             confirmButtonColor: '#E0CA00',
-                            confirmButtonText: 'Yes, reset it!',
-                            cancelButtonText: 'No, cancel plx!',
+                            confirmButtonText: 'Reset',
+                            cancelButtonText: 'Cancel',
                             closeOnConfirm: true,
                             closeOnCancel: true
                         },
@@ -858,8 +857,8 @@
                             showCancelButton: true,
                             showSweetAlert: true,
                             confirmButtonColor: '#E0CA00',
-                            confirmButtonText: 'Yes, reset it!',
-                            cancelButtonText: 'No, cancel plx!',
+                            confirmButtonText: 'Reset',
+                            cancelButtonText: 'Cancel',
                             closeOnConfirm: true,
                             closeOnCancel: true
                         },
@@ -935,8 +934,8 @@
                             showCancelButton: true,
                             showSweetAlert: true,
                             confirmButtonColor: '#E0CA00',
-                            confirmButtonText: 'Yes, reset it!',
-                            cancelButtonText: 'No, cancel plx!',
+                            confirmButtonText: 'Reset',
+                            cancelButtonText: 'Cancel',
                             closeOnConfirm: true,
                             closeOnCancel: true
                         },
@@ -1172,22 +1171,22 @@
             is_active = parseInt(is_active);
 
             if (is_active) {
-                msg = 'off';
+                msg = 'Disable';
                 color = '#C50101';
             } else {
-                msg = 'on';
+                msg = 'Enable';
                 color = '#01C579';
             }
 
             swal({
                     title: 'Are you sure?',
-                    text: 'Your want to turn ' + msg + ' this bridge?',
+                    text: 'Your want to ' + msg.toLowerCase() + ' this bridge?',
                     type: 'warning',
                     showCancelButton: true,
                     showSweetAlert: true,
                     confirmButtonColor: color,
-                    confirmButtonText: 'Yes, turn ' + msg + '!',
-                    cancelButtonText: 'No, cancel plx!',
+                    confirmButtonText: msg,
+                    cancelButtonText: 'Cancel',
                     closeOnConfirm: false,
                     closeOnCancel: true,
                     showLoaderOnConfirm: true
@@ -1204,8 +1203,8 @@
                             success: function (res) {
                                 if (res.status_code === 200) {
                                     swal({
-                                            title: 'Turned ' + msg + '!',
-                                            text: 'Your bridge has been turned ' + msg + '!',
+                                            title: msg + 'd!',
+                                            text: 'Your bridge has been ' + msg.toLowerCase() + 'd!',
                                             type: 'info',
                                             showSweetAlert: true,
                                             confirmButtonColor: '#AEDEF4',
@@ -1238,8 +1237,8 @@
                         showCancelButton: true,
                         showSweetAlert: true,
                         confirmButtonColor: '#C50101',
-                        confirmButtonText: 'Yes, delete it!',
-                        cancelButtonText: 'No, cancel plx!',
+                        confirmButtonText: 'Delete',
+                        cancelButtonText: 'Cancel',
                         closeOnConfirm: false,
                         closeOnCancel: true
                     },

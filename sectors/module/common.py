@@ -27,10 +27,11 @@ def get_formatted_content(message, bridge_info):
                     break
 
         if replaceable:
-            try:
-                content = json.loads(replace_word)
-            except:
-                content = {'content': replace_word}
+            if replace_word:
+                try:
+                    content = json.loads(replace_word)
+                except:
+                    content = {'content': replace_word}
     else:
         replaceable = True
 

@@ -34,12 +34,18 @@ def run_module(request):
 
 # Test function
 def send_message(request, param1, param2):
-    admin_config.BRIDGE_HANDLE.send_message(param1, param2)
+    res = admin_config.BRIDGE_HANDLE.send_message(param1, param2)
 
-    return JsonResponse({
-        'status_code': status.HTTP_200_OK,
-        'text': 'Sent'
-    }, status=status.HTTP_200_OK)
+    if res:
+        return JsonResponse({
+            'status_code': status.HTTP_200_OK,
+            'text': 'Sent'
+        }, status=status.HTTP_200_OK)
+    else:
+        return JsonResponse({
+            'status_code': status.HTTP_406_NOT_ACCEPTABLE,
+            'text': 'No Bridge or Inactive'
+        }, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
 @api_view(['GET'])

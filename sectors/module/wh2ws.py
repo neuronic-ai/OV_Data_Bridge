@@ -23,6 +23,7 @@ class Bridge:
         self.connection_text = 'Waiting for connect'
         self.log = log.BridgeLog(bridge_info)
         self.cache = self.log.get_last_log()
+        self.ws_clients = []
 
     def open(self):
         self.connection_status = True
@@ -44,6 +45,12 @@ class Bridge:
 
         return self.connection_status
 
+    def add_ws_client(self, ws_id):
+        self.ws_clients.append(ws_id)
+
+    def remove_ws_client(self, ws_id):
+        self.ws_clients.remove(ws_id)
+
     def send_message(self, message):
         self.add_cache(f'WH:Recv - {message}')
         try:
@@ -51,7 +58,8 @@ class Bridge:
             if replaceable:
                 self.add_cache(f'WS:Send - {content}')
 
-                common.send_ws_message(f"{admin_config.BRIDGE_CONSUMER_PREFIX}_{self.bridge_info['id']}", content)
+                for ws_id in self.ws_clients:
+                    common.send_ws_message(ws_id, content)
 
                 bridge = TBLBridge.objects.get(id=self.bridge_info['id'])
                 bridge.api_calls += 1

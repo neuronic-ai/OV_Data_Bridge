@@ -26,6 +26,7 @@ class Bridge:
         self.connection_text = 'Waiting for connect'
         self.log = log.BridgeLog(bridge_info)
         self.cache = self.log.get_last_log()
+        self.ws_clients = []
 
         self.REDIS_CACHE_ID = f"{admin_config.BRIDGE_REDIS_CACHE_PREFIX}_{self.bridge_info['id']}"
         self.REDIS_CACHE_TTL = self.bridge_info['frequency']
@@ -74,6 +75,12 @@ class Bridge:
 
         return self.connection_status
 
+    def add_ws_client(self, ws_id):
+        self.ws_clients.append(ws_id)
+
+    def remove_ws_client(self, ws_id):
+        self.ws_clients.remove(ws_id)
+
     def send_message(self):
         if self.REDIS_CACHE_ID in cache:
             message = cache.get(self.REDIS_CACHE_ID)
@@ -84,7 +91,8 @@ class Bridge:
         try:
             self.add_cache(f'WS:Send - {message}')
 
-            common.send_ws_message(f"{admin_config.BRIDGE_CONSUMER_PREFIX}_{self.bridge_info['id']}", message)
+            for ws_id in self.ws_clients:
+                common.send_ws_message(ws_id, message)
 
             bridge = TBLBridge.objects.get(id=self.bridge_info['id'])
             bridge.api_calls += 1

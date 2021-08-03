@@ -205,7 +205,6 @@ def delete_bridge(request):
         if bridge.user_id == request.user.id:
             bridge.delete()
             admin_config.BRIDGE_HANDLE.remove_bridge_by_id(bridge_id)
-
             delete_bridge_log(request, bridge_id)
 
             return JsonResponse({
@@ -411,6 +410,7 @@ def delete_user(request):
             bridges_info = list(TBLBridge.objects.filter(user_id=user_id).values('id'))
             for bi in bridges_info:
                 admin_config.BRIDGE_HANDLE.remove_bridge_by_id(bi['id'])
+                delete_bridge_log(request, bi['id'])
 
             user = TBLUser.objects.get(id=user_id)
             user.delete()

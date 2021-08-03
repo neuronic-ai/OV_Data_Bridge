@@ -1,4 +1,3 @@
-import json
 import time
 import _thread as thread
 
@@ -7,7 +6,6 @@ from . import ws2wh, wh2ws, ws2api, api2ws
 from sectors.common import error
 
 from db.models import (
-    TBLUser,
     TBLBridge
 )
 
@@ -111,6 +109,20 @@ class BridgeQueue:
 
     def send_message(self, bridge_id, message):
         for b_obj in self.bridges_obj:
-            if b_obj['id'] == bridge_id:
+            if b_obj['id'] == bridge_id and b_obj['status']:
                 b_obj['obj'].send_message(message)
+                return True
+
+        return False
+
+    def add_ws_client(self, bridge_id, ws_id):
+        for b_obj in self.bridges_obj:
+            if b_obj['id'] == bridge_id and b_obj['status']:
+                b_obj['obj'].add_ws_client(ws_id)
+                break
+
+    def remove_ws_client(self, bridge_id, ws_id):
+        for b_obj in self.bridges_obj:
+            if b_obj['id'] == bridge_id and b_obj['status']:
+                b_obj['obj'].remove_ws_client(ws_id)
                 break
