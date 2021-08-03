@@ -504,29 +504,29 @@
 
 {% block javascript %}
     <script>
-    /*
-        var socket;
-        $(document).ready(function () {
+        /*
+            var socket;
+            $(document).ready(function () {
 
-            socket = new WebSocket('ws://127.0.0.1:8000/websocket/49n9esjfl5/bkraus9prj7kgztg0c73');
+                socket = new WebSocket('ws://127.0.0.1:8000/websocket/49n9esjfl5/bkraus9prj7kgztg0c73');
 
-            socket.onmessage = function (e) {
-                console.log(e);
-            };
-            socket.onopen = function (e) {
-                console.log("connection opened");
-                console.log(e);
-                socket.send("asdfsadfasdf");
-            };
-            socket.onerror = function (e) {
-                console.log("connection error");
-                console.log(e);
-            };
-            socket.onclose = function (e) {
-                console.log("connection closed");
-                console.log(e);
-            };
-        });*/
+                socket.onmessage = function (e) {
+                    console.log(e);
+                };
+                socket.onopen = function (e) {
+                    console.log("connection opened");
+                    console.log(e);
+                    socket.send("asdfsadfasdf");
+                };
+                socket.onerror = function (e) {
+                    console.log("connection error");
+                    console.log(e);
+                };
+                socket.onclose = function (e) {
+                    console.log("connection closed");
+                    console.log(e);
+                };
+            });*/
 
         var i;
         var g_bridges_info = {{ bridges_info|safe }};
@@ -977,7 +977,73 @@
                 },
                 on_download_html: function () {
 
+                    var text = '<!DOCTYPE html>\n' +
+                        '<meta charset="utf-8" />\n' +
+                        '<title>WebSocket Test</title>\n' +
+                        '<script language="javascript" type="text/javascript">\n' +
+                        '\n' +
+                        'var wsUri = "' + this.ws_address + '";\n' +
+                        'var output;\n' +
+                        '\n' +
+                        'function init()\n' +
+                        '{\n' +
+                        '  output = document.getElementById("output");\n' +
+                        '  testWebSocket();\n' +
+                        '}\n' +
+                        '\n' +
+                        'function testWebSocket()\n' +
+                        '{\n' +
+                        '  websocket = new WebSocket(wsUri);\n' +
+                        '  websocket.onopen = function(evt) { onOpen(evt) };\n' +
+                        '  websocket.onclose = function(evt) { onClose(evt) };\n' +
+                        '  websocket.onmessage = function(evt) { onMessage(evt) };\n' +
+                        '  websocket.onerror = function(evt) { onError(evt) };\n' +
+                        '}\n' +
+                        '\n' +
+                        'function onOpen(evt)\n' +
+                        '{\n' +
+                        '  writeToScreen("CONNECTED to WebSocket");\n' +
+                        '}\n' +
+                        '\n' +
+                        'function onClose(evt)\n' +
+                        '{\n' +
+                        '  writeToScreen("DISCONNECTED");\n' +
+                        '}\n' +
+                        '\n' +
+                        'function onMessage(evt)\n' +
+                        '{\n' +
+                        '  writeToScreen(\'<span style="color: blue;">RESPONSE: \' + evt.data+\'</span>\');\n' +
+                        '}\n' +
+                        '\n' +
+                        'function onError(evt)\n' +
+                        '{\n' +
+                        '  writeToScreen(\'<span style="color: red;">ERROR:</span> \' + evt.data);\n' +
+                        '}\n' +
+                        '\n' +
+                        'function writeToScreen(message)\n' +
+                        '{\n' +
+                        '  var pre = document.createElement("p");\n' +
+                        '  pre.style.wordWrap = "break-word";\n' +
+                        '  pre.innerHTML = message;\n' +
+                        '  output.appendChild(pre);\n' +
+                        '}\n' +
+                        '\n' +
+                        'window.addEventListener("load", init, false);\n' +
+                        '</' + 'script>\n' +
+                        '\n' +
+                        '<h2>WebSocket Test</h2>\n' +
+                        '<div id="output"></div>' +
+                        '\n';
 
+                    var element = document.createElement('a');
+                    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                    element.setAttribute('download', 'wss.html');
+
+                    element.style.display = 'none';
+                    document.body.appendChild(element);
+
+                    element.click();
+                    document.body.removeChild(element);
                 }
             },
             watch: {
