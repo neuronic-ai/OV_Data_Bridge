@@ -153,7 +153,7 @@
                                 <span class="nav-link-text">Profile</span>
                             </a>
                         </li>
-                        {% if is_staff %}
+                        {% if is_superuser %}
                             <li class="nav-item">
                                 <a class="nav-link {% if page_name == 'user' %}active{% endif %}"
                                    href="{% url "user" %}">

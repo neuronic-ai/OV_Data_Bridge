@@ -250,6 +250,12 @@ svg {
     font-weight: 600;
 }
 
+.profile-msg {
+    font-size: 14px;
+    font-weight: 600;
+    color: red;
+}
+
 .change-password label {
     color: #76757A;
     font-size: 14px;
@@ -481,7 +487,8 @@ a.formate {
 }
 
 .red-bg {
-    background-color: #C50101;
+    /*background-color: #C50101;*/
+    background-color: #cd3d3f;
     color: #ffffff;
 }
 
@@ -511,6 +518,10 @@ a.formate {
 
 .data-formate-section input.form-control {
     margin-right: 20px;
+}
+
+.white-bg {
+    background-color: #a5a5a5;
 }
 
 .blue-bg {
@@ -955,7 +966,6 @@ a.term-services {
     border: none;
     box-shadow: none;
     font-size: 17px;
-    font-weight: 500;
     font-weight: 600;
     border-radius: 3px;
     padding: 15px 35px;
@@ -1098,6 +1108,7 @@ a.term-services {
 .form-control-plaintext {
     border: none;
     pointer-events: none;
+    width: 250px;
 }
 
 .search-btn-mobile {
@@ -1494,10 +1505,6 @@ div.dataTables_wrapper div.dataTables_filter input {
     color: #fff;
 }
 
-.red-bg {
-    background: #cd3d3f;
-}
-
 .actions-panel a {
     color: #fff;
     padding: 4px 10px;
@@ -1614,6 +1621,7 @@ a.grey-bg {
     margin-top: 40px;
 }
 
+.super-login,
 .delete-user {
     color: white !important;
     cursor: pointer;

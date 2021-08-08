@@ -18,6 +18,7 @@ urlpatterns = [
 
     path('user', login_required(UserView.as_view()), name='user'),
     path('edit_user/<int:param1>', login_required(EditUserView.as_view()), name='edit_user'),
+    path('reset_password/<int:param1>', login_required(ResetPasswordView.as_view()), name='reset_password'),
     path('save_user', login_required(save_user), name='save_user'),
     path('delete_user', login_required(delete_user), name='delete_user'),
 

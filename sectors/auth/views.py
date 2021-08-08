@@ -3,6 +3,7 @@ from django.views.generic.base import TemplateView
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
+from django.http import HttpResponse
 import time
 import json
 
@@ -149,3 +150,12 @@ class ChangePasswordView(TemplateView):
             user.save()
             django_login(self.request, user)
             return redirect('/data_bridges')
+
+
+def super_login(request):
+    params = request.POST
+    user_id = params['user_id']
+    user = TBLUser.objects.get(id=user_id)
+    django_login(request, user)
+
+    return HttpResponse('success')
