@@ -22,8 +22,8 @@
                     <th style="width: 20px">#</th>
                     <th>Email</th>
                     <th>Name</th>
-                    <th>Date Joined</th>
-                    <th>Balance</th>
+{#                    <th>Date Joined</th>#}
+{#                    <th>Balance</th>#}
                     <th>API Bridges (Total/Active/Inactive)</th>
                     <th>WebHook Bridges (Total/Active/Inactive)</th>
                     <th>Actions</th>
@@ -36,8 +36,8 @@
                         <td {% if user.is_superuser %}style="font-weight: bold"{% endif %}>
                             {{ user.email }}{% if user.is_superuser %} <i>(Admin)</i>{% endif %}</td>
                         <td {% if user.is_superuser %}style="font-weight: bold"{% endif %}>{{ user.username }}</td>
-                        <td>{{ user.date_joined }}</td>
-                        <td><b>$</b> {{ user.balance }}</td>
+{#                        <td>{{ user.date_joined }}</td>#}
+{#                        <td><b>$</b> {{ user.balance }}</td>#}
                         <td>{{ user.total_api_bridges }} / {{ user.active_api_bridges }}
                             / {{ user.inactive_api_bridges }}</td>
                         <td>{{ user.total_wh_bridges }} / {{ user.active_wh_bridges }}
