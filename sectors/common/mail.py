@@ -37,15 +37,15 @@ def send_email(request, recipient_list, email_type, msg_content=None, html_conte
     msg["from"] = smtp_setting['smtp_username']
     msg["to"] = recipient_list
 
-    if email_type == 'SMTP_TEST':
-        msg["Subject"] = 'SMTP TEST EMAIL'
-        content = 'Hello'
-    elif email_type == 'RESET_PASSWORD':
+    if email_type == 'RESET_LINK':
         msg['Subject'] = 'OCEAN VANTAGE - RESET PASSWORD'
         if msg_content:
             content = msg_content
         else:
             content = ''
+    elif email_type == 'PASSWORD_CHANGED':
+        msg['Subject'] = 'OCEAN VANTAGE - YOU CHANGED YOUR PASSWORD'
+        content = 'If you did not change your password, please contact us right away.'
     else:
         return False, error.UNKNOWN_EMAIL_TYPE
 

@@ -101,7 +101,7 @@ class PasswordResetView(TemplateView):
             reset_url = f'{admin_config.HOST_URL}auth/change_password/{reset_link}'
             content = f'Please use below link to reset your password.\n{reset_url}'
 
-            status, text = mail.send_email(self.request, email, 'RESET_PASSWORD', content)
+            status, text = mail.send_email(self.request, email, 'RESET_LINK', content)
         else:
             status, text = True, ''
 

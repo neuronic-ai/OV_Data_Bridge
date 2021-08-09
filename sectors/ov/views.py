@@ -3,6 +3,7 @@ from django.views.generic.base import TemplateView
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
 from operator import itemgetter
+import _thread as thread
 import json
 import os
 
@@ -261,6 +262,8 @@ class ChangePasswordView(TemplateView):
             user = TBLUser.objects.get(id=self.request.user.id)
             user.set_password(password)
             user.save()
+
+            thread.start_new_thread(mail.send_email, (self.request, self.request.user.email, 'PASSWORD_CHANGED'))
         else:
             self.request.session['change_password_msg'] = error.RESET_FAIL
             return redirect('/change_password')
@@ -410,6 +413,8 @@ class ResetPasswordView(TemplateView):
         user = TBLUser.objects.get(id=user_id)
         user.set_password(password)
         user.save()
+
+        thread.start_new_thread(mail.send_email, (self.request, self.request.user.email, 'PASSWORD_CHANGED'))
 
         return redirect('/user')
 
