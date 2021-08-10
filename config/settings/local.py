@@ -27,7 +27,7 @@ DATABASES = {
         'NAME': 'ovdatabridge',
         'USER': 'root',
         'PASSWORD': 'jQEbw5VVHesHnZsG7tS4',
-        'PORT': '3307',
+        'PORT': '3306',
     }
 }
 
