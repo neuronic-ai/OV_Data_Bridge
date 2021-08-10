@@ -9,14 +9,25 @@ ALLOWED_HOSTS = ['bridge.vantagecrypto.com']
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'HOST': 'localhost',
+#         'NAME': 'ovdatabridge',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'PORT': '3306',
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'HOST': 'localhost',
         'NAME': 'ovdatabridge',
-        'USER': 'root',
-        'PASSWORD': '',
-        'PORT': '3306',
+        'USER': 'ovdatabridge',
+        'PASSWORD': 'z63p7GU3UbXBtyWvLqEZcL79vswwZQMW',
+        'PORT': '3307',
     }
 }
 
