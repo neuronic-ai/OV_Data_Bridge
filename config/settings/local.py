@@ -23,7 +23,7 @@ ALLOWED_HOSTS = ['bridge.vantagecrypto.com']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': 'localhost',
+        'HOST': '127.0.0.1',
         'NAME': 'ovdatabridge',
         'USER': 'root',
         'PASSWORD': 'jQEbw5VVHesHnZsG7tS4',
