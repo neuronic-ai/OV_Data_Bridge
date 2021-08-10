@@ -25,8 +25,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'HOST': 'localhost',
         'NAME': 'ovdatabridge',
-        'USER': 'ovdatabridge1',
-        'PASSWORD': 'z63p7GU3UbXBtyWvLqEZcL79vswwZQMW',
+        'USER': 'root',
+        'PASSWORD': 'jQEbw5VVHesHnZsG7tS4',
         'PORT': '3307',
     }
 }
