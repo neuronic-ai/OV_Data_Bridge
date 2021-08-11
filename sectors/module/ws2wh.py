@@ -108,7 +108,6 @@ class Bridge:
         else:
             self.add_cache(f'WH:Send - Ignored!')
 
-
     def add_cache(self, data):
         self.trace(data)
 

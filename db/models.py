@@ -1,10 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import json
+
+from sectors.common import admin_config
 
 
 class TBLUser(AbstractUser):
     reset_link = models.CharField(max_length=255, default='')
-    permission = models.TextField(blank=True, null=True)
+    permission = models.TextField(default=json.dumps({
+        'max_active_bridges': admin_config.DEFAULT_MAX_ACTIVE_BRIDGES,
+        'rate_limit_per_url': admin_config.DEFAULT_RATE_LIMIT_PER_URL,
+        'allowed_frequency': admin_config.DEFAULT_ALLOWED_FREQUENCY,
+        'available_bridges': admin_config.DEFAULT_AVAILABLE_BRIDGE
+    }))
 
     class Meta:
         db_table = 'TBLUSER'
