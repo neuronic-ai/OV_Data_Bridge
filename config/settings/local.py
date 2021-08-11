@@ -9,25 +9,14 @@ ALLOWED_HOSTS = ['bridge.vantagecrypto.com']
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'HOST': 'localhost',
-#         'NAME': 'ovdatabridge',
-#         'USER': 'root',
-#         'PASSWORD': '',
-#         'PORT': '3306',
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': '127.0.0.1',
-        'NAME': 'ovdatabridge',
-        'USER': 'root',
-        'PASSWORD': 'jQEbw5VVHesHnZsG7tS4',
-        'PORT': '3306',
+        'HOST': os.getenv('MYSQL_HOST', '127.0.0.1'),
+        'NAME': os.getenv('MYSQL_DATABASE', 'ovdatabridge'),
+        'USER': os.getenv('MYSQL_USER', 'root'),
+        'PASSWORD': os.getenv('MYSQL_PASSWORD', ''),
+        'PORT': os.getenv('MYSQL_PORT', '3306'),
     }
 }
 
@@ -35,9 +24,9 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('35.193.25.247', 6379)],
-            'capacity': 1500,
-            'expiry': 10,
+            'hosts': [(os.getenv('REDIS_HOST', '35.193.25.247'), os.getenv('REDIS_PORT', 6379))],
+            # 'capacity': 1500,
+            # 'expiry': 10,
         },
     },
 }
@@ -45,7 +34,7 @@ CHANNEL_LAYERS = {
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://35.193.25.247:6379/',
+        'LOCATION': os.getenv('CACHE_LOCATION', 'redis://35.193.25.247:6379/'),
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
