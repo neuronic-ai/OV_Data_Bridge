@@ -3,8 +3,10 @@ from .base import *
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['bridge.vantagecrypto.com']
-# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = []
+hosts = os.getenv('ALLOWED_HOSTS', '')
+if hosts:
+    ALLOWED_HOSTS.extend(hosts.split(','))
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -20,17 +22,6 @@ DATABASES = {
     }
 }
 
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [(os.getenv('REDIS_HOST', '35.193.25.247'), os.getenv('REDIS_PORT', 6379))],
-            # 'capacity': 1500,
-            # 'expiry': 10,
-        },
-    },
-}
-
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
@@ -40,5 +31,3 @@ CACHES = {
         }
     }
 }
-
-ASGI_APPLICATION = 'config.asgi.application'

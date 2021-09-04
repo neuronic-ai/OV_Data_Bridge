@@ -31,6 +31,13 @@ class Bridge:
         self.REDIS_CACHE_ID = f"{admin_config.BRIDGE_REDIS_CACHE_PREFIX}_{self.bridge_info['id']}"
         self.REDIS_CACHE_TTL = self.bridge_info['frequency']
 
+    def notify_event(self, event):
+        data = event['data']
+        if event['type'] == 'on_add_ws_client':
+            self.add_ws_client(data['group_name'])
+        elif event['type'] == 'on_remove_ws_client':
+            self.remove_ws_client(data['group_name'])
+
     def run_api(self):
         count = 0
         while True:

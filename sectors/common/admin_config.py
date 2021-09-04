@@ -1,7 +1,9 @@
 import config.settings.base as base
+import os
 
-# HOST_URL = 'http://127.0.0.1:8000/'
-HOST_URL = 'https://bridge.vantagecrypto.com/'
+HOST_URL = os.getenv('OV_HOST_URL', 'http://127.0.0.1:8000/')
+OV_WEBSOCKET_HOST_URL = os.getenv('OV_WEBSOCKET_HOST', '127.0.0.1:8002')
+
 TRACE_MODE = False
 DELETE_LOG_AFTER_BRIDGE_DELETED = True
 

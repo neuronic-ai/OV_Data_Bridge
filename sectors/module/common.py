@@ -1,7 +1,8 @@
 import json
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
 import _thread as thread
+import requests
+
+from sectors.common import admin_config
 
 
 def get_formatted_content(message, bridge_info):
@@ -42,11 +43,14 @@ def thread_swm(group_name, content):
     if 'type' not in content or content['type'] != 'notify':
         content['type'] = 'notify'
 
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(
-        group_name,
-        content
-    )
+    res = requests.post(f'http://{admin_config.OV_WEBSOCKET_HOST_URL}/event/notify_event', json={
+        'type': 'on_message',
+        'bridge_id': None,
+        'data': {
+            'group_name': group_name,
+            'content': content
+        }
+    })
 
 
 def send_ws_message(group_name, content):

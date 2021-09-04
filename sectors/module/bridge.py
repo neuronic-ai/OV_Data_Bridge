@@ -57,7 +57,7 @@ class BridgeQueue:
             for b_obj in self.bridges_obj:
                 b_obj['status'] = b_obj['obj'].is_connected()
 
-            time.sleep(60)
+            time.sleep(1)
 
     def start_bridge_by_id(self, bridge_id):
         new_bridge = True
@@ -115,14 +115,9 @@ class BridgeQueue:
 
         return False
 
-    def add_ws_client(self, bridge_id, ws_id):
+    def notify_event(self, event):
+        bridge_id = event['bridge_id']
         for b_obj in self.bridges_obj:
-            if b_obj['id'] == bridge_id and b_obj['status']:
-                b_obj['obj'].add_ws_client(ws_id)
-                break
-
-    def remove_ws_client(self, bridge_id, ws_id):
-        for b_obj in self.bridges_obj:
-            if b_obj['id'] == bridge_id and b_obj['status']:
-                b_obj['obj'].remove_ws_client(ws_id)
+            if b_obj['id'] == bridge_id:
+                b_obj['obj'].notify_event(event)
                 break

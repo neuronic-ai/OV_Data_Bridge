@@ -25,6 +25,15 @@ class Bridge:
         self.cache = self.log.get_last_log()
         self.ws_clients = []
 
+    def notify_event(self, event):
+        data = event['data']
+        if event['type'] == 'on_message':
+            self.send_message(data['message'])
+        elif event['type'] == 'on_add_ws_client':
+            self.add_ws_client(data['group_name'])
+        elif event['type'] == 'on_remove_ws_client':
+            self.remove_ws_client(data['group_name'])
+
     def open(self):
         self.connection_status = True
         self.connection_text = 'WH:Open - Ready'

@@ -89,6 +89,9 @@ def save_bridge(request):
             bridge.frequency = int(params['frequency'])
 
         bridge_qty = TBLBridge.objects.filter(user=request.user, is_active=True).count()
+        if bridge.is_active:
+            bridge_qty -= 1
+
         max_active_bridges = json.loads(request.user.permission)['max_active_bridges']
         if not max_active_bridges > bridge_qty:
             bridge.is_active = False
