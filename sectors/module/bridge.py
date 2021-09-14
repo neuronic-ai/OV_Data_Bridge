@@ -1,7 +1,7 @@
 import time
 import _thread as thread
 
-from . import ws2wh, wh2ws, ws2api, api2ws, file2ws, file2api, wh2file, ws2file, api2file
+from . import ws2wh, wh2ws, ws2api, api2ws, file2wh, file2ws, file2api, wh2file, ws2file, api2file
 
 from sectors.common import error
 
@@ -34,6 +34,9 @@ class BridgeQueue:
             b_obj.open()
         elif bridge_info['type'] == 4:  # api2ws
             b_obj = api2ws.Bridge(bridge_info)
+            b_obj.open()
+        elif bridge_info['type'] == 5:  # file2wh
+            b_obj = file2wh.Bridge(bridge_info)
             b_obj.open()
         elif bridge_info['type'] == 6:  # file2ws
             b_obj = file2ws.Bridge(bridge_info)
