@@ -92,6 +92,8 @@ class Bridge:
             bridge = TBLBridge.objects.get(id=self.bridge_info['id'])
             bridge.api_calls += 1
             bridge.save()
+
+            self.prev_file_data = message
         else:
             self.add_cache(f'WH:Send - Ignored!')
 
