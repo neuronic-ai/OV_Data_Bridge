@@ -26,7 +26,7 @@ class Bridge:
         self.log = log.BridgeLog(bridge_info)
         self.cache = self.log.get_last_log()
 
-        self.file = file.File(bridge_info['dst_address'], bridge_info['format'])
+        self.file = file.File(bridge_info['dst_address'], bridge_info['file_format'])
 
         # self.REDIS_CACHE_ID = f"{admin_config.BRIDGE_REDIS_CACHE_PREFIX}_{self.bridge_info['id']}"
         self.REDIS_CACHE_TTL = self.bridge_info['frequency']

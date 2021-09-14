@@ -132,10 +132,10 @@
                             ws2file_vue.name = '';
                             ws2file_vue.ws_address = ws_host + gen_rp(10) + '/' + gen_rp(20);
                             ws2file_vue.pre_fwa = file_host + gen_rp(10) + '/' + gen_rp(20);
-                            ws2file_vue.file_web_address = ws2file_vue.pre_fwa + ws2file_vue.file_format;
+                            ws2file_vue.file_format = 'txt';
+                            ws2file_vue.file_web_address = ws2file_vue.pre_fwa + '.' + ws2file_vue.file_format;
                             ws2file_vue.frequency = g_frequency_info[0].second;
                             ws2file_vue.flush = 3600;
-                            ws2file_vue.file_format = 'txt';
                             $('#ws2file_frequency').selectpicker('val', ws2file_vue.frequency);
                             $('#ws2file_flush').selectpicker('val', ws2file_vue.flush);
                             $('#ws2file_file_format').selectpicker('val', ws2file_vue.file_format);

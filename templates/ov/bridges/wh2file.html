@@ -115,9 +115,9 @@
                             wh2file_vue.name = '';
                             wh2file_vue.wh_address = wh_host + gen_rp(10) + '/' + gen_rp(20);
                             wh2file_vue.pre_fwa = file_host + gen_rp(10) + '/' + gen_rp(20);
-                            wh2file_vue.flush = 3600;
                             wh2file_vue.file_format = 'txt';
-                            wh2file_vue.file_web_address = wh2file_vue.pre_fwa + wh2file_vue.file_format;
+                            wh2file_vue.file_web_address = wh2file_vue.pre_fwa + '.' + wh2file_vue.file_format;
+                            wh2file_vue.flush = 3600;
                             $('#wh2file_flush').selectpicker('val', wh2file_vue.flush);
                             $('#wh2file_file_format').selectpicker('val', wh2file_vue.file_format);
                             focus_on_element('wh2file_name');

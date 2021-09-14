@@ -69,6 +69,7 @@
 
             if (localStorage.remember_me) {
                 document.getElementsByName('username')[0].value = localStorage.username;
+                document.getElementsByName('password')[0].value = localStorage.password;
                 document.getElementById('remember_me').checked = true;
             }
 
@@ -99,9 +100,11 @@
             if (document.getElementById('remember_me').checked) {
                 localStorage.remember_me = 'checked';
                 localStorage.username = username;
+                localStorage.password = password;
             } else {
                 localStorage.remember_me = '';
                 localStorage.username = '';
+                localStorage.password = '';
             }
 
             document.loginform.submit();

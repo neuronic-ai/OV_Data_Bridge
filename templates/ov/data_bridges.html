@@ -358,6 +358,7 @@
                 } else if (bridge_type === 10) {
                     bridge_info.src_address = '';
                     bridge_info.dst_address = file_host + gen_rp(10) + '/' + gen_rp(20);
+                    bridge_info.file_format = 'txt';
                 }
 
                 bridge_info.format = JSON.stringify({'search_word': '', 'replace_word': '', 'any': false});

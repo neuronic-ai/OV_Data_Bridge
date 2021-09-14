@@ -2,7 +2,7 @@
 
 <div class="modal fade" id="api2file" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
-        <div class="modal-content">
+        <div class="modal-content" style="overflow-y: inherit">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">API to File</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -48,6 +48,20 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <label>File Format: </label>
+                                            <div class="frequency-dropdown">
+                                                <select v-model="file_format" id="api2file_file_format" class="selectpicker form-control" data-dropup-auto="false" data-size="4">
+                                                    {% for f in file_format %}
+                                                        <option value={{ f.value }}>{{ f.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="right-button-panel example">
                                 <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
@@ -73,8 +87,10 @@
             id: 0,
             name: '',
             api_feed: '',
+            pre_fwa: '',
             file_web_address: '',
             frequency: '',
+            file_format: ''
         },
         methods: {
             on_delete: function () {
@@ -99,9 +115,12 @@
                         if (isConfirm) {
                             api2file_vue.name = '';
                             api2file_vue.api_feed = '';
-                            api2file_vue.file_web_address = file_host + gen_rp(10) + '/' + gen_rp(20);
+                            api2file_vue.pre_fwa = file_host + gen_rp(10) + '/' + gen_rp(20);
+                            api2file_vue.file_format = 'txt';
+                            api2file_vue.file_web_address = api2file_vue.pre_fwa + '.' + api2file_vue.file_format;
                             api2file_vue.frequency = g_frequency_info[0].second;
                             $('#api2file_frequency').selectpicker('val', api2file_vue.frequency);
+                            $('#api2file_file_format').selectpicker('val', api2file_vue.file_format);
                             focus_on_element('api2file_name');
                         }
                     });
@@ -123,8 +142,9 @@
                     'name': this.name,
                     'type': 10,
                     'src_address': this.api_feed,
-                    'dst_address': this.file_web_address,
-                    'frequency': this.frequency
+                    'dst_address': this.pre_fwa,
+                    'frequency': this.frequency,
+                    'file_format': this.file_format
                 });
             },
             on_copy_api: function () {
@@ -136,6 +156,10 @@
             name: function (cur_val, prev_val) {
                 if (cur_val.length > 64)
                     this.name = prev_val;
+            },
+            file_format: function (cur_val, prev_val) {
+
+                this.file_web_address = this.pre_fwa + '.' + cur_val;
             }
         }
     });
@@ -145,9 +169,12 @@
         api2file_vue.id = bridge_info.id;
         api2file_vue.name = bridge_info.name;
         api2file_vue.api_feed = bridge_info.src_address;
-        api2file_vue.file_web_address = bridge_info.dst_address;
+        api2file_vue.pre_fwa = bridge_info.dst_address;
+        api2file_vue.file_web_address = bridge_info.dst_address + '.' + bridge_info.file_format;
         api2file_vue.frequency = bridge_info.frequency;
+        api2file_vue.file_format = bridge_info.file_format;
         $('#api2file_frequency').selectpicker('val', bridge_info.frequency);
+        $('#api2file_file_format').selectpicker('val', bridge_info.file_format);
         $('#api2file').modal('show');
         focus_on_element('api2file_name');
     }

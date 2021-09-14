@@ -1,3 +1,4 @@
+import config.settings.base as base
 import string
 import random
 from datetime import datetime
@@ -9,7 +10,7 @@ def generate_random_string(length=12):
 
 
 def get_media_directory(request, level, sub_date=True):
-    directory_name = 'file/'
+    directory_name = f'{base.BASE_DIR}/file/'
     if level == 5:
         directory_name += 'file_bridge/'
 
