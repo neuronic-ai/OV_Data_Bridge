@@ -1,4 +1,4 @@
-{% extends "ov/base.html" %}
+{% extends 'ov/base.html' %}
 {% load static %}
 
 {% block title %}
@@ -130,409 +130,76 @@
                                 <a v-on:click="on_api2ws" href="#" class="bridge-button mr-0">API to WebSocket</a>
                             </div>
                         {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="ws2wh" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">WebSocket to WebHook</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="websocket-panel">
-                        <div class="change-password">
-                            <form id="ws2wh_form">
-                                <div class="left-panel">
-                                    <div class="form-group formate-section name-formate">
-                                        <div class="name-formate-div">
-                                            <label>Name</label>
-                                            <input v-model="name" id="ws2wh_name" type="text" class="form-control"
-                                                   placeholder="Enter here">
-                                        </div>
-                                        <a href="#" v-on:click="on_format" class="formate blue-bg"
-                                           data-toggle="modal" data-target="#formate">Format</a>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>WebSocket Address</label>
-                                        <input v-model="ws_address" id="ws2wh_ws_address" type="text"
-                                               class="form-control" placeholder="Enter here">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>WebHook Address</label>
-                                        <input v-model="wh_address" id="ws2wh_wh_address" type="text"
-                                               class="form-control" placeholder="Enter here">
-                                    </div>
-                                </div>
-                                <div class="right-button-panel example">
-                                    <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
-                                    <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
-                                    <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="wh2ws" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">WebHook to WebSocket</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="websocket-panel">
-                        <div class="change-password">
-                            <form id="wh2ws_form">
-                                <div class="left-panel">
-                                    <div class="form-group formate-section name-formate">
-                                        <div class="name-formate-div">
-                                            <label>Name</label>
-                                            <input v-model="name" id="wh2ws_name" type="text" class="form-control"
-                                                   placeholder="Enter here">
-                                        </div>
-                                        <a href="#" v-on:click="on_format" class="formate blue-bg"
-                                           data-toggle="modal" data-target="#formate">Format</a>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>WebHook Address</label>
-                                        <div class="copybutton">
-                                            <input v-model="wh_address" type="text" class="form-control"
-                                                   placeholder="Enter here" readonly>
-                                            <div v-on:click="on_copy_wh"
-                                                 class="copy-icon integration-checklist__copy-button">
-                                                <img src="{% static "img/icons/copy.png" %}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>WebSocket Address</label>
-                                        <div class="copybutton">
-                                            <input v-model="ws_address" type="text" class="form-control"
-                                                   placeholder="Enter here" readonly>
-                                            <div v-on:click="on_copy_ws"
-                                                 class="copy-icon integration-checklist__copy-button">
-                                                <img class="integration-checklist__copy-button"
-                                                     src="{% static "img/icons/copy.png" %}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="right-button-panel example">
-                                    <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
-                                    <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
-                                    <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="formate-popup modal fade" id="formate" role="dialog" aria-labelledby="exampleModalCenterTitle"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered format-modal" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Format</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="websocket-panel">
-                        <div class="change-password">
-                            <form id="format_form">
-                                <div class="left-panel">
-                                    <div class="form-section">
-                                        <label>Comma delimited search words</label>
-                                        <div class="data-formate-section formate-section remember-forgot">
-                                            <input v-model="search_word" id="search_word" type="text"
-                                                   class="form-control" placeholder="Enter here">
-                                            <div class="form-group remember-check">
-                                                <input v-model="any" v-on:click="on_check_any" type="checkbox"
-                                                       id="any">
-                                                <label for="any">Any</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <input v-model="replace_word" type="text" class="form-control"
-                                               placeholder="Enter here">
-                                    </div>
-                                </div>
-                                <div class="right-button-section">
-                                    <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
-                                    <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
-                                    <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="ws2api" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">WebSocket to API</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="websocket-panel">
-                        <div class="change-password">
-                            <form id="ws2api_form">
-                                <div class="left-panel">
-                                    <div class="form-group formate-section name-formate">
-                                        <div class="name-formate-div">
-                                            <label>Name</label>
-                                            <input v-model="name" id="ws2api_name" type="text" class="form-control"
-                                                   placeholder="Enter here">
-                                        </div>
-                                        <div class="frequency-dropdown">
-                                            <label>Frequency</label>
-                                            <select v-model="frequency" class="selectpicker form-control"
-                                                    data-dropup-auto="false" data-size="4">
-                                                {% for f in frequency %}
-                                                    <option value={{ f.second }}>{{ f.name }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>WebSocket Address</label>
-                                        <input v-model="ws_address" id="ws2api_ws_address" type="text"
-                                               class="form-control" placeholder="Enter here">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>API Feed</label>
-                                        <div class="copybutton">
-                                            <input v-model="api_feed" type="text" class="form-control"
-                                                   placeholder="Enter here" readonly>
-                                            <div v-on:click="on_copy_api"
-                                                 class="copy-icon integration-checklist__copy-button">
-                                                <img src="{% static "img/icons/copy.png" %}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="right-button-panel example">
-                                    <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
-                                    <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
-                                    <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="api2ws" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">API to WebSocket</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="websocket-panel">
-                        <div class="change-password">
-                            <form id="api2ws_form">
-                                <div class="left-panel">
-                                    <div class="form-group formate-section name-formate">
-                                        <div class="name-formate-div">
-                                            <label>Name</label>
-                                            <input v-model="name" id="api2ws_name" type="text" class="form-control"
-                                                   placeholder="Enter here">
-                                        </div>
-                                        <div class="frequency-dropdown">
-                                            <label>Frequency</label>
-                                            <select v-model="frequency" class="selectpicker form-control"
-                                                    data-dropup-auto="false" data-size="4">
-                                                {% for f in frequency %}
-                                                    <option value={{ f.second }}>{{ f.name }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>API Feed</label>
-                                        <input v-model="api_feed" id="api2ws_api_feed" type="text"
-                                               class="form-control" placeholder="Enter here">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>WebSocket Address</label>
-                                        <div class="copybutton">
-                                            <input v-model="ws_address" type="text" class="form-control"
-                                                   placeholder="Enter here" readonly>
-                                            <div v-on:click="on_copy_ws"
-                                                 class="copy-icon integration-checklist__copy-button">
-                                                <img src="{% static "img/icons/copy.png" %}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div v-on:click="on_download_html" class="html-button">
-                                        <img src="{% static "img/icons/drop-black.png" %}">
-                                        <span>HTML</span>
-                                    </div>
-                                </div>
-                                <div class="right-button-panel example">
-                                    <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
-                                    <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
-                                    <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="docmodel" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Reports</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="websocket-panel">
-                        <div class="change-password">
-                            <div class="row d-flex">
-                                <div class="col-lg-6 col-md-12 col-sm-12">
-                                    <div class="log-divv">
-                                        <h3 class="log-title">Last 100 Logs</h3>
-                                        <div class="log-content">
-                                            <section id="log_body">
-                                            </section>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-12 col-sm-12">
-                                    <div class="file-list-div">
-                                        <h3 class="log-title">All Logs</h3>
-                                        <div class="filelist-wra table-responsive">
-                                            <table class="table">
-                                                <thead>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>From</th>
-                                                    <th>To</th>
-                                                    <th>Size</th>
-                                                    <th></th>
-                                                </tr>
-                                                </thead>
-                                                <tbody id="zip_body">
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <ul class="pagination pagination-sm hide">
-                                            <li class="page-item"><a class="page-link next-p" href="#">Previous</a></li>
-                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                            <li class="page-item"><a class="page-link " href="#">2</a></li>
-                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                            <li class="page-item"><a class="page-link next-p" href="#">Next</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
+                        {% if permission.available_bridges.ab5 %}
+                            <div class="col-lg-6 p-0">
+                                <a v-on:click="on_file2wh" href="#" class="bridge-button">File to WebHook</a>
                             </div>
-                        </div>
+                        {% endif %}
+                        {% if permission.available_bridges.ab6 %}
+                            <div class="col-lg-6 p-0">
+                                <a v-on:click="on_file2ws" href="#" class="bridge-button mr-0">File WebSocket</a>
+                            </div>
+                        {% endif %}
+                        {% if permission.available_bridges.ab7 %}
+                            <div class="col-lg-6 p-0">
+                                <a v-on:click="on_file2api" href="#" class="bridge-button">File to API</a>
+                            </div>
+                        {% endif %}
+                        {% if permission.available_bridges.ab8 %}
+                            <div class="col-lg-6 p-0">
+                                <a v-on:click="on_wh2file" href="#" class="bridge-button mr-0">WebHook to File</a>
+                            </div>
+                        {% endif %}
+                        {% if permission.available_bridges.ab9 %}
+                            <div class="col-lg-6 p-0">
+                                <a v-on:click="on_ws2file" href="#" class="bridge-button">WebSocket to File</a>
+                            </div>
+                        {% endif %}
+                        {% if permission.available_bridges.ab10 %}
+                            <div class="col-lg-6 p-0">
+                                <a v-on:click="on_api2file" href="#" class="bridge-button mr-0">API to File</a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    {% include 'ov/bridges/ws2wh.html' %}
+    {% include 'ov/bridges/wh2ws.html' %}
+    {% include 'ov/bridges/ws2api.html' %}
+    {% include 'ov/bridges/api2ws.html' %}
+    {% include 'ov/bridges/file2wh.html' %}
+    {% include 'ov/bridges/file2ws.html' %}
+    {% include 'ov/bridges/file2api.html' %}
+    {% include 'ov/bridges/wh2file.html' %}
+    {% include 'ov/bridges/ws2file.html' %}
+    {% include 'ov/bridges/api2file.html' %}
+
+    {% include 'ov/bridges/format.html' %}
+
+    {% include 'ov/bridges/log_modal.html' %}
+
 {% endblock sub_content %}
 
 {% block javascript %}
     <script>
-        /*
-            var socket;
-            $(document).ready(function () {
 
-                socket = new WebSocket('ws://127.0.0.1:8000/websocket/49n9esjfl5/bkraus9prj7kgztg0c73');
+        let ws_host = 'wss://' + window.location.host + '/websocket/';
+        let wh_host = 'https://' + window.location.host + '/webhook/';
+        let api_host = 'https://' + window.location.host + '/api/';
 
-                socket.onmessage = function (e) {
-                    console.log(e);
-                };
-                socket.onopen = function (e) {
-                    console.log("connection opened");
-                    console.log(e);
-                    socket.send("asdfsadfasdf");
-                };
-                socket.onerror = function (e) {
-                    console.log("connection error");
-                    console.log(e);
-                };
-                socket.onclose = function (e) {
-                    console.log("connection closed");
-                    console.log(e);
-                };
-            });*/
-
-        var i;
-        var g_bridges_info = {{ bridges_info|safe }};
-        var g_frequency_info = {{ frequency|safe }};
-        var bridges = {{ bridges_info|safe }};
+        let i;
+        let g_bridges_info = {{ bridges_info|safe }};
+        let g_frequency_info = {{ frequency|safe }};
+        let bridges = {{ bridges_info|safe }};
 
         for (i = 0; i < bridges.length; i++) {
             bridges[i]["show"] = true;
         }
 
-        var ws_host = 'wss://' + window.location.host + '/websocket/';
-        var wh_host = 'https://' + window.location.host + '/webhook/';
-        var api_host = 'https://' + window.location.host + '/api/';
-
-        var dashboard_panel_vue = new Vue({
+        let dashboard_panel_vue = new Vue({
             delimiters: ['[[', ']]'],
             el: '#dashboard_panel',
             data: {
@@ -540,7 +207,7 @@
             },
         });
 
-        var bridge_vue = new Vue({
+        let bridge_vue = new Vue({
             delimiters: ['[[', ']]'],
             el: '#bridge_form',
             data: {},
@@ -560,76 +227,30 @@
                 on_api2ws: function () {
 
                     open_bridge_modal(4);
-                }
-            }
-        });
-
-        var format_vue = new Vue({
-            delimiters: ['[[', ']]'],
-            el: '#format_form',
-            data: {
-                search_word: '',
-                replace_word: '',
-                any: false,
-            },
-            methods: {
-                on_delete: function () {
-
-                    swal({
-                            title: 'Are you sure?',
-                            text: 'You will not be able to recover this format!',
-                            type: 'warning',
-                            showCancelButton: true,
-                            showSweetAlert: true,
-                            confirmButtonColor: '#C50101',
-                            confirmButtonText: 'Delete',
-                            cancelButtonText: 'Cancel',
-                            closeOnConfirm: true,
-                            closeOnCancel: true
-                        },
-                        function (isConfirm) {
-                            if (isConfirm) {
-                                $('#formate').modal('hide');
-                                reset_format();
-                            }
-                        });
                 },
-                on_reset: function () {
+                on_file2wh: function() {
 
-                    swal({
-                            title: 'Are you sure?',
-                            text: 'Format for this bridge will be cleared!',
-                            type: 'warning',
-                            showCancelButton: true,
-                            showSweetAlert: true,
-                            confirmButtonColor: '#E0CA00',
-                            confirmButtonText: 'Reset',
-                            cancelButtonText: 'Cancel',
-                            closeOnConfirm: true,
-                            closeOnCancel: true
-                        },
-                        function (isConfirm) {
-                            if (isConfirm) {
-                                reset_format();
-                                focus_on_element('search_word');
-                            }
-                        });
+                    open_bridge_modal(5);
                 },
-                on_save: function () {
+                on_file2ws: function() {
 
-                    $('#formate').modal('hide');
+                    open_bridge_modal(6);
                 },
-                on_check_any: function () {
+                on_file2api: function() {
 
-                    this.any = !this.any;
-                }
-            },
-            watch: {
-                search_word: function (cur_val, prev_val) {
-
+                    open_bridge_modal(7);
                 },
-                replace_word: function (cur_val, prev_val) {
+                on_wh2file: function() {
 
+                    open_bridge_modal(8);
+                },
+                on_ws2file: function() {
+
+                    open_bridge_modal(9);
+                },
+                on_api2file: function() {
+
+                    open_bridge_modal(10);
                 }
             }
         });
@@ -640,413 +261,6 @@
                 $('#' + element_name).focus();
             }, timeout);
         }
-
-        function reset_format() {
-
-            format_vue.search_word = '';
-            format_vue.replace_word = '';
-            format_vue.any = false;
-        }
-
-        var ws2wh_vue = new Vue({
-            delimiters: ['[[', ']]'],
-            el: '#ws2wh_form',
-            data: {
-                id: 0,
-                name: '',
-                ws_address: '',
-                wh_address: '',
-            },
-            methods: {
-                on_format: function () {
-
-                    focus_on_element('search_word');
-                },
-                on_delete: function () {
-
-                    delete_bridge(this.id);
-                },
-                on_reset: function () {
-
-                    swal({
-                            title: 'Are you sure?',
-                            text: 'All configurations for this bridge will be cleared!',
-                            type: 'warning',
-                            showCancelButton: true,
-                            showSweetAlert: true,
-                            confirmButtonColor: '#E0CA00',
-                            confirmButtonText: 'Reset',
-                            cancelButtonText: 'Cancel',
-                            closeOnConfirm: true,
-                            closeOnCancel: true
-                        },
-                        function (isConfirm) {
-                            if (isConfirm) {
-                                ws2wh_vue.name = '';
-                                ws2wh_vue.ws_address = '';
-                                ws2wh_vue.wh_address = '';
-                                reset_format();
-                                focus_on_element('ws2wh_name');
-                            }
-                        });
-                },
-                on_save: function () {
-
-                    if (this.name === '') {
-                        $('#ws2wh_name').focus();
-                        return;
-                    }
-
-                    if (this.ws_address === '') {
-                        $('#ws2wh_ws_address').focus();
-                        return;
-                    }
-
-                    if (this.wh_address === '') {
-                        $('#ws2wh_wh_address').focus();
-                        return;
-                    }
-
-                    save_bridge({
-                        'id': this.id,
-                        'name': this.name,
-                        'type': 1,
-                        'src_address': this.ws_address,
-                        'dst_address': this.wh_address,
-                        'format': JSON.stringify({
-                            'search_word': format_vue.search_word,
-                            'replace_word': format_vue.replace_word,
-                            'any': format_vue.any
-                        })
-                    });
-                }
-            },
-            watch: {
-                name: function (cur_val, prev_val) {
-                    if (cur_val.length > 64)
-                        this.name = prev_val;
-                },
-                ws_address: function (cur_val, prev_val) {
-
-                },
-                wh_address: function (cur_val, prev_val) {
-
-                }
-            }
-        });
-
-        var wh2ws_vue = new Vue({
-            delimiters: ['[[', ']]'],
-            el: '#wh2ws_form',
-            data: {
-                id: 0,
-                name: '',
-                wh_address: '',
-                ws_address: '',
-            },
-            methods: {
-                on_format: function () {
-
-                    focus_on_element('search_word');
-                },
-                on_delete: function () {
-
-                    delete_bridge(this.id);
-                },
-                on_reset: function () {
-
-                    swal({
-                            title: 'Are you sure?',
-                            text: 'All configurations for this bridge will be cleared!',
-                            type: 'warning',
-                            showCancelButton: true,
-                            showSweetAlert: true,
-                            confirmButtonColor: '#E0CA00',
-                            confirmButtonText: 'Reset',
-                            cancelButtonText: 'Cancel',
-                            closeOnConfirm: true,
-                            closeOnCancel: true
-                        },
-                        function (isConfirm) {
-                            if (isConfirm) {
-                                wh2ws_vue.name = '';
-                                wh2ws_vue.wh_address = wh_host + gen_rp(10) + '/' + gen_rp(20);
-                                wh2ws_vue.ws_address = ws_host + gen_rp(10) + '/' + gen_rp(20);
-                                reset_format();
-                                focus_on_element('wh2ws_name');
-                            }
-                        });
-                },
-                on_save: function () {
-
-                    if (this.name === '') {
-                        $('#wh2ws_name').focus();
-                        return;
-                    }
-
-                    save_bridge({
-                        'id': this.id,
-                        'name': this.name,
-                        'type': 2,
-                        'src_address': this.wh_address,
-                        'dst_address': this.ws_address,
-                        'format': JSON.stringify({
-                            'search_word': format_vue.search_word,
-                            'replace_word': format_vue.replace_word,
-                            'any': format_vue.any
-                        })
-                    });
-                },
-                on_copy_wh: function () {
-
-                    copy_text(this.wh_address);
-                },
-                on_copy_ws: function () {
-
-                    copy_text(this.ws_address);
-                }
-            },
-            watch: {
-                name: function (cur_val, prev_val) {
-                    if (cur_val.length > 64)
-                        this.name = prev_val;
-                }
-            }
-        });
-
-        function change_frequency_title(frequency) {
-
-            for (i = 0; i < g_frequency_info.length; i++) {
-                if (g_frequency_info[i].second === frequency) {
-                    $('.filter-option-inner-inner').html(g_frequency_info[i].name);
-                    break;
-                }
-            }
-        }
-
-        var ws2api_vue = new Vue({
-            delimiters: ['[[', ']]'],
-            el: '#ws2api_form',
-            data: {
-                id: 0,
-                name: '',
-                ws_address: '',
-                api_feed: '',
-                frequency: 0,
-            },
-            methods: {
-                on_delete: function () {
-
-                    delete_bridge(this.id);
-                },
-                on_reset: function () {
-
-                    swal({
-                            title: 'Are you sure?',
-                            text: 'All configurations for this bridge will be cleared!',
-                            type: 'warning',
-                            showCancelButton: true,
-                            showSweetAlert: true,
-                            confirmButtonColor: '#E0CA00',
-                            confirmButtonText: 'Reset',
-                            cancelButtonText: 'Cancel',
-                            closeOnConfirm: true,
-                            closeOnCancel: true
-                        },
-                        function (isConfirm) {
-                            if (isConfirm) {
-                                ws2api_vue.name = '';
-                                ws2api_vue.ws_address = '';
-                                ws2api_vue.api_feed = ws_host + gen_rp(10) + '/' + gen_rp(20);
-                                ws2api_vue.frequency = g_frequency_info[0].second;
-                                change_frequency_title(ws2api_vue.frequency);
-                                focus_on_element('ws2api_name');
-                            }
-                        });
-                },
-                on_save: function () {
-
-                    if (this.name === '') {
-                        $('#ws2api_name').focus();
-                        return;
-                    }
-
-                    if (this.ws_address === '') {
-                        $('#ws2api_ws_address').focus();
-                        return;
-                    }
-
-                    save_bridge({
-                        'id': this.id,
-                        'name': this.name,
-                        'type': 3,
-                        'src_address': this.ws_address,
-                        'dst_address': this.api_feed,
-                        'frequency': this.frequency
-                    });
-                },
-                on_copy_api: function () {
-
-                    copy_text(this.api_feed);
-                },
-            },
-            watch: {
-                name: function (cur_val, prev_val) {
-                    if (cur_val.length > 64)
-                        this.name = prev_val;
-                },
-                ws_address: function (cur_val, prev_val) {
-
-                }
-            }
-        });
-
-        var api2ws_vue = new Vue({
-            delimiters: ['[[', ']]'],
-            el: '#api2ws_form',
-            data: {
-                id: 0,
-                name: '',
-                api_feed: '',
-                ws_address: '',
-                frequency: 0,
-            },
-            methods: {
-                on_delete: function () {
-
-                    delete_bridge(this.id);
-                },
-                on_reset: function () {
-
-                    swal({
-                            title: 'Are you sure?',
-                            text: 'All configurations for this bridge will be cleared!',
-                            type: 'warning',
-                            showCancelButton: true,
-                            showSweetAlert: true,
-                            confirmButtonColor: '#E0CA00',
-                            confirmButtonText: 'Reset',
-                            cancelButtonText: 'Cancel',
-                            closeOnConfirm: true,
-                            closeOnCancel: true
-                        },
-                        function (isConfirm) {
-                            if (isConfirm) {
-                                api2ws_vue.name = '';
-                                api2ws_vue.api_feed = ws_host + gen_rp(10) + '/' + gen_rp(20);
-                                api2ws_vue.ws_address = '';
-                                api2ws_vue.frequency = g_frequency_info[0].second;
-                                change_frequency_title(api2ws_vue.frequency);
-                                focus_on_element('api2ws_name');
-                            }
-                        });
-                },
-                on_save: function () {
-
-                    if (this.name === '') {
-                        $('#ws2api_name').focus();
-                        return;
-                    }
-
-                    if (this.ws_address === '') {
-                        $('#ws2api_ws_address').focus();
-                        return;
-                    }
-
-                    save_bridge({
-                        'id': this.id,
-                        'name': this.name,
-                        'type': 4,
-                        'src_address': this.api_feed,
-                        'dst_address': this.ws_address,
-                        'frequency': this.frequency
-                    });
-                },
-                on_copy_ws: function () {
-
-                    copy_text(this.ws_address);
-                },
-                on_download_html: function () {
-
-                    var text = '<!DOCTYPE html>\n' +
-                        '<meta charset="utf-8" />\n' +
-                        '<title>WebSocket Test</title>\n' +
-                        '<script language="javascript" type="text/javascript">\n' +
-                        '\n' +
-                        'var wsUri = "' + this.ws_address + '";\n' +
-                        'var output;\n' +
-                        '\n' +
-                        'function init()\n' +
-                        '{\n' +
-                        '  output = document.getElementById("output");\n' +
-                        '  testWebSocket();\n' +
-                        '}\n' +
-                        '\n' +
-                        'function testWebSocket()\n' +
-                        '{\n' +
-                        '  websocket = new WebSocket(wsUri);\n' +
-                        '  websocket.onopen = function(evt) { onOpen(evt) };\n' +
-                        '  websocket.onclose = function(evt) { onClose(evt) };\n' +
-                        '  websocket.onmessage = function(evt) { onMessage(evt) };\n' +
-                        '  websocket.onerror = function(evt) { onError(evt) };\n' +
-                        '}\n' +
-                        '\n' +
-                        'function onOpen(evt)\n' +
-                        '{\n' +
-                        '  writeToScreen("CONNECTED to WebSocket");\n' +
-                        '}\n' +
-                        '\n' +
-                        'function onClose(evt)\n' +
-                        '{\n' +
-                        '  writeToScreen("DISCONNECTED");\n' +
-                        '}\n' +
-                        '\n' +
-                        'function onMessage(evt)\n' +
-                        '{\n' +
-                        '  writeToScreen(\'<span style="color: blue;">RESPONSE: \' + evt.data+\'</span>\');\n' +
-                        '}\n' +
-                        '\n' +
-                        'function onError(evt)\n' +
-                        '{\n' +
-                        '  writeToScreen(\'<span style="color: red;">ERROR:</span> \' + evt.data);\n' +
-                        '}\n' +
-                        '\n' +
-                        'function writeToScreen(message)\n' +
-                        '{\n' +
-                        '  var pre = document.createElement("p");\n' +
-                        '  pre.style.wordWrap = "break-word";\n' +
-                        '  pre.innerHTML = message;\n' +
-                        '  output.appendChild(pre);\n' +
-                        '}\n' +
-                        '\n' +
-                        'window.addEventListener("load", init, false);\n' +
-                        '</' + 'script>\n' +
-                        '\n' +
-                        '<h2>WebSocket Test</h2>\n' +
-                        '<div id="output"></div>' +
-                        '\n';
-
-                    var element = document.createElement('a');
-                    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-                    element.setAttribute('download', 'wss.html');
-
-                    element.style.display = 'none';
-                    document.body.appendChild(element);
-
-                    element.click();
-                    document.body.removeChild(element);
-                }
-            },
-            watch: {
-                name: function (cur_val, prev_val) {
-                    if (cur_val.length > 64)
-                        this.name = prev_val;
-                },
-                ws_address: function (cur_val, prev_val) {
-
-                }
-            }
-        });
 
         function copy_text(text_value) {
             var input = document.createElement('input');
@@ -1109,6 +323,7 @@
             if (bridge_id === 0) {
                 bridge_info.id = 0;
                 bridge_info.name = '';
+
                 if (bridge_type === 1) {
                     bridge_info.src_address = '';
                     bridge_info.dst_address = '';
@@ -1121,6 +336,28 @@
                 } else if (bridge_type === 4) {
                     bridge_info.src_address = '';
                     bridge_info.dst_address = ws_host + gen_rp(10) + '/' + gen_rp(20);
+                } else if (bridge_type === 5) {
+                    bridge_info.src_address = '';
+                    bridge_info.dst_address = '';
+                } else if (bridge_type === 6) {
+                    bridge_info.src_address = '';
+                    bridge_info.dst_address = ws_host + gen_rp(10) + '/' + gen_rp(20);
+                } else if (bridge_type === 7) {
+                    bridge_info.src_address = '';
+                    bridge_info.dst_address = api_host + gen_rp(10) + '/' + gen_rp(20);
+                } else if (bridge_type === 8) {
+                    bridge_info.src_address = wh_host + gen_rp(10) + '/' + gen_rp(20);
+                    bridge_info.dst_address = file_host + gen_rp(10) + '/' + gen_rp(20);
+                    bridge_info.flush = 3600;
+                    bridge_info.file_format = 'txt';
+                } else if (bridge_type === 9) {
+                    bridge_info.src_address = '';
+                    bridge_info.dst_address = file_host + gen_rp(10) + '/' + gen_rp(20);
+                    bridge_info.flush = 3600;
+                    bridge_info.file_format = 'txt';
+                } else if (bridge_type === 10) {
+                    bridge_info.src_address = '';
+                    bridge_info.dst_address = file_host + gen_rp(10) + '/' + gen_rp(20);
                 }
 
                 bridge_info.format = JSON.stringify({'search_word': '', 'replace_word': '', 'any': false});
@@ -1134,9 +371,8 @@
                 }
             }
 
-            if (bridge_type === 1 || bridge_type === 2) {    // ws2wh
-
-                var format_json = JSON.parse(bridge_info.format);
+            if (bridge_type === 1 || bridge_type === 2 || bridge_type === 5) {
+                let format_json = JSON.parse(bridge_info.format);
                 format_vue.search_word = format_json.search_word;
                 format_vue.replace_word = format_json.replace_word;
                 format_vue.any = format_json.any;
@@ -1144,44 +380,28 @@
                 if (format_vue.any) {
                     document.getElementById("any").checked = true;
                 }
-
-                if (bridge_type === 1) {
-                    ws2wh_vue.id = bridge_info.id;
-                    ws2wh_vue.name = bridge_info.name;
-                    ws2wh_vue.ws_address = bridge_info.src_address;
-                    ws2wh_vue.wh_address = bridge_info.dst_address;
-                    $('#ws2wh').modal('show');
-                    focus_on_element('ws2wh_name');
-                } else if (bridge_type === 2) {
-                    wh2ws_vue.id = bridge_info.id;
-                    wh2ws_vue.name = bridge_info.name;
-                    wh2ws_vue.wh_address = bridge_info.src_address;
-                    wh2ws_vue.ws_address = bridge_info.dst_address;
-                    $('#wh2ws').modal('show');
-                    focus_on_element('wh2ws_name');
-                }
-            } else if (bridge_type === 3 || bridge_type === 4) {
-
-                if (bridge_type === 3) {
-                    ws2api_vue.id = bridge_info.id;
-                    ws2api_vue.name = bridge_info.name;
-                    ws2api_vue.ws_address = bridge_info.src_address;
-                    ws2api_vue.api_feed = bridge_info.dst_address;
-                    ws2api_vue.frequency = bridge_info.frequency;
-                    change_frequency_title(ws2api_vue.frequency);
-                    $('#ws2api').modal('show');
-                    focus_on_element('ws2api_name');
-                } else if (bridge_type === 4) {
-                    api2ws_vue.id = bridge_info.id;
-                    api2ws_vue.name = bridge_info.name;
-                    api2ws_vue.api_feed = bridge_info.src_address;
-                    api2ws_vue.ws_address = bridge_info.dst_address;
-                    api2ws_vue.frequency = bridge_info.frequency;
-                    change_frequency_title(api2ws_vue.frequency);
-                    $('#api2ws').modal('show');
-                    focus_on_element('api2ws_name');
-                }
             }
+
+            if (bridge_type === 1)
+                open_ws2wh(bridge_info);
+            else if (bridge_type === 2)
+                open_wh2ws(bridge_info);
+            else if (bridge_type === 3)
+                open_ws2api(bridge_info);
+            else if (bridge_type === 4)
+                open_api2ws(bridge_info);
+            else if (bridge_type === 5)
+                open_file2wh(bridge_info);
+            else if (bridge_type === 6)
+                open_file2ws(bridge_info);
+            else if (bridge_type === 7)
+                open_file2api(bridge_info);
+            else if (bridge_type === 8)
+                open_wh2file(bridge_info);
+            else if (bridge_type === 9)
+                open_ws2file(bridge_info);
+            else if (bridge_type === 10)
+                open_api2file(bridge_info);
         }
 
         function open_report_modal(bridge_id) {
@@ -1359,7 +579,6 @@
                 dashboard_panel_vue.bridges[i]["show"] = dashboard_panel_vue.bridges[i]["name"].search(keyword) !== -1;
             }
         });
-
 
     </script>
 {% endblock javascript %}

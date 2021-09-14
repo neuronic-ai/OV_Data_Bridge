@@ -76,29 +76,105 @@
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label>Available Bridges</label>
-                            <div class="check-url">
-                                <div class="check-forgot">
-                                    <div class="form-group remember-check">
-                                        <input v-model="ab1" v-on:click="on_check_ab1" type="checkbox" id="ab1">
-                                        <label for="ab1">WSS/WS>WH</label>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <div class="check-url">
+                                        <div class="check-forgot">
+                                            <div class="form-group remember-check">
+                                                <input v-model="ab1" v-on:click="on_check_ab1" type="checkbox" id="ab1">
+                                                <label for="ab1">WSS/WS>WH</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="check-forgot">
-                                    <div class="form-group remember-check">
-                                        <input v-model="ab2" v-on:click="on_check_ab2" type="checkbox" id="ab2">
-                                        <label for="ab2">WH>WSS/WS</label>
+                                <div class="col-lg-3">
+                                    <div class="check-url">
+                                        <div class="check-forgot">
+                                            <div class="form-group remember-check">
+                                                <input v-model="ab2" v-on:click="on_check_ab2" type="checkbox" id="ab2">
+                                                <label for="ab2">WH>WSS/WS</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="check-forgot">
-                                    <div class="form-group remember-check">
-                                        <input v-model="ab3" v-on:click="on_check_ab3" type="checkbox" id="ab3">
-                                        <label for="ab3">WSS/WS>API</label>
+                                <div class="col-lg-3">
+                                    <div class="check-url">
+                                        <div class="check-forgot">
+                                            <div class="form-group remember-check">
+                                                <input v-model="ab3" v-on:click="on_check_ab3" type="checkbox" id="ab3">
+                                                <label for="ab3">WSS/WS>API</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="check-forgot">
-                                    <div class="form-group remember-check">
-                                        <input v-model="ab4" v-on:click="on_check_ab4" type="checkbox" id="ab4">
-                                        <label for="ab4">API>WS/WSS</label>
+                                <div class="col-lg-3">
+                                    <div class="check-url">
+                                        <div class="check-forgot">
+                                            <div class="form-group remember-check">
+                                                <input v-model="ab4" v-on:click="on_check_ab4" type="checkbox" id="ab4">
+                                                <label for="ab4">API>WS/WSS</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="check-url">
+                                        <div class="check-forgot">
+                                            <div class="form-group remember-check">
+                                                <input v-model="ab5" v-on:click="on_check_ab5" type="checkbox" id="ab5">
+                                                <label for="ab5">FILE>WH</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="check-url">
+                                        <div class="check-forgot">
+                                            <div class="form-group remember-check">
+                                                <input v-model="ab6" v-on:click="on_check_ab6" type="checkbox" id="ab6">
+                                                <label for="ab6">FILE>WS/WSS</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="check-url">
+                                        <div class="check-forgot">
+                                            <div class="form-group remember-check">
+                                                <input v-model="ab7" v-on:click="on_check_ab7" type="checkbox" id="ab7">
+                                                <label for="ab7">FILE>API</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="check-url">
+                                        <div class="check-forgot">
+                                            <div class="form-group remember-check">
+                                                <input v-model="ab8" v-on:click="on_check_ab8" type="checkbox" id="ab8">
+                                                <label for="ab8">WH>FILE</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="check-url">
+                                        <div class="check-forgot">
+                                            <div class="form-group remember-check">
+                                                <input v-model="ab9" v-on:click="on_check_ab9" type="checkbox" id="ab9">
+                                                <label for="ab9">WS>FILE</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="check-url">
+                                        <div class="check-forgot">
+                                            <div class="form-group remember-check">
+                                                <input v-model="ab10" v-on:click="on_check_ab10" type="checkbox" id="ab10">
+                                                <label for="ab10">API>FILE</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -138,6 +214,12 @@
                 ab2: available_bridges['ab2'],
                 ab3: available_bridges['ab3'],
                 ab4: available_bridges['ab4'],
+                ab5: available_bridges['ab5'],
+                ab6: available_bridges['ab6'],
+                ab7: available_bridges['ab7'],
+                ab8: available_bridges['ab8'],
+                ab9: available_bridges['ab9'],
+                ab10: available_bridges['ab10']
             },
             methods: {
                 on_check_af1: function () {
@@ -172,6 +254,30 @@
 
                     this.ab4 = !this.ab4;
                 },
+                on_check_ab5: function() {
+
+                    this.ab5 = !this.ab5;
+                },
+                on_check_ab6: function() {
+
+                    this.ab6 = !this.ab6;
+                },
+                on_check_ab7: function() {
+
+                    this.ab7 = !this.ab7;
+                },
+                on_check_ab8: function() {
+
+                    this.ab8 = !this.ab8;
+                },
+                on_check_ab9: function() {
+
+                    this.ab9 = !this.ab9;
+                },
+                on_check_ab10: function() {
+
+                    this.ab10 = !this.ab10;
+                },
                 on_save: function () {
 
                     $.ajax({
@@ -191,7 +297,13 @@
                                 'ab1': user_edit_vue.ab1,
                                 'ab2': user_edit_vue.ab2,
                                 'ab3': user_edit_vue.ab3,
-                                'ab4': user_edit_vue.ab4
+                                'ab4': user_edit_vue.ab4,
+                                'ab5': user_edit_vue.ab5,
+                                'ab6': user_edit_vue.ab6,
+                                'ab7': user_edit_vue.ab7,
+                                'ab8': user_edit_vue.ab8,
+                                'ab9': user_edit_vue.ab9,
+                                'ab10': user_edit_vue.ab10,
                             })
                         },
                         success: function (res) {

@@ -1,0 +1,154 @@
+{% load static %}
+
+<div class="modal fade" id="api2file" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">API to File</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="websocket-panel">
+                    <div class="change-password">
+                        <form id="api2file_form">
+                            <div class="left-panel">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-lg-9">
+                                            <label>Name</label>
+                                            <input v-model="name" id="api2file_name" type="text" class="form-control" placeholder="Enter here">
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <label>Frequency</label>
+                                            <div class="frequency-dropdown">
+                                                <select v-model="frequency" id="api2file_frequency" class="selectpicker form-control" data-dropup-auto="false" data-size="4">
+                                                    {% for f in frequency %}
+                                                        <option value={{ f.second }}>{{ f.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>API Feed</label>
+                                    <input v-model="api_feed" id="api2file_api_feed" type="text" class="form-control" placeholder="Enter here">
+                                </div>
+                                <div class="form-group">
+                                    <label>File Web Address</label>
+                                    <div class="copybutton">
+                                        <input v-model="file_web_address" type="text" class="form-control" placeholder="Enter here" readonly>
+                                        <div v-on:click="on_copy_api" class="copy-icon integration-checklist__copy-button">
+                                            <img src="{% static "img/icons/copy.png" %}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="right-button-panel example">
+                                <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
+                                <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
+                                <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let file_host = 'https://' + window.location.host + '/file/';
+
+    let api2file_vue = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#api2file_form',
+        data: {
+            id: 0,
+            name: '',
+            api_feed: '',
+            file_web_address: '',
+            frequency: '',
+        },
+        methods: {
+            on_delete: function () {
+
+                delete_bridge(this.id);
+            },
+            on_reset: function () {
+
+                swal({
+                        title: 'Are you sure?',
+                        text: 'All configurations for this bridge will be cleared!',
+                        type: 'warning',
+                        showCancelButton: true,
+                        showSweetAlert: true,
+                        confirmButtonColor: '#E0CA00',
+                        confirmButtonText: 'Reset',
+                        cancelButtonText: 'Cancel',
+                        closeOnConfirm: true,
+                        closeOnCancel: true
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            api2file_vue.name = '';
+                            api2file_vue.api_feed = '';
+                            api2file_vue.file_web_address = file_host + gen_rp(10) + '/' + gen_rp(20);
+                            api2file_vue.frequency = g_frequency_info[0].second;
+                            $('#api2file_frequency').selectpicker('val', api2file_vue.frequency);
+                            focus_on_element('api2file_name');
+                        }
+                    });
+            },
+            on_save: function () {
+
+                if (this.name === '') {
+                    $('#api2file_name').focus();
+                    return;
+                }
+
+                if (this.api_feed === '') {
+                    $('#api2file_api_feed').focus();
+                    return;
+                }
+
+                save_bridge({
+                    'id': this.id,
+                    'name': this.name,
+                    'type': 10,
+                    'src_address': this.api_feed,
+                    'dst_address': this.file_web_address,
+                    'frequency': this.frequency
+                });
+            },
+            on_copy_api: function () {
+
+                copy_text(this.file_web_address);
+            },
+        },
+        watch: {
+            name: function (cur_val, prev_val) {
+                if (cur_val.length > 64)
+                    this.name = prev_val;
+            }
+        }
+    });
+
+    function open_api2file(bridge_info) {
+
+        api2file_vue.id = bridge_info.id;
+        api2file_vue.name = bridge_info.name;
+        api2file_vue.api_feed = bridge_info.src_address;
+        api2file_vue.file_web_address = bridge_info.dst_address;
+        api2file_vue.frequency = bridge_info.frequency;
+        $('#api2file_frequency').selectpicker('val', bridge_info.frequency);
+        $('#api2file').modal('show');
+        focus_on_element('api2file_name');
+    }
+</script>

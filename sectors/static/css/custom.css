@@ -1117,7 +1117,7 @@ a.term-services {
 
 .frequency-dropdown {
     position: relative;
-    width: 180px;
+    margin-top: 6px;
 }
 
 .frequency-dropdown select {

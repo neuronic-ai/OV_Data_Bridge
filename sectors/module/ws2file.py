@@ -1,18 +1,22 @@
 import websocket
 import _thread as thread
-from django.core.cache import cache
 import time
 import json
+import requests
 from datetime import datetime
 
-from . import log
+from . import common, log, file
 
 from sectors.common import admin_config
+
+from db.models import (
+    TBLBridge
+)
 
 
 class Bridge:
     """
-    WebSocket to API Data Bridge
+    WebSocket to File Data Bridge
     """
 
     def __init__(self, bridge_info):
@@ -24,31 +28,25 @@ class Bridge:
         self.ws = None
         self.connection_status = None
         self.connection_text = 'Waiting for connect'
-        self.dumper_status = True
         self.log = log.BridgeLog(bridge_info)
         self.cache = self.log.get_last_log()
 
-        self.REDIS_CACHE_ID = f"{admin_config.BRIDGE_REDIS_CACHE_PREFIX}_{self.bridge_info['id']}"
-        self.REDIS_QUEUE = []
-        self.REDIS_CACHE_TTL = self.bridge_info['frequency']
+        self.file = file.File(bridge_info['dst_address'], bridge_info['file_format'])
+
+        self.flush = self.bridge_info['flush']
 
     def run_forever(self):
         self.ws.run_forever()
 
-    def dumper(self):
+    def run_api(self):
         count = 0
         while True:
-            if not self.dumper_status:
+            if not self.connection_status:
                 break
 
-            if count >= self.REDIS_CACHE_TTL:
+            if count >= self.flush:
                 count = 0
-                try:
-                    cache.set(self.REDIS_CACHE_ID, self.REDIS_QUEUE, timeout=self.REDIS_CACHE_TTL + 1)
-                    self.add_cache(f'REDIS QUEUE:Update - {self.REDIS_QUEUE}')
-                    self.REDIS_QUEUE = []
-                except Exception as e:
-                    self.add_cache(f'REDIS QUEUE:Update - Exception - {e}')
+                self.file.truncate()
 
             time.sleep(1)
             count += 1
@@ -62,16 +60,13 @@ class Bridge:
                                              on_close=self.on_close)
         if not self.connection_status:
             thread.start_new_thread(self.run_forever, ())
-
-        self.dumper_status = True
-        thread.start_new_thread(self.dumper, ())
+            thread.start_new_thread(self.run_api, ())
 
     def close_log(self):
         self.log.close()
 
     def close(self):
         self.connection_status = False
-        self.dumper_status = False
         self.ws.close()
 
     def is_connected(self):
@@ -96,29 +91,25 @@ class Bridge:
     def on_message(self, ws, message):
         if self.connection_status:
             self.add_cache(f'WS:Recv - {message}')
-            self.set_redis_cache(message)
+            self.write_file(message)
 
     def on_error(self, ws, error):
         self.connection_status = False
-        self.dumper_status = False
         self.connection_text = f'WS:Error - {error}'
         self.add_cache(self.connection_text)
 
     def on_close(self, ws, close_status_code, close_msg):
         self.connection_status = False
-        self.dumper_status = False
         self.connection_text = f'WS:Closed - {close_status_code} - {close_msg}'
         self.add_cache(self.connection_text)
 
-    def set_redis_cache(self, message):
-        try:
-            self.REDIS_QUEUE.append({
-                'date': datetime.utcnow().strftime('%m/%d/%Y, %H:%M:%S'),
-                'data': message
-            })
-            self.add_cache(f'REDIS QUEUE:Append - {message}')
-        except Exception as e:
-            self.add_cache(f'REDIS QUEUE:Append - Exception - {e}')
+    def write_file(self, message):
+        self.add_cache(f'FILE:Update - {message}')
+        self.file.write(message)
+
+        bridge = TBLBridge.objects.get(id=self.bridge_info['id'])
+        bridge.api_calls += 1
+        bridge.save()
 
     def add_cache(self, data):
         self.trace(data)

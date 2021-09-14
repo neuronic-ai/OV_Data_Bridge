@@ -202,9 +202,6 @@
     {% endblock content %}
 </div>
 
-{% block sub_content %}
-{% endblock sub_content %}
-
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 {#<script src="{% static "js/jquery-3.5.1.slim.min.js" %}"></script>#}
 <script src="{% static "js/bootstrap.bundle.js" %}"></script>
@@ -214,6 +211,9 @@
 <script src='https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js'></script>
 <script src='https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js'></script>
 <script src="{% static "js/main.js" %}"></script>
+
+{% block sub_content %}
+{% endblock sub_content %}
 
 {% block javascript %}
 {% endblock javascript %}

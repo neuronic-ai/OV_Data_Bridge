@@ -1,3 +1,4 @@
+import _thread as thread
 import time
 from datetime import datetime
 import json
@@ -13,7 +14,7 @@ from db.models import (
 
 class Bridge:
     """
-    WebHook to WebSocket Data Bridge
+    File to WebSocket Data Bridge
     """
 
     def __init__(self, bridge_info):
@@ -25,18 +26,37 @@ class Bridge:
         self.cache = self.log.get_last_log()
         self.ws_clients = []
 
+        self.FILE_FREQUENCY = self.bridge_info['frequency']
+        self.prev_file_data = None
+
     def notify_event(self, event):
         data = event['data']
-        if event['type'] == 'on_message':
-            self.send_message(data['message'])
-        elif event['type'] == 'on_add_ws_client':
+        if event['type'] == 'on_add_ws_client':
             self.add_ws_client(data['group_name'])
         elif event['type'] == 'on_remove_ws_client':
             self.remove_ws_client(data['group_name'])
 
+    def run_download(self):
+        count = 0
+        while True:
+            if not self.connection_status:
+                break
+
+            if count == 0 or count >= self.FILE_FREQUENCY:
+                count = 0
+                self.add_cache(f"FILE:Download - {self.bridge_info['src_address']}")
+                resp_data, status_code = common.get_remote_file_data(None, self.bridge_info)
+                self.add_cache(f'FILE:Recv - {resp_data}')
+                if status_code < 300:
+                    self.send_message(resp_data)
+
+            time.sleep(1)
+            count += 1
+
     def open(self):
         self.connection_status = True
-        self.connection_text = 'WH:Open - Ready'
+        self.connection_text = 'FILE:Open - Ready'
+        thread.start_new_thread(self.run_download, ())
         self.add_cache(self.connection_text)
 
     def close_log(self):
@@ -44,7 +64,7 @@ class Bridge:
 
     def close(self):
         self.connection_status = False
-        self.connection_text = f'WH:Closed'
+        self.connection_text = f'FILE:Closed'
         self.add_cache(self.connection_text)
 
     def is_connected(self):
@@ -61,20 +81,22 @@ class Bridge:
             self.ws_clients.remove(ws_id)
 
     def send_message(self, message):
-        self.add_cache(f'WH:Recv - {message}')
         try:
-            replaceable, content = common.get_formatted_content(message, self.bridge_info)
-            if replaceable:
-                self.add_cache(f'WS:Send - {content}')
+            if self.prev_file_data:
+                if self.prev_file_data == message:
+                    self.add_cache(f'WS:Send - Ignored!')
+                    return
 
-                for ws_id in self.ws_clients:
-                    common.send_ws_message(ws_id, content)
+            self.add_cache(f'WS:Send - {message}')
 
-                bridge = TBLBridge.objects.get(id=self.bridge_info['id'])
-                bridge.api_calls += 1
-                bridge.save()
-            else:
-                self.add_cache(f'WS:Send - Ignored!')
+            for ws_id in self.ws_clients:
+                common.send_ws_message(ws_id, {'data': message})
+
+            bridge = TBLBridge.objects.get(id=self.bridge_info['id'])
+            bridge.api_calls += 1
+            bridge.save()
+
+            self.prev_file_data = message
         except Exception as e:
             self.add_cache(f'WS:Send - Exception - {e}')
 

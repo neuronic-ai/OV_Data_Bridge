@@ -1,0 +1,165 @@
+<div class="modal fade" id="file2wh" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">File to WebHook</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="websocket-panel">
+                    <div class="change-password">
+                        <form id="file2wh_form">
+                            <div class="left-panel">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <label>Name</label>
+                                            <input v-model="name" id="file2wh_name" type="text" class="form-control" placeholder="Enter here">
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <label>Frequency</label>
+                                            <div class="frequency-dropdown">
+                                                <select v-model="frequency" id="file2wh_frequency" class="selectpicker form-control" data-dropup-auto="false" data-size="4">
+                                                    {% for f in frequency %}
+                                                        <option value={{ f.second }}>{{ f.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3" style="padding-top: 11px">
+                                            <a href="#" v-on:click="on_format" class="formate blue-bg" data-toggle="modal" data-target="#formate">Format</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>File Web Address</label>
+                                    <input v-model="file_web_address" id="file2wh_file_web_address" type="text" class="form-control" placeholder="Enter here">
+                                </div>
+                                <div class="form-group">
+                                    <label>WebHook Address</label>
+                                    <input v-model="wh_address" id="file2wh_wh_address" type="text" class="form-control" placeholder="Enter here">
+                                </div>
+                            </div>
+                            <div class="right-button-panel example">
+                                <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
+                                <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
+                                <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let file2wh_vue = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#file2wh_form',
+        data: {
+            id: 0,
+            name: '',
+            file_web_address: '',
+            wh_address: '',
+            frequency: ''
+        },
+        methods: {
+            on_format: function () {
+
+                focus_on_element('search_word');
+            },
+            on_delete: function () {
+
+                delete_bridge(this.id);
+            },
+            on_reset: function () {
+
+                swal({
+                        title: 'Are you sure?',
+                        text: 'All configurations for this bridge will be cleared!',
+                        type: 'warning',
+                        showCancelButton: true,
+                        showSweetAlert: true,
+                        confirmButtonColor: '#E0CA00',
+                        confirmButtonText: 'Reset',
+                        cancelButtonText: 'Cancel',
+                        closeOnConfirm: true,
+                        closeOnCancel: true
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            file2wh_vue.name = '';
+                            file2wh_vue.file_web_address = '';
+                            file2wh_vue.wh_address = '';
+                            file2wh_vue.frequency = g_frequency_info[0].second;
+                            $('#file2wh_frequency').selectpicker('val', file2wh_vue.frequency);
+                            reset_format();
+                            focus_on_element('file2wh_name');
+                        }
+                    });
+            },
+            on_save: function () {
+
+                if (this.name === '') {
+                    $('#file2wh_name').focus();
+                    return;
+                }
+
+                if (this.file_web_address === '') {
+                    $('#file2wh_file_web_address').focus();
+                    return;
+                }
+
+                if (this.wh_address === '') {
+                    $('#file2wh_wh_address').focus();
+                    return;
+                }
+
+                save_bridge({
+                    'id': this.id,
+                    'name': this.name,
+                    'type': 5,
+                    'src_address': this.file_web_address,
+                    'dst_address': this.wh_address,
+                    'frequency': this.frequency,
+                    'format': JSON.stringify({
+                        'search_word': format_vue.search_word,
+                        'replace_word': format_vue.replace_word,
+                        'any': format_vue.any
+                    })
+                });
+            }
+        },
+        watch: {
+            name: function (cur_val, prev_val) {
+                if (cur_val.length > 64)
+                    this.name = prev_val;
+            },
+            ws_address: function (cur_val, prev_val) {
+
+            },
+            wh_address: function (cur_val, prev_val) {
+
+            }
+        }
+    });
+
+    function open_file2wh(bridge_info) {
+
+        file2wh_vue.id = bridge_info.id;
+        file2wh_vue.name = bridge_info.name;
+        file2wh_vue.file_web_address = bridge_info.src_address;
+        file2wh_vue.wh_address = bridge_info.dst_address;
+        file2wh_vue.frequency = bridge_info.frequency;
+        $('#file2wh_frequency').selectpicker('val', bridge_info.frequency);
+        $('#file2wh').modal('show');
+        focus_on_element('file2wh_name');
+    }
+</script>

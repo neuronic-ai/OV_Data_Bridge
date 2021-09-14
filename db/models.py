@@ -37,6 +37,8 @@ class TBLBridge(models.Model):
     dst_address = models.CharField(max_length=255, default='')
     format = models.TextField(blank=True, null=True)
     frequency = models.IntegerField(default=0)
+    flush = models.IntegerField(default=0)
+    file_format = models.CharField(max_length=255, default='')
     is_active = models.BooleanField(default=True)
 
     class Meta:

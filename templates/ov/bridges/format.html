@@ -1,0 +1,123 @@
+<div class="formate-popup modal fade" id="formate" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered format-modal" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Format</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="websocket-panel">
+                    <div class="change-password">
+                        <form id="format_form">
+                            <div class="left-panel">
+                                <div class="form-section">
+                                    <label>Comma delimited search words</label>
+                                    <div class="data-formate-section formate-section remember-forgot">
+                                        <input v-model="search_word" id="search_word" type="text" class="form-control" placeholder="Enter here">
+                                        <div class="form-group remember-check">
+                                            <input v-model="any" v-on:click="on_check_any" type="checkbox" id="any">
+                                            <label for="any">Any</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input v-model="replace_word" type="text" class="form-control" placeholder="Enter here">
+                                </div>
+                            </div>
+                            <div class="right-button-section">
+                                <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
+                                <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
+                                <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let format_vue = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#format_form',
+        data: {
+            search_word: '',
+            replace_word: '',
+            any: false,
+        },
+        methods: {
+            on_delete: function () {
+
+                swal({
+                        title: 'Are you sure?',
+                        text: 'You will not be able to recover this format!',
+                        type: 'warning',
+                        showCancelButton: true,
+                        showSweetAlert: true,
+                        confirmButtonColor: '#C50101',
+                        confirmButtonText: 'Delete',
+                        cancelButtonText: 'Cancel',
+                        closeOnConfirm: true,
+                        closeOnCancel: true
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $('#formate').modal('hide');
+                            reset_format();
+                        }
+                    });
+            },
+            on_reset: function () {
+
+                swal({
+                        title: 'Are you sure?',
+                        text: 'Format for this bridge will be cleared!',
+                        type: 'warning',
+                        showCancelButton: true,
+                        showSweetAlert: true,
+                        confirmButtonColor: '#E0CA00',
+                        confirmButtonText: 'Reset',
+                        cancelButtonText: 'Cancel',
+                        closeOnConfirm: true,
+                        closeOnCancel: true
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            reset_format();
+                            focus_on_element('search_word');
+                        }
+                    });
+            },
+            on_save: function () {
+
+                $('#formate').modal('hide');
+            },
+            on_check_any: function () {
+
+                this.any = !this.any;
+            }
+        },
+        watch: {
+            search_word: function (cur_val, prev_val) {
+
+            },
+            replace_word: function (cur_val, prev_val) {
+
+            }
+        }
+    });
+
+    function reset_format() {
+
+        format_vue.search_word = '';
+        format_vue.replace_word = '';
+        format_vue.any = false;
+    }
+</script>

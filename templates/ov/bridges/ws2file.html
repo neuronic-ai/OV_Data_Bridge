@@ -1,0 +1,206 @@
+{% load static %}
+
+<div class="modal fade" id="ws2file" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
+        <div class="modal-content" style="overflow-y: inherit">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">WebSocket to File</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="websocket-panel">
+                    <div class="change-password">
+                        <form id="ws2file_form">
+                            <div class="left-panel">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-lg-9">
+                                            <label>Name</label>
+                                            <input v-model="name" id="ws2file_name" type="text" class="form-control" placeholder="Enter here">
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <label>Frequency</label>
+                                            <div class="frequency-dropdown">
+                                                <select v-model="frequency" id="ws2file_frequency" class="selectpicker form-control" data-dropup-auto="false" data-size="4">
+                                                    {% for f in frequency %}
+                                                        <option value={{ f.second }}>{{ f.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-lg-9">
+                                            <label>WebSocket Address</label>
+                                            <input v-model="ws_address" id="ws2file_ws_address" type="text" class="form-control" placeholder="Enter here">
+                                        </div>
+                                        <div class="col-lg-3" style="padding-top: 11px">
+                                            <a href="#" class="formate blue-bg" data-toggle="modal" data-target="#formate">Format</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>File Web Address</label>
+                                    <div class="copybutton">
+                                        <input v-model="file_web_address" type="text" class="form-control" placeholder="Enter here" readonly>
+                                        <div v-on:click="on_copy_file" class="copy-icon integration-checklist__copy-button">
+                                            <img class="integration-checklist__copy-button" src="{% static "img/icons/copy.png" %}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <label>Flush File Every: </label>
+                                            <div class="frequency-dropdown">
+                                                <select v-model="flush" id="ws2file_flush" class="selectpicker form-control" data-dropup-auto="false" data-size="4">
+                                                    {% for f in flush %}
+                                                        <option value={{ f.second }}>{{ f.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label>File Format: </label>
+                                            <div class="frequency-dropdown">
+                                                <select v-model="file_format" id="ws2file_file_format" class="selectpicker form-control" data-dropup-auto="false" data-size="4">
+                                                    {% for f in file_format %}
+                                                        <option value={{ f.value }}>{{ f.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="right-button-panel example">
+                                <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
+                                <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
+                                <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let ws2file_vue = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#ws2file_form',
+        data: {
+            id: 0,
+            name: '',
+            ws_address: '',
+            pre_fwa: '',
+            file_web_address: '',
+            frequency: '',
+            flush: '',
+            file_format: ''
+        },
+        methods: {
+            on_delete: function () {
+
+                delete_bridge(this.id);
+            },
+            on_reset: function () {
+
+                swal({
+                        title: 'Are you sure?',
+                        text: 'All configurations for this bridge will be cleared!',
+                        type: 'warning',
+                        showCancelButton: true,
+                        showSweetAlert: true,
+                        confirmButtonColor: '#E0CA00',
+                        confirmButtonText: 'Reset',
+                        cancelButtonText: 'Cancel',
+                        closeOnConfirm: true,
+                        closeOnCancel: true
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            ws2file_vue.name = '';
+                            ws2file_vue.ws_address = ws_host + gen_rp(10) + '/' + gen_rp(20);
+                            ws2file_vue.pre_fwa = file_host + gen_rp(10) + '/' + gen_rp(20);
+                            ws2file_vue.file_web_address = ws2file_vue.pre_fwa + ws2file_vue.file_format;
+                            ws2file_vue.frequency = g_frequency_info[0].second;
+                            ws2file_vue.flush = 3600;
+                            ws2file_vue.file_format = 'txt';
+                            $('#ws2file_frequency').selectpicker('val', ws2file_vue.frequency);
+                            $('#ws2file_flush').selectpicker('val', ws2file_vue.flush);
+                            $('#ws2file_file_format').selectpicker('val', ws2file_vue.file_format);
+                            focus_on_element('ws2file_name');
+                        }
+                    });
+            },
+            on_save: function () {
+
+                if (this.name === '') {
+                    $('#ws2file_name').focus();
+                    return;
+                }
+
+                if (this.ws_address === '') {
+                    $('#ws2file_ws_address').focus();
+                    return;
+                }
+
+                save_bridge({
+                    'id': this.id,
+                    'name': this.name,
+                    'type': 9,
+                    'src_address': this.ws_address,
+                    'dst_address': this.pre_fwa,
+                    'frequency': this.frequency,
+                    'flush': this.flush,
+                    'file_format': this.file_format
+                });
+            },
+            on_copy_ws: function () {
+
+                copy_text(this.ws_address);
+            },
+            on_copy_file: function () {
+
+                copy_text(this.file_web_address);
+            }
+        },
+        watch: {
+            name: function (cur_val, prev_val) {
+                if (cur_val.length > 64)
+                    this.name = prev_val;
+            },
+            file_format: function (cur_val, prev_val) {
+
+                this.file_web_address = this.pre_fwa + '.' + cur_val;
+            }
+        }
+    });
+
+    function open_ws2file(bridge_info) {
+
+        ws2file_vue.id = bridge_info.id;
+        ws2file_vue.name = bridge_info.name;
+        ws2file_vue.ws_address = bridge_info.src_address;
+        ws2file_vue.pre_fwa = bridge_info.dst_address;
+        ws2file_vue.file_web_address = bridge_info.dst_address + '.' + bridge_info.file_format;
+        ws2file_vue.frequency = bridge_info.frequency;
+        ws2file_vue.flush = bridge_info.flush;
+        ws2file_vue.file_format = bridge_info.file_format;
+        $('#ws2file_frequency').selectpicker('val', bridge_info.frequency);
+        $('#ws2file_flush').selectpicker('val', bridge_info.flush);
+        $('#ws2file_file_format').selectpicker('val', bridge_info.file_format);
+        $('#ws2file').modal('show');
+        focus_on_element('ws2file_name');
+    }
+</script>

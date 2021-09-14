@@ -3,6 +3,7 @@ import json
 from threading import Lock
 from zipfile import ZIP_DEFLATED, ZipFile
 from datetime import datetime
+import pytz
 
 from sectors.common import admin_config, common
 
@@ -107,7 +108,7 @@ class BridgeLog:
                 try:
                     log = TBLLog.objects.get(bridge_id=self.bridge_info['id'], is_full=False)
                     log.size = zip_size
-                    log.date_to = datetime.now()
+                    log.date_to = datetime.now(tzinfo=pytz.UTC)
                     if zip_size > admin_config.BRIDGE_LOG_MAX_SIZE:
                         log.is_full = True
                         self.add_new_log()

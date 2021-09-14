@@ -28,16 +28,3 @@ $(".mobile-search").click(function(){
 $(".close-toggle").click(function(){
   $(".search-bar").removeClass("active");
 });
-
-
-
-// $('.close-toggle').click(function() {
-//     location.reload();
-// });
-
-function myFunction() {
-  var copyText = document.getElementById("myInput");
-  copyText.select();
-  copyText.setSelectionRange(0, 99999)
-  document.execCommand("copy");
-}

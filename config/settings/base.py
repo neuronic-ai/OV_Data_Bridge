@@ -107,5 +107,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'sectors', 'static')
 ]
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'file')
+MEDIA_URL = '/file/'
+
 AUTH_USER_MODEL = 'db.TBLUser'
 LOGIN_URL = '/auth/login'

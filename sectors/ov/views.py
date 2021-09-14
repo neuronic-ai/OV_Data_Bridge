@@ -8,6 +8,7 @@ import json
 import os
 
 from sectors.common import admin_config, error, mail
+from sectors.module import common
 
 from db.models import (
     TBLBridge,
@@ -65,6 +66,8 @@ class DataBridgesView(TemplateView):
             del bi['user_id']
 
         context['frequency'] = admin_config.frequency
+        context['flush'] = admin_config.flush
+        context['file_format'] = admin_config.file_format
 
         return context
 
@@ -78,15 +81,29 @@ def save_bridge(request):
         else:
             bridge = TBLBridge.objects.get(id=int(params['id']))
 
+        bridge_type = int(params['type'])
+
+        if bridge_type in [5, 6, 7]:
+            resp_data, status_code = common.check_validity_remote_file(request, params['src_address'])
+            if status_code >= 300:
+                return JsonResponse({
+                    'status_code': status_code,
+                    'text': resp_data
+                })
+
         bridge.user = request.user
         bridge.name = params['name']
-        bridge.type = int(params['type'])
+        bridge.type = bridge_type
         bridge.src_address = params['src_address']
         bridge.dst_address = params['dst_address']
         if 'format' in params:
             bridge.format = params['format']
         if 'frequency' in params:
             bridge.frequency = int(params['frequency'])
+        if 'flush' in params:
+            bridge.flush = int(params['flush'])
+        if 'file_format' in params:
+            bridge.file_format = params['file_format']
 
         bridge_qty = TBLBridge.objects.filter(user=request.user, is_active=True).count()
         if bridge.is_active:

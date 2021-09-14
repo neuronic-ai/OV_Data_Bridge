@@ -1,0 +1,155 @@
+{% load static %}
+
+<div class="modal fade" id="ws2api" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered WebSocket-modal" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">WebSocket to API</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="websocket-panel">
+                    <div class="change-password">
+                        <form id="ws2api_form">
+                            <div class="left-panel">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-lg-9">
+                                            <label>Name</label>
+                                            <input v-model="name" id="ws2api_name" type="text" class="form-control" placeholder="Enter here">
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <label>Frequency</label>
+                                            <div class="frequency-dropdown">
+                                                <select v-model="frequency" id="ws2api_frequency" class="selectpicker form-control" data-dropup-auto="false" data-size="4">
+                                                    {% for f in frequency %}
+                                                        <option value={{ f.second }}>{{ f.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>WebSocket Address</label>
+                                    <input v-model="ws_address" id="ws2api_ws_address" type="text" class="form-control" placeholder="Enter here">
+                                </div>
+                                <div class="form-group">
+                                    <label>API Feed</label>
+                                    <div class="copybutton">
+                                        <input v-model="api_feed" type="text" class="form-control" placeholder="Enter here" readonly>
+                                        <div v-on:click="on_copy_api" class="copy-icon integration-checklist__copy-button">
+                                            <img src="{% static "img/icons/copy.png" %}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="right-button-panel example">
+                                <a href="#" v-on:click="on_delete" class="websocket-button red-bg">Delete</a>
+                                <a href="#" v-on:click="on_reset" class="websocket-button yellow-bg">Reset</a>
+                                <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let ws2api_vue = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#ws2api_form',
+        data: {
+            id: 0,
+            name: '',
+            ws_address: '',
+            api_feed: '',
+            frequency: 0,
+        },
+        methods: {
+            on_delete: function () {
+
+                delete_bridge(this.id);
+            },
+            on_reset: function () {
+
+                swal({
+                        title: 'Are you sure?',
+                        text: 'All configurations for this bridge will be cleared!',
+                        type: 'warning',
+                        showCancelButton: true,
+                        showSweetAlert: true,
+                        confirmButtonColor: '#E0CA00',
+                        confirmButtonText: 'Reset',
+                        cancelButtonText: 'Cancel',
+                        closeOnConfirm: true,
+                        closeOnCancel: true
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            ws2api_vue.name = '';
+                            ws2api_vue.ws_address = '';
+                            ws2api_vue.api_feed = api_host + gen_rp(10) + '/' + gen_rp(20);
+                            ws2api_vue.frequency = g_frequency_info[0].second;
+                            $('#ws2api_frequency').selectpicker('val', ws2api_vue.frequency);
+                            focus_on_element('ws2api_name');
+                        }
+                    });
+            },
+            on_save: function () {
+
+                if (this.name === '') {
+                    $('#ws2api_name').focus();
+                    return;
+                }
+
+                if (this.ws_address === '') {
+                    $('#ws2api_ws_address').focus();
+                    return;
+                }
+
+                save_bridge({
+                    'id': this.id,
+                    'name': this.name,
+                    'type': 3,
+                    'src_address': this.ws_address,
+                    'dst_address': this.api_feed,
+                    'frequency': this.frequency
+                });
+            },
+            on_copy_api: function () {
+
+                copy_text(this.api_feed);
+            },
+        },
+        watch: {
+            name: function (cur_val, prev_val) {
+                if (cur_val.length > 64)
+                    this.name = prev_val;
+            },
+            ws_address: function (cur_val, prev_val) {
+
+            }
+        }
+    });
+
+    function open_ws2api(bridge_info) {
+
+        ws2api_vue.id = bridge_info.id;
+        ws2api_vue.name = bridge_info.name;
+        ws2api_vue.ws_address = bridge_info.src_address;
+        ws2api_vue.api_feed = bridge_info.dst_address;
+        ws2api_vue.frequency = bridge_info.frequency;
+        $('#ws2api_frequency').selectpicker('val', bridge_info.frequency);
+        $('#ws2api').modal('show');
+        focus_on_element('ws2api_name');
+    }
+</script>

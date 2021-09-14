@@ -115,7 +115,7 @@ class Bridge:
             self.cache.pop(0)
 
         cache_data = {
-            'date': datetime.now().strftime('%m/%d/%Y, %H:%M:%S'),
+            'date': datetime.utcnow().strftime('%m/%d/%Y, %H:%M:%S'),
             'data': data
         }
 
@@ -128,4 +128,4 @@ class Bridge:
 
     def trace(self, trace_log):
         if admin_config.TRACE_MODE:
-            print(f"{datetime.now()}: {self.bridge_info['name']}_{self.bridge_info['user_id']}: {trace_log}")
+            print(f"{datetime.utcnow()}: {self.bridge_info['name']}_{self.bridge_info['user_id']}: {trace_log}")
