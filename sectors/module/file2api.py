@@ -9,6 +9,10 @@ from . import common, log
 
 from sectors.common import admin_config
 
+from db.models import (
+    TBLBridge
+)
+
 
 class Bridge:
     """
@@ -28,7 +32,6 @@ class Bridge:
         self.cache = self.log.get_last_log()
 
         self.REDIS_CACHE_ID = f"{admin_config.BRIDGE_REDIS_CACHE_PREFIX}_{self.bridge_info['id']}"
-        self.REDIS_QUEUE = []
         self.REDIS_CACHE_TTL = self.bridge_info['frequency']
         self.prev_file_data = None
 
@@ -71,27 +74,33 @@ class Bridge:
 
     def set_redis_cache(self, message):
         try:
-            # if self.REDIS_CACHE_ID in cache:
-            #     print(cache.get(self.REDIS_CACHE_ID))
+            bridge = TBLBridge.objects.get(id=self.bridge_info['id'])
+            if bridge.is_status == 1 or bridge.user.balance <= 0:
+                bridge.is_status = 1
+                bridge.save()
+                self.add_cache(f'REDIS QUEUE:Append - Ignored! - Out of Funds!')
+                return
+
+            try:
+                message = json.loads(message)
+            except:
+                pass
 
             if self.prev_file_data:
                 if self.prev_file_data == message:
                     self.add_cache(f'REDIS QUEUE:Append - Ignored!')
                     return
 
-            try:
-                if self.REDIS_CACHE_ID not in cache:
-                    cache.set(self.REDIS_CACHE_ID, self.REDIS_QUEUE)
-                    self.add_cache(f'REDIS QUEUE:Update - {self.REDIS_QUEUE}')
-                    self.REDIS_QUEUE = []
-            except Exception as e:
-                self.add_cache(f'REDIS QUEUE:Update - Exception - {e}')
+            if self.REDIS_CACHE_ID not in cache:
+                cache.set(self.REDIS_CACHE_ID, [])
 
-            self.REDIS_QUEUE.append({
+            cache_data = cache.get(self.REDIS_CACHE_ID)
+            cache_data.append({
                 'date': datetime.utcnow().strftime('%m/%d/%Y, %H:%M:%S'),
                 'data': message
             })
-            cache.set(self.REDIS_CACHE_ID, self.REDIS_QUEUE)
+
+            cache.set(self.REDIS_CACHE_ID, cache_data)
             self.add_cache(f'REDIS QUEUE:Append - {message}')
 
             self.prev_file_data = message

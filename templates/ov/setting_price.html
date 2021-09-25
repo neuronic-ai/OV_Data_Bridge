@@ -1,0 +1,165 @@
+{% extends "ov/base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Users</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="main-content">
+        <div class="user-edit-panel into-border">
+            <h3 class="user-title">Setting</h3>
+            <div class="user-dashboard-title" style="min-height: 30px">
+            </div>
+        </div>
+        <div class="row" style="padding-top: 20px">
+            <a href="{% url "setting_server" %}" class="sub-tab">SERVER</a>
+            <a href="{% url "setting_price" %}" class="sub-tab st-active">PRICING</a>
+            <a href="{% url "setting_smtp" %}" class="sub-tab">SMTP</a>
+        </div>
+        <div class="edit-user change-password change-password-panel">
+            <form>
+                <div class="row m-0">
+                    <div class="col-lg-12">
+                        <span>
+                            <h6 class="externel-title">Pricing Configuration Settings</h6>
+                        </span>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="check-url">
+                                        <div class="check-forgot">
+                                            <div class="form-group remember-check">
+                                                <input type="checkbox" id="disable_pricing" {% if disable_pricing %}checked{% endif %}>
+                                                <label for="disable_pricing">Disable Pricing ( FREE MODE )</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row m-0">
+                    <div class="col-lg-7">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                </div>
+                                <div class="col-lg-3" style="text-decoration: underline">
+                                    Monthly Pricing ($)
+                                </div>
+                                <div class="col-lg-5" style="text-decoration: underline">
+                                    Conversion Pricing ($)
+                                </div>
+                            </div>
+                            {% for bp in bridge_price %}
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="check-url">
+                                        <div class="check-forgot">
+                                            <div class="form-group remember-check">
+                                                <input type="checkbox" id="ab{{ bp.type }}" {% if bp.is_active %}checked{% endif %}>
+                                                <label for="ab{{ bp.type }}">{{ bp.name }}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 price-div">
+                                    <input id="bp_mp_{{ bp.type }}" type="number" placeholder="$" value={{ bp.m_p }}>
+                                </div>
+                                <div class="col-lg-5 price-div">
+                                    <input id="bp_cp_{{ bp.type }}" type="number" placeholder="$" value={{ bp.c_p }}>
+                                    <i>Per 1000 Conversion</i>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg-12" style="text-decoration: underline">
+                                    Monthly Pricing ($) - Conversion Speed
+                                </div>
+                            </div>
+                            {% for fp in frequency_price %}
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="check-url">
+                                            <div class="check-forgot">
+                                                <div class="form-group remember-check">
+                                                    <input type="checkbox" id="af{{ fp.type }}" {% if fp.is_active %}checked{% endif %}>
+                                                    <label for="af{{ fp.type }}">{{ fp.name }}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 price-div">
+                                        <input id="fp_mp_{{ fp.type }}" type="number" placeholder="$" value={{ fp.m_p }}>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row m-0">
+                    <div class="col-lg-12">
+                        <div class="edit-user-action">
+                            <a href="#" class="success-bg" onclick="save()">Save</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block javascript %}
+    <script>
+        function save() {
+
+            let i;
+            let bridge_price = [];
+            let frequency_price = [];
+
+            for (i = 1; i < 11; i++) {
+                bridge_price.push({
+                    'type': i,
+                    'm_p': parseFloat($('#bp_mp_' + i).val()),
+                    'c_p': parseFloat($('#bp_cp_' + i).val()),
+                    'is_active': document.getElementById('ab' + i).checked
+                });
+            }
+
+            for (i = 1; i < 5; i++) {
+                frequency_price.push({
+                    'type': i,
+                    'm_p': parseFloat($('#fp_mp_' + i).val()),
+                    'is_active': document.getElementById('af' + i).checked
+                });
+            }
+
+            $.ajax({
+                url: '{% url 'save_setting' %}',
+                type: 'POST',
+                data: {
+                    'price_setting': JSON.stringify({
+                        'disable_pricing': document.getElementById('disable_pricing').checked,
+                        'bridge_price': bridge_price,
+                        'frequency_price': frequency_price
+                    })
+                },
+                success: function (res) {
+                    if (res.status_code === 200) {
+                        swal('Saved!', 'Setting has been saved!', 'success');
+                    } else {
+                        swal('Error!', res.text, 'error');
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}

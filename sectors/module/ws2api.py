@@ -9,6 +9,10 @@ from . import log
 
 from sectors.common import admin_config
 
+from db.models import (
+    TBLBridge
+)
+
 
 class Bridge:
     """
@@ -112,6 +116,13 @@ class Bridge:
 
     def set_redis_cache(self, message):
         try:
+            bridge = TBLBridge.objects.get(id=self.bridge_info['id'])
+            if bridge.is_status == 1 or bridge.user.balance <= 0:
+                bridge.is_status = 1
+                bridge.save()
+                self.add_cache(f'REDIS QUEUE:Append - Ignored! - Out of Funds!')
+                return
+
             self.REDIS_QUEUE.append({
                 'date': datetime.utcnow().strftime('%m/%d/%Y, %H:%M:%S'),
                 'data': message

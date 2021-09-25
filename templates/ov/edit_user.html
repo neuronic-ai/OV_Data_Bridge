@@ -15,6 +15,10 @@
                 <h2>Total Bridges: <span>{{ total_bridges }}</span></h2>
             </div>
         </div>
+        <div class="row" style="padding-top: 20px">
+            <a href="{% url "edit_user_general" param1=edit_user_id %}" class="sub-tab st-active">GENERAL</a>
+            <a href="{% url "edit_user_account" param1=edit_user_id %}" class="sub-tab">ACCOUNT</a>
+        </div>
         <div class="edit-user change-password change-password-panel">
             <form id="edit_user_form">
                 <div class="row m-0">
@@ -68,6 +72,35 @@
                                     <div class="form-group remember-check">
                                         <input v-model="af4" v-on:click="on_check_af4" type="checkbox" id="af4">
                                         <label for="af4">1h</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Allowed File Flush</label>
+                            <div class="check-url">
+                                <div class="check-forgot">
+                                    <div class="form-group remember-check">
+                                        <input v-model="aff1" v-on:click="on_check_aff1" type="checkbox" id="aff1">
+                                        <label for="aff1">5s</label>
+                                    </div>
+                                </div>
+                                <div class="check-forgot">
+                                    <div class="form-group remember-check">
+                                        <input v-model="aff2" v-on:click="on_check_aff2" type="checkbox" id="aff2">
+                                        <label for="aff2">1m</label>
+                                    </div>
+                                </div>
+                                <div class="check-forgot">
+                                    <div class="form-group remember-check">
+                                        <input v-model="aff3" v-on:click="on_check_aff3" type="checkbox" id="aff3">
+                                        <label for="aff3">5m</label>
+                                    </div>
+                                </div>
+                                <div class="check-forgot">
+                                    <div class="form-group remember-check">
+                                        <input v-model="aff4" v-on:click="on_check_aff4" type="checkbox" id="aff4">
+                                        <label for="aff4">1h</label>
                                     </div>
                                 </div>
                             </div>
@@ -198,6 +231,7 @@
     <script>
         var permission = {{ edit_permission|safe }};
         var allowed_frequency = JSON.parse(permission.allowed_frequency);
+        var allowed_file_flush = JSON.parse(permission.allowed_file_flush);
         var available_bridges = JSON.parse(permission.available_bridges);
 
         var user_edit_vue = new Vue({
@@ -210,6 +244,10 @@
                 af2: allowed_frequency['af2'],
                 af3: allowed_frequency['af3'],
                 af4: allowed_frequency['af4'],
+                aff1: allowed_file_flush['aff1'],
+                aff2: allowed_file_flush['aff2'],
+                aff3: allowed_file_flush['aff3'],
+                aff4: allowed_file_flush['aff4'],
                 ab1: available_bridges['ab1'],
                 ab2: available_bridges['ab2'],
                 ab3: available_bridges['ab3'],
@@ -237,6 +275,22 @@
                 on_check_af4: function () {
 
                     this.af4 = !this.af4;
+                },
+                on_check_aff1: function () {
+
+                    this.aff1 = !this.aff1;
+                },
+                on_check_aff2: function () {
+
+                    this.aff2 = !this.aff2;
+                },
+                on_check_aff3: function () {
+
+                    this.aff3 = !this.aff3;
+                },
+                on_check_aff4: function () {
+
+                    this.aff4 = !this.aff4;
                 },
                 on_check_ab1: function () {
 
@@ -293,6 +347,12 @@
                                 'af3': user_edit_vue.af3,
                                 'af4': user_edit_vue.af4
                             }),
+                            'allowed_file_flush': JSON.stringify({
+                                'aff1': user_edit_vue.aff1,
+                                'aff2': user_edit_vue.aff2,
+                                'aff3': user_edit_vue.aff3,
+                                'aff4': user_edit_vue.aff4
+                            }),
                             'available_bridges': JSON.stringify({
                                 'ab1': user_edit_vue.ab1,
                                 'ab2': user_edit_vue.ab2,
@@ -303,7 +363,7 @@
                                 'ab7': user_edit_vue.ab7,
                                 'ab8': user_edit_vue.ab8,
                                 'ab9': user_edit_vue.ab9,
-                                'ab10': user_edit_vue.ab10,
+                                'ab10': user_edit_vue.ab10
                             })
                         },
                         success: function (res) {

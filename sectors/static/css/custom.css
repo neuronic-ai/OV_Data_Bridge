@@ -950,6 +950,10 @@ a.term-services {
     height: calc(1.5em + 10px + 0px);
 }
 
+.col-lg-3 input.form-control {
+    height: calc(1.5em + 10px + 0px);
+}
+
 .profile-page input.form-control {
     height: calc(1.5em + 10px + 0px);
 }
@@ -1302,8 +1306,8 @@ a.term-services {
 }
 
 .table-panel .form-inline .dataTables_filter {
-    position: absolute;
-    left: 10px;
+    /*position: absolute;*/
+    /*left: 10px;*/
 }
 
 .table-panel .form-inline {
@@ -1318,9 +1322,8 @@ a.term-services {
     margin: 0;
 }
 
-.table-panel .form-inline .dataTables_length {
-    position: fixed;
-    right: 65px;
+.table-panel .form-inline .dataTables_length label {
+    justify-content: left;
 }
 
 .table-panel .row .col-sm-6, .table-panel .row .col-sm-12, .table-panel .row .col-sm-5, .table-panel .row .col-sm-7 {
@@ -1331,8 +1334,15 @@ a.term-services {
     padding: 0;
 }
 
+.out-of-funds {
+    color: red;
+    font-size: 16px !important;
+    font-style: italic;
+    font-weight: 600;
+}
+
 .table-panel .row:first-child {
-    margin-bottom: 50px;
+    margin-bottom: 10px;
 }
 
 .table-panel {
@@ -1529,10 +1539,9 @@ div.dataTables_wrapper div.dataTables_filter input {
 }
 
 .edit-user {
-    margin-top: 60px;
+    margin-top: 40px;
     margin-bottom: 60px;
     width: 100%;
-    padding-right: 80px;
 }
 
 .edit-user form {
@@ -1617,10 +1626,6 @@ a.grey-bg {
     white-space: nowrap;
 }
 
-.edit-user-action {
-    margin-top: 40px;
-}
-
 .super-login,
 .delete-user {
     color: white !important;
@@ -1677,6 +1682,27 @@ a.grey-bg {
 
 .bottom-form {
     padding-right: 30px;
+}
+
+.sub-tab {
+    margin-right: 24px;
+    margin-left: 30px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1D1D1D;
+}
+
+.st-active {
+    color: #01c579;
+    text-decoration: underline;
+}
+
+.price-div {
+    padding-top: 10px;
+}
+
+.price-div input {
+    width: 100px;
 }
 
 #docmodel .log-divv, #docmodel .file-list-div {

@@ -6,6 +6,8 @@ from sectors.common import admin_config
 
 
 class TBLUser(AbstractUser):
+    balance = models.FloatField(default=0)
+    spent = models.FloatField(default=0)
     reset_link = models.CharField(max_length=255, default='')
     permission = models.TextField(default=json.dumps({
         'max_active_bridges': admin_config.DEFAULT_MAX_ACTIVE_BRIDGES,
@@ -18,18 +20,10 @@ class TBLUser(AbstractUser):
         db_table = 'TBLUSER'
 
 
-BRIDGE_TYPE = [
-    (1, 'ws2wh'),
-    (2, 'wh2ws'),
-    (3, 'ws2api'),
-    (4, 'api2ws'),
-]
-
-
 class TBLBridge(models.Model):
     user = models.ForeignKey(TBLUser, on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=255, default='')
-    type = models.IntegerField(choices=BRIDGE_TYPE)
+    type = models.IntegerField(default=0)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
     api_calls = models.IntegerField(default=0)
@@ -39,7 +33,9 @@ class TBLBridge(models.Model):
     frequency = models.IntegerField(default=0)
     flush = models.IntegerField(default=0)
     file_format = models.CharField(max_length=255, default='')
+    billed_calls = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
+    is_status = models.IntegerField(default=0)
 
     class Meta:
         db_table = 'TBLBRIDGE'
@@ -58,12 +54,27 @@ class TBLLog(models.Model):
 
 
 class TBLSetting(models.Model):
-    server_setting = models.TextField(blank=True, null=True)
+    server_setting = models.JSONField(default=dict)
     max_active_bridges = models.IntegerField(default=0)
     rate_limit_per_url = models.IntegerField(default=0)
-    allowed_frequency = models.TextField(blank=True, null=True)
-    available_bridges = models.TextField(blank=True, null=True)
-    smtp_setting = models.TextField(blank=True, null=True)
+    allowed_frequency = models.JSONField(default=dict)
+    allowed_file_flush = models.JSONField(default=dict)
+    available_bridges = models.JSONField(default=dict)
+    price_setting = models.JSONField(default=dict)
+    smtp_setting = models.JSONField(default=dict)
 
     class Meta:
         db_table = 'TBLSETTING'
+
+
+class TBLTransaction(models.Model):
+    user = models.ForeignKey(TBLUser, on_delete=models.CASCADE, blank=True, null=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    mode = models.IntegerField(default=0)
+    amount = models.FloatField(default=0)
+    balance = models.FloatField(default=0)
+    description = models.CharField(max_length=255, default='')
+    notes = models.CharField(max_length=255, default='')
+
+    class Meta:
+        db_table = 'TBLTRANSACTION'

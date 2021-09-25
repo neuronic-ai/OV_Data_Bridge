@@ -12,8 +12,13 @@
             <div class="user-dashboard-title" style="min-height: 30px">
             </div>
         </div>
+        <div class="row" style="padding-top: 20px">
+            <a href="{% url "setting_server" %}" class="sub-tab st-active">SERVER</a>
+            <a href="{% url "setting_price" %}" class="sub-tab">PRICING</a>
+            <a href="{% url "setting_smtp" %}" class="sub-tab">SMTP</a>
+        </div>
         <div class="edit-user change-password change-password-panel">
-            <form id="setting_form">
+            <form id="setting_server_form">
                 <div class="row m-0">
                     <div class="col-lg-12">
                         <span>
@@ -98,6 +103,35 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="fn-bold">Allowed File Flush</label>
+                            <div class="check-url">
+                                <div class="check-forgot">
+                                    <div class="form-group remember-check">
+                                        <input v-model="aff1" v-on:click="on_check_aff1" type="checkbox" id="aff1">
+                                        <label for="aff1">5m</label>
+                                    </div>
+                                </div>
+                                <div class="check-forgot">
+                                    <div class="form-group remember-check">
+                                        <input v-model="aff2" v-on:click="on_check_aff2" type="checkbox" id="aff2">
+                                        <label for="aff2">30m</label>
+                                    </div>
+                                </div>
+                                <div class="check-forgot">
+                                    <div class="form-group remember-check">
+                                        <input v-model="aff3" v-on:click="on_check_aff3" type="checkbox" id="aff3">
+                                        <label for="aff3">1hr</label>
+                                    </div>
+                                </div>
+                                <div class="check-forgot">
+                                    <div class="form-group remember-check">
+                                        <input v-model="aff4" v-on:click="on_check_aff4" type="checkbox" id="aff4">
+                                        <label for="aff4">24hr</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group">
@@ -138,7 +172,7 @@
                                         <div class="check-forgot">
                                             <div class="form-group remember-check">
                                                 <input v-model="ab4" v-on:click="on_check_ab4" type="checkbox" id="ab4">
-                                                <label for="ab4">API>WS/WSS</label>
+                                                <label for="ab4">API>WSS/WS</label>
                                             </div>
                                         </div>
                                     </div>
@@ -158,7 +192,7 @@
                                         <div class="check-forgot">
                                             <div class="form-group remember-check">
                                                 <input v-model="ab6" v-on:click="on_check_ab6" type="checkbox" id="ab6">
-                                                <label for="ab6">FILE>WS/WSS</label>
+                                                <label for="ab6">FILE>WSS/WS</label>
                                             </div>
                                         </div>
                                     </div>
@@ -188,7 +222,7 @@
                                         <div class="check-forgot">
                                             <div class="form-group remember-check">
                                                 <input v-model="ab9" v-on:click="on_check_ab9" type="checkbox" id="ab9">
-                                                <label for="ab9">WS>FILE</label>
+                                                <label for="ab9">WSS/WS>FILE</label>
                                             </div>
                                         </div>
                                     </div>
@@ -209,55 +243,7 @@
                 </div>
                 <div class="row m-0">
                     <div class="col-lg-12">
-                        <span>
-                            <h6 class="externel-title">External SMTP Server Configuration Settings</h6>
-                        </span>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label>SMTP Server Name</label>
-                            <input v-model="smtp_server_name" type="email" class="form-control"
-                                   placeholder="smtp@gmail.com">
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label>SMTP Port</label>
-                            <input v-model="smtp_port" type="number" class="form-control" placeholder="587">
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label>SMTP Authentication</label>
-                            <input v-model="smtp_authentication" type="text" class="form-control"
-                                   placeholder="Enter Here" readonly>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label>SMTP Enable StartTLS</label>
-                            <input v-model="smtp_enable_starttls" type="text" class="form-control"
-                                   placeholder="Enter Here" readonly>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label>SMTP Username</label>
-                            <input v-model="smtp_username" type="text" class="form-control" placeholder="Enter Here">
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label>SMTP Password</label>
-                            <input v-model="smtp_password" type="password" class="form-control"
-                                   placeholder="Enter Here">
-                        </div>
-                    </div>
-                </div>
-                <div class="row m-0">
-                    <div class="col-lg-12">
                         <div class="edit-user-action">
-                            <a href="#" v-on:click="on_test" class="yellow-bg">Test SMTP</a>
                             <a href="#" v-on:click="on_save" class="success-bg">Save</a>
                         </div>
                     </div>
@@ -272,12 +258,12 @@
         var setting_data = {{ setting_data|safe }};
         var server_data = JSON.parse(setting_data.server_setting);
         var allowed_frequency = JSON.parse(setting_data.allowed_frequency);
+        var allowed_file_flush = JSON.parse(setting_data.allowed_file_flush);
         var available_bridges = JSON.parse(setting_data.available_bridges);
-        var smtp_setting = JSON.parse(setting_data.smtp_setting);
 
-        var setting_vue = new Vue({
+        var setting_server_vue = new Vue({
             delimiters: ['[[', ']]'],
-            el: '#setting_form',
+            el: '#setting_server_form',
             data: {
                 server_name: server_data['server_name'],
                 priv_key_directory: server_data['priv_key_directory'],
@@ -290,6 +276,10 @@
                 af2: allowed_frequency['af2'],
                 af3: allowed_frequency['af3'],
                 af4: allowed_frequency['af4'],
+                aff1: allowed_file_flush['aff1'],
+                aff2: allowed_file_flush['aff2'],
+                aff3: allowed_file_flush['aff3'],
+                aff4: allowed_file_flush['aff4'],
                 ab1: available_bridges['ab1'],
                 ab2: available_bridges['ab2'],
                 ab3: available_bridges['ab3'],
@@ -299,13 +289,7 @@
                 ab7: available_bridges['ab7'],
                 ab8: available_bridges['ab8'],
                 ab9: available_bridges['ab9'],
-                ab10: available_bridges['ab10'],
-                smtp_server_name: smtp_setting['smtp_server_name'],
-                smtp_port: smtp_setting['smtp_port'],
-                smtp_authentication: smtp_setting['smtp_authentication'],
-                smtp_enable_starttls: smtp_setting['smtp_enable_starttls'],
-                smtp_username: smtp_setting['smtp_username'],
-                smtp_password: smtp_setting['smtp_password'],
+                ab10: available_bridges['ab10']
             },
             methods: {
                 on_check_af1: function () {
@@ -323,6 +307,22 @@
                 on_check_af4: function () {
 
                     this.af4 = !this.af4;
+                },
+                on_check_aff1: function () {
+
+                    this.aff1 = !this.aff1;
+                },
+                on_check_aff2: function () {
+
+                    this.aff2 = !this.aff2;
+                },
+                on_check_aff3: function () {
+
+                    this.aff3 = !this.aff3;
+                },
+                on_check_aff4: function () {
+
+                    this.aff4 = !this.aff4;
                 },
                 on_check_ab1: function () {
 
@@ -364,30 +364,6 @@
 
                     this.ab10 = !this.ab10;
                 },
-                on_test: function () {
-
-                    $.ajax({
-                        url: '{% url 'test_smtp' %}',
-                        type: 'POST',
-                        data: {
-                            'smtp_setting': JSON.stringify({
-                                'smtp_server_name': setting_vue.smtp_server_name,
-                                'smtp_port': setting_vue.smtp_port,
-                                'smtp_authentication': setting_vue.smtp_authentication,
-                                'smtp_enable_starttls': setting_vue.smtp_enable_starttls,
-                                'smtp_username': setting_vue.smtp_username,
-                                'smtp_password': setting_vue.smtp_password
-                            })
-                        },
-                        success: function (res) {
-                            if (res.status_code === 200) {
-                                swal('Success!', 'SMTP configuration is correct!', 'success');
-                            } else {
-                                swal('Error!', res.text, 'error');
-                            }
-                        }
-                    });
-                },
                 on_save: function () {
 
                     $.ajax({
@@ -395,39 +371,37 @@
                         type: 'POST',
                         data: {
                             'server_setting': JSON.stringify({
-                                'server_name': setting_vue.server_name,
-                                'priv_key_directory': setting_vue.priv_key_directory,
-                                'cert_directory': setting_vue.cert_directory,
-                                'privacy_link': setting_vue.privacy_link,
-                                'user_link': setting_vue.user_link,
+                                'server_name': setting_server_vue.server_name,
+                                'priv_key_directory': setting_server_vue.priv_key_directory,
+                                'cert_directory': setting_server_vue.cert_directory,
+                                'privacy_link': setting_server_vue.privacy_link,
+                                'user_link': setting_server_vue.user_link,
                             }),
-                            'max_active_bridges': setting_vue.max_active_bridges,
-                            'rate_limit_per_url': setting_vue.rate_limit_per_url,
+                            'max_active_bridges': setting_server_vue.max_active_bridges,
+                            'rate_limit_per_url': setting_server_vue.rate_limit_per_url,
                             'allowed_frequency': JSON.stringify({
-                                'af1': setting_vue.af1,
-                                'af2': setting_vue.af2,
-                                'af3': setting_vue.af3,
-                                'af4': setting_vue.af4
+                                'af1': setting_server_vue.af1,
+                                'af2': setting_server_vue.af2,
+                                'af3': setting_server_vue.af3,
+                                'af4': setting_server_vue.af4
+                            }),
+                            'allowed_file_flush': JSON.stringify({
+                                'aff1': setting_server_vue.aff1,
+                                'aff2': setting_server_vue.aff2,
+                                'aff3': setting_server_vue.aff3,
+                                'aff4': setting_server_vue.aff4
                             }),
                             'available_bridges': JSON.stringify({
-                                'ab1': setting_vue.ab1,
-                                'ab2': setting_vue.ab2,
-                                'ab3': setting_vue.ab3,
-                                'ab4': setting_vue.ab4,
-                                'ab5': setting_vue.ab5,
-                                'ab6': setting_vue.ab6,
-                                'ab7': setting_vue.ab7,
-                                'ab8': setting_vue.ab8,
-                                'ab9': setting_vue.ab9,
-                                'ab10': setting_vue.ab10
-                            }),
-                            'smtp_setting': JSON.stringify({
-                                'smtp_server_name': setting_vue.smtp_server_name,
-                                'smtp_port': setting_vue.smtp_port,
-                                'smtp_authentication': setting_vue.smtp_authentication,
-                                'smtp_enable_starttls': setting_vue.smtp_enable_starttls,
-                                'smtp_username': setting_vue.smtp_username,
-                                'smtp_password': setting_vue.smtp_password
+                                'ab1': setting_server_vue.ab1,
+                                'ab2': setting_server_vue.ab2,
+                                'ab3': setting_server_vue.ab3,
+                                'ab4': setting_server_vue.ab4,
+                                'ab5': setting_server_vue.ab5,
+                                'ab6': setting_server_vue.ab6,
+                                'ab7': setting_server_vue.ab7,
+                                'ab8': setting_server_vue.ab8,
+                                'ab9': setting_server_vue.ab9,
+                                'ab10': setting_server_vue.ab10
                             })
                         },
                         success: function (res) {

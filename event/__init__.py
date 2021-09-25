@@ -1,5 +1,5 @@
 from sectors.common import admin_config
-from sectors.module import bridge
+from sectors.module import bridge, billing
 import _thread as thread
 import time
 import os
@@ -33,9 +33,18 @@ def run_module():
             admin_config.BRIDGE_HANDLE = bridge.BridgeQueue()
             admin_config.BRIDGE_HANDLE.fetch_all_bridges()
             admin_config.BRIDGE_HANDLE.start_all()
-            print('Module end...')
         except Exception as e:
             print(f'Module exception...{e}')
+    else:
+        pass
+
+    if admin_config.BILLING_HANDLE is None:
+        print('Billing start...')
+        try:
+            admin_config.BILLING_HANDLE = billing.Billing()
+            admin_config.BILLING_HANDLE.start_conversion_pricing()
+        except Exception as e:
+            print(f'Billing exception...{e}')
     else:
         pass
 

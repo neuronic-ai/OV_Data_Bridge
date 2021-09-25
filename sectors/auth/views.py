@@ -41,10 +41,10 @@ class SignupView(TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super(SignupView, self).get_context_data(*args, **kwargs)
         context['terms_of_service'] = '#'
-        setting = list(TBLSetting.objects.filter().values())
+        setting = list(TBLSetting.objects.all().values())
         if len(setting):
             setting = setting[0]
-            context['terms_of_service'] = json.loads(setting['server_setting'])['user_link']
+            context['terms_of_service'] = setting['server_setting']['user_link']
 
         return context
 
@@ -64,14 +64,14 @@ class SignupView(TemplateView):
         user.username = username
         user.set_password(password)
 
-        setting = list(TBLSetting.objects.filter().values())
+        setting = list(TBLSetting.objects.all().values())
         if len(setting) > 0:
             setting = setting[0]
             user.permission = json.dumps({
                 'max_active_bridges': setting['max_active_bridges'],
                 'rate_limit_per_url': setting['rate_limit_per_url'],
-                'allowed_frequency': json.loads(setting['allowed_frequency']),
-                'available_bridges': json.loads(setting['available_bridges'])
+                'allowed_frequency': setting['allowed_frequency'],
+                'available_bridges': setting['available_bridges']
             })
 
         user.save()

@@ -17,12 +17,16 @@ urlpatterns = [
     path('change_password', login_required(ChangePasswordView.as_view()), name='change_password'),
 
     path('user', login_required(UserView.as_view()), name='user'),
-    path('edit_user/<int:param1>', login_required(EditUserView.as_view()), name='edit_user'),
+    path('edit_user_general/<int:param1>', login_required(EditUserGeneralView.as_view()), name='edit_user_general'),
+    path('edit_user_account/<int:param1>', login_required(EditUserAccountView.as_view()), name='edit_user_account'),
     path('reset_password/<int:param1>', login_required(ResetPasswordView.as_view()), name='reset_password'),
     path('save_user', login_required(save_user), name='save_user'),
+    path('update_user_balance', login_required(update_user_balance), name='update_user_balance'),
     path('delete_user', login_required(delete_user), name='delete_user'),
 
-    path('setting', login_required(SettingView.as_view()), name='setting'),
+    path('setting_server', login_required(SettingServerView.as_view()), name='setting_server'),
+    path('setting_price', login_required(SettingPriceView.as_view()), name='setting_price'),
+    path('setting_smtp', login_required(SettingSMTPView.as_view()), name='setting_smtp'),
     path('test_smtp', login_required(test_smtp), name='test_smtp'),
     path('save_setting', login_required(save_setting), name='save_setting'),
 

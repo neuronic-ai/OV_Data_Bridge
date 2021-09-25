@@ -63,6 +63,13 @@ class Bridge:
     def send_message(self, message):
         self.add_cache(f'WH:Recv - {message}')
         try:
+            bridge = TBLBridge.objects.get(id=self.bridge_info['id'])
+            if bridge.is_status == 1 or bridge.user.balance <= 0:
+                bridge.is_status = 1
+                bridge.save()
+                self.add_cache(f'WS:Send - Ignored! - Out of Funds!')
+                return
+
             replaceable, content = common.get_formatted_content(message, self.bridge_info)
             if replaceable:
                 self.add_cache(f'WS:Send - {content}')
@@ -70,11 +77,10 @@ class Bridge:
                 for ws_id in self.ws_clients:
                     common.send_ws_message(ws_id, content)
 
-                bridge = TBLBridge.objects.get(id=self.bridge_info['id'])
                 bridge.api_calls += 1
                 bridge.save()
             else:
-                self.add_cache(f'WS:Send - Ignored!')
+                self.add_cache(f'WS:Send - Ignored! - Format!')
         except Exception as e:
             self.add_cache(f'WS:Send - Exception - {e}')
 

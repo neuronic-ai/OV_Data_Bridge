@@ -31,7 +31,7 @@ def send_email(request, recipient_list, email_type, msg_content=None, html_conte
     if len(setting) < 0:
         return False, error.SMTP_SETTING_NOT_AVAILABLE
     else:
-        smtp_setting = json.loads(setting[0]['smtp_setting'])
+        smtp_setting = setting[0]['smtp_setting']
 
     msg = MIMEMultipart('alternative')
     msg["from"] = smtp_setting['smtp_username']

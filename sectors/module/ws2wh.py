@@ -86,6 +86,13 @@ class Bridge:
         self.add_cache(self.connection_text)
 
     def call_webhook(self, message):
+        bridge = TBLBridge.objects.get(id=self.bridge_info['id'])
+        if bridge.is_status == 1 or bridge.user.balance <= 0:
+            bridge.is_status = 1
+            bridge.save()
+            self.add_cache(f'WH:Send - Ignored! - Out of Funds!')
+            return
+
         wh_address = self.bridge_info['dst_address']
         replaceable, content = common.get_formatted_content(message, self.bridge_info)
 
@@ -102,11 +109,10 @@ class Bridge:
             except Exception as e:
                 self.add_cache(f'WH:Send - Exception - {e}')
 
-            bridge = TBLBridge.objects.get(id=self.bridge_info['id'])
             bridge.api_calls += 1
             bridge.save()
         else:
-            self.add_cache(f'WH:Send - Ignored!')
+            self.add_cache(f'WH:Send - Ignored! - Format!')
 
     def add_cache(self, data):
         self.trace(data)

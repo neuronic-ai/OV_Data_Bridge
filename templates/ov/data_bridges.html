@@ -58,6 +58,7 @@
                                         <span>[[ bridge_info.description ]]</span>
                                         <label><i>Start Date: [[ bridge_info.date_created ]]</i></label>
                                         <label>Conversions: [[ bridge_info.api_calls ]]</label>
+                                        <label v-if="bridge_info.is_status == 1" class="out-of-funds"><i class="fa fa-warning"></i> Temp-disabled: Out of funds</label>
                                     </div>
                                     <div class="action-panel">
                                         <svg v-bind:id="bridge_info.id" v-bind:type="bridge_info.type"

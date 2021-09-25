@@ -46,7 +46,7 @@
                             <div class="actions-panel">
                                 <a class="yellow-bg super-login" id={{ user.id }}>
                                     <i class="fa fa-sign-in"></i>&nbsp;Login</a>
-                                <a href="{% url "edit_user" param1=user.id %}" class="blue-bg">
+                                <a href="{% url "edit_user_general" param1=user.id %}" class="blue-bg">
                                     <i class="fa fa-pencil-square-o"></i>&nbsp;Edit</a>
                                 <a href="{% url "reset_password" param1=user.id %}" class="white-bg">
                                     <i class="fa fa-refresh"></i>&nbsp;Reset Password</a>
@@ -68,7 +68,7 @@
             $('.table').DataTable({
                 //disable sorting on last column
                 "columnDefs": [
-                    {"orderable": false, "targets": 7}
+                    {"orderable": false, "targets": 5}
                 ],
                 language: {
                     //customize pagination prev and next buttons: use arrows instead of words

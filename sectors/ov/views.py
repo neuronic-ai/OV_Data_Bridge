@@ -14,7 +14,8 @@ from db.models import (
     TBLBridge,
     TBLLog,
     TBLUser,
-    TBLSetting
+    TBLSetting,
+    TBLTransaction,
 )
 
 
@@ -54,7 +55,7 @@ class DataBridgesView(TemplateView):
         context['permission'] = json.loads(self.request.user.permission)
         context['bridges_info'] = list(TBLBridge.objects.filter(user_id=self.request.user.id).values())
         for bi in context['bridges_info']:
-            bi['description'] = admin_config.get_bridge_description(bi['type'])['description']
+            bi['description'] = admin_config.get_bridge_by_type(bi['type'])['description']
             bi['date_created'] = bi['date_created'].strftime('%B %d, %Y')
             bi['date_updated'] = bi['date_updated'].strftime('%B %d, %Y')
 
@@ -65,9 +66,9 @@ class DataBridgesView(TemplateView):
 
             del bi['user_id']
 
-        context['frequency'] = admin_config.frequency
-        context['flush'] = admin_config.flush
-        context['file_format'] = admin_config.file_format
+        context['frequency'] = admin_config.FREQUENCY
+        context['flush'] = admin_config.FLUSH
+        context['file_format'] = admin_config.FILE_FORMAT
 
         return context
 
@@ -312,8 +313,8 @@ class UserView(TemplateView):
             'inactive_total_bridges': 0
         }
 
-        bridges_info = list(TBLBridge.objects.filter().values('user_id', 'type', 'is_active'))
-        users_info = list(TBLUser.objects.filter().values('id', 'is_superuser', 'username', 'email', 'date_joined',
+        bridges_info = list(TBLBridge.objects.all().values('user_id', 'type', 'is_active'))
+        users_info = list(TBLUser.objects.all().values('id', 'is_superuser', 'username', 'email', 'date_joined',
                                                           'permission'))
         u_id = 1
         for ui in users_info:
@@ -365,17 +366,17 @@ class UserView(TemplateView):
         return context
 
 
-class EditUserView(TemplateView):
+class EditUserGeneralView(TemplateView):
     template_name = 'ov/edit_user.html'
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_superuser:
             return redirect('/404_page')
         else:
-            return super(EditUserView, self).dispatch(request, *args, **kwargs)
+            return super(EditUserGeneralView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
-        context = super(EditUserView, self).get_context_data(*args, **kwargs)
+        context = super(EditUserGeneralView, self).get_context_data(*args, **kwargs)
         context = put_base_info(self.request, context, 'user')
 
         user_id = kwargs['param1']
@@ -386,8 +387,59 @@ class EditUserView(TemplateView):
         context['edit_email'] = user.email
         context['edit_permission'] = json.loads(user.permission)
         context['edit_permission']['allowed_frequency'] = json.dumps(context['edit_permission']['allowed_frequency'])
+        context['edit_permission']['allowed_file_flush'] = json.dumps(context['edit_permission']['allowed_file_flush'])
         context['edit_permission']['available_bridges'] = json.dumps(context['edit_permission']['available_bridges'])
 
+        bridges_info = list(TBLBridge.objects.filter(user_id=user_id).values('user_id', 'type', 'is_active'))
+
+        context['api_bridges'] = 0
+        context['wh_bridges'] = 0
+        context['total_bridges'] = 0
+
+        for bi in bridges_info:
+            if bi['type'] in [1, 2]:
+                context['wh_bridges'] += 1
+            elif bi['type'] in [3, 4]:
+                context['api_bridges'] += 1
+            else:
+                pass
+
+            context['total_bridges'] += 1
+
+        return context
+
+
+class EditUserAccountView(TemplateView):
+    template_name = 'ov/edit_user_account.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return redirect('/404_page')
+        else:
+            return super(EditUserAccountView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(EditUserAccountView, self).get_context_data(*args, **kwargs)
+        context = put_base_info(self.request, context, 'user')
+
+        user_id = kwargs['param1']
+
+        user = TBLUser.objects.get(id=user_id)
+        context['edit_user_id'] = user.id
+        context['edit_balance'] = user.balance
+
+        # get transaction info
+        transactions_info = list(TBLTransaction.objects.filter(user_id=user_id).values())
+
+        sp = 1
+        for transaction in transactions_info:
+            transaction['id'] = sp
+            transaction['date_created'] = transaction['date_created'].strftime('%m/%d/%Y, %H:%M:%S')
+            sp += 1
+
+        context['transactions_info'] = transactions_info
+
+        # get bridge info
         bridges_info = list(TBLBridge.objects.filter(user_id=user_id).values('user_id', 'type', 'is_active'))
 
         context['api_bridges'] = 0
@@ -448,11 +500,13 @@ def save_user(request):
         if request.user.is_superuser:
             user = TBLUser.objects.get(id=user_id)
             allowed_frequency = json.loads(params['allowed_frequency'])
+            allowed_file_flush = json.loads(params['allowed_file_flush'])
             available_bridges = json.loads(params['available_bridges'])
             user.permission = json.dumps({
                 'max_active_bridges': int(params['max_active_bridges']),
                 'rate_limit_per_url': int(params['rate_limit_per_url']),
                 'allowed_frequency': allowed_frequency,
+                'allowed_file_flush': allowed_file_flush,
                 'available_bridges': available_bridges
             })
             user.save()
@@ -484,6 +538,45 @@ def save_user(request):
                         admin_config.BRIDGE_HANDLE.stop_bridge_by_id(bridge_info['id'])
 
                     sp += 1
+
+            return JsonResponse({
+                'status_code': 200,
+                'text': error.SUCCESS
+            })
+        else:
+            return JsonResponse({
+                'status_code': 401,
+                'text': error.PERMISSION_NOT_ALLOWED
+            })
+
+    except Exception as e:
+        return JsonResponse({
+            'status_code': 500,
+            'text': str(e)
+        })
+
+
+def update_user_balance(request):
+    params = request.POST
+
+    try:
+        user_id = int(params['user_id'])
+
+        if request.user.is_superuser:
+            user = TBLUser.objects.get(id=user_id)
+            user.balance = round(user.balance + float(params['amount']), admin_config.ROUND_DIGIT)
+            user.save()
+
+            if user.balance > 0:
+                TBLBridge.objects.filter(user_id=user_id).update(is_status=0)
+
+            transaction = TBLTransaction()
+            transaction.user_id = user_id
+            transaction.amount = round(float(params['amount']), admin_config.ROUND_DIGIT)
+            transaction.balance = user.balance
+            transaction.description = 'Add Credit'
+            transaction.notes = params['notes']
+            transaction.save()
 
             return JsonResponse({
                 'status_code': 200,
@@ -534,20 +627,20 @@ def delete_user(request):
         })
 
 
-class SettingView(TemplateView):
+class SettingServerView(TemplateView):
     template_name = 'ov/setting.html'
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_superuser:
             return redirect('/404_page')
         else:
-            return super(SettingView, self).dispatch(request, *args, **kwargs)
+            return super(SettingServerView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
-        context = super(SettingView, self).get_context_data(*args, **kwargs)
+        context = super(SettingServerView, self).get_context_data(*args, **kwargs)
         context = put_base_info(self.request, context, 'setting')
 
-        setting = list(TBLSetting.objects.filter().values())
+        setting = list(TBLSetting.objects.all().values())
 
         if len(setting) == 0:
             setting_data = {
@@ -561,25 +654,93 @@ class SettingView(TemplateView):
                 'max_active_bridges': admin_config.DEFAULT_MAX_ACTIVE_BRIDGES,
                 'rate_limit_per_url': admin_config.DEFAULT_RATE_LIMIT_PER_URL,
                 'allowed_frequency': json.dumps(admin_config.DEFAULT_ALLOWED_FREQUENCY),
-                'available_bridges': json.dumps(admin_config.DEFAULT_AVAILABLE_BRIDGE),
+                'allowed_file_flush': json.dumps(admin_config.DEFAULT_ALLOWED_FILE_FLUSH),
+                'available_bridges': json.dumps(admin_config.DEFAULT_AVAILABLE_BRIDGE)
+            }
+        else:
+            setting = setting[0]
+            setting_data = {
+                'server_setting': json.dumps(setting['server_setting']),
+                'max_active_bridges': setting['max_active_bridges'],
+                'rate_limit_per_url': setting['rate_limit_per_url'],
+                'allowed_frequency': json.dumps(setting['allowed_frequency']),
+                'allowed_file_flush': json.dumps(setting['allowed_file_flush']),
+                'available_bridges': json.dumps(setting['available_bridges'])
+            }
+
+        context['setting_data'] = setting_data
+
+        return context
+
+
+class SettingPriceView(TemplateView):
+    template_name = 'ov/setting_price.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return redirect('/404_page')
+        else:
+            return super(SettingPriceView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(SettingPriceView, self).get_context_data(*args, **kwargs)
+        context = put_base_info(self.request, context, 'setting')
+
+        setting = list(TBLSetting.objects.all().values())
+
+        if len(setting) == 0:
+            bridge_price = admin_config.BRIDGE_PRICE
+            frequency_price = admin_config.FREQUENCY_PRICE
+            disable_pricing = admin_config.DISABLE_PRICING
+        else:
+            setting = setting[0]
+            disable_pricing = setting['price_setting']['disable_pricing']
+            bridge_price = setting['price_setting']['bridge_price']
+            frequency_price = setting['price_setting']['frequency_price']
+
+        for bp in bridge_price:
+            bp['name'] = admin_config.get_bridge_by_type(bp['type'])['reg']
+
+        for fp in frequency_price:
+            fp['name'] = admin_config.get_frequency_by_type(fp['type'])['reg']
+
+        context['disable_pricing'] = disable_pricing
+        context['bridge_price'] = bridge_price
+        context['frequency_price'] = frequency_price
+
+        return context
+
+
+class SettingSMTPView(TemplateView):
+    template_name = 'ov/setting_smtp.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return redirect('/404_page')
+        else:
+            return super(SettingSMTPView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(SettingSMTPView, self).get_context_data(*args, **kwargs)
+        context = put_base_info(self.request, context, 'setting')
+
+        setting = list(TBLSetting.objects.all().values())
+
+        if len(setting) == 0:
+            setting_data = {
                 'smtp_setting': json.dumps({
                     'smtp_server_name': '',
                     'smtp_port': '',
                     'smtp_authentication': True,
                     'smtp_enable_starttls': True,
                     'smtp_username': '',
-                    'smtp_password': '',
+                    'smtp_password': ''
                 })
             }
         else:
             setting = setting[0]
             setting_data = {
-                'server_setting': setting['server_setting'],
-                'max_active_bridges': setting['max_active_bridges'],
-                'rate_limit_per_url': setting['rate_limit_per_url'],
-                'allowed_frequency': setting['allowed_frequency'],
-                'available_bridges': setting['available_bridges'],
-                'smtp_setting': setting['smtp_setting']
+                'smtp_setting': json.dumps(setting['smtp_setting'])
             }
 
         context['setting_data'] = setting_data
@@ -623,15 +784,54 @@ def save_setting(request):
 
     try:
         if request.user.is_superuser:
-            TBLSetting.objects.all().delete()
+            setting = TBLSetting.objects.all()
+            if len(setting) == 0:
+                setting = TBLSetting()
+                setting.server_setting = {
+                    'server_name': '',
+                    'priv_key_directory': '',
+                    'cert_directory': '',
+                    'privacy_link': '',
+                    'user_link': ''
+                }
+                setting.max_active_bridges = admin_config.DEFAULT_MAX_ACTIVE_BRIDGES
+                setting.rate_limit_per_url = admin_config.DEFAULT_RATE_LIMIT_PER_URL
+                setting.allowed_frequency = admin_config.DEFAULT_ALLOWED_FREQUENCY
+                setting.allowed_file_flush = admin_config.DEFAULT_ALLOWED_FILE_FLUSH
+                setting.available_bridges = admin_config.DEFAULT_AVAILABLE_BRIDGE
+                setting.price_setting = {
+                    'disable_pricing': admin_config.DISABLE_PRICING,
+                    'bridge_price': admin_config.BRIDGE_PRICE,
+                    'frequency_price': admin_config.FREQUENCY_PRICE
+                }
+                setting.smtp_setting = {
+                    'smtp_server_name': '',
+                    'smtp_port': '',
+                    'smtp_authentication': True,
+                    'smtp_enable_starttls': True,
+                    'smtp_username': '',
+                    'smtp_password': ''
+                }
+            else:
+                setting = setting[0]
 
-            setting = TBLSetting()
-            setting.server_setting = params['server_setting']
-            setting.max_active_bridges = int(params['max_active_bridges'])
-            setting.rate_limit_per_url = int(params['rate_limit_per_url'])
-            setting.allowed_frequency = params['allowed_frequency']
-            setting.available_bridges = params['available_bridges']
-            setting.smtp_setting = params['smtp_setting']
+            if 'server_setting' in params:
+                setting.server_setting = json.loads(params['server_setting'])
+            if 'max_active_bridges' in params:
+                setting.max_active_bridges = int(params['max_active_bridges'])
+            if 'rate_limit_per_url' in params:
+                setting.rate_limit_per_url = int(params['rate_limit_per_url'])
+            if 'allowed_frequency' in params:
+                setting.allowed_frequency = json.loads(params['allowed_frequency'])
+            if 'allowed_file_flush' in params:
+                setting.allowed_file_flush = json.loads(params['allowed_file_flush'])
+            if 'available_bridges' in params:
+                setting.available_bridges = json.loads(params['available_bridges'])
+            if 'price_setting' in params:
+                setting.price_setting = json.loads(params['price_setting'])
+            if 'smtp_setting' in params:
+                setting.smtp_setting = json.loads(params['smtp_setting'])
+
             setting.save()
 
             return JsonResponse({
