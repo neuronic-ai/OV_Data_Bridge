@@ -12,6 +12,29 @@ from db.models import (
 )
 
 
+def check_bridge_out_of_funds(user_id=None):
+    if user_id is None:
+        bridges = TBLBridge.objects.all()
+    else:
+        bridges = TBLBridge.objects.filter(user_id=user_id)
+
+    setting = list(TBLSetting.objects.all().values())
+    if len(setting) > 0:
+        price_setting = setting[0]['price_setting']
+        for bridge in bridges:
+            if price_setting['disable_pricing']:
+                bridge.is_status = 0
+                bridge.save()
+                print('aa')
+            else:
+                if bridge.user.balance <= 0:
+                    for b_p in price_setting['bridge_price']:
+                        if b_p['type'] == bridge.type and b_p['is_active']:
+                            bridge.is_status = 1
+                            bridge.save()
+                            print('bb')
+
+
 class Billing:
     """
     Manage Billing
@@ -60,7 +83,7 @@ class Billing:
                         bridge.billed_calls = bridge.api_calls
                         bridge.save()
 
-                self.check_bridge_out_of_funds()
+                check_bridge_out_of_funds()
 
             time.sleep(3600)
         pass
@@ -80,13 +103,3 @@ class Billing:
     # def start_monthly_fee(self):
     #     pass
 
-    def check_bridge_out_of_funds(self):
-        bridges = TBLBridge.objects.all()
-
-        for bridge in bridges:
-            if bridge.user.balance <= 0:
-                bridge.is_status = 1
-            else:
-                bridge.is_status = 0
-
-            bridge.save()

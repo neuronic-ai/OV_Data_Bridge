@@ -8,7 +8,7 @@ import json
 import os
 
 from sectors.common import admin_config, error, mail
-from sectors.module import common
+from sectors.module import common, billing
 
 from db.models import (
     TBLBridge,
@@ -561,6 +561,8 @@ def update_user_balance(request):
 
             if user.balance > 0:
                 TBLBridge.objects.filter(user_id=user_id).update(is_status=0)
+            else:
+                billing.check_bridge_out_of_funds(user_id)
 
             transaction = TBLTransaction()
             transaction.user_id = user_id
@@ -825,6 +827,9 @@ def save_setting(request):
                 setting.smtp_setting = json.loads(params['smtp_setting'])
 
             setting.save()
+
+            if 'price_setting' in params:
+                billing.check_bridge_out_of_funds()
 
             return JsonResponse({
                 'status_code': 200,

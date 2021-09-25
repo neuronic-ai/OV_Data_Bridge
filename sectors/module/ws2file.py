@@ -106,9 +106,7 @@ class Bridge:
     def write_file(self, message):
         self.add_cache(f'FILE:Update - {message}')
         bridge = TBLBridge.objects.get(id=self.bridge_info['id'])
-        if bridge.is_status == 1 or bridge.user.balance <= 0:
-            bridge.is_status = 1
-            bridge.save()
+        if bridge.is_status == 1:
             self.add_cache(f'FILE:Update - Ignored! - Out of Funds!')
             return
 
