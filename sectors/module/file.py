@@ -32,12 +32,15 @@ class File:
     def write(self, data):
         self.mutex.acquire()
         try:
-            f_data = f"{datetime.utcnow().strftime('%m/%d/%Y %H:%M:%S')} | {data}"
+            f_data = {
+                'date': datetime.utcnow().strftime('%m/%d/%Y %H:%M:%S'),
+                'data': data
+            }
 
             if self.ext == 'csv':
                 self.file.write(f"'{f_data}',")
             else:
-                self.file.write(f_data)
+                self.file.write(str(f_data))
                 self.file.write('\n')
 
             self.file.flush()
