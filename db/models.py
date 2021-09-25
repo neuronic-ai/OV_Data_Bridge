@@ -13,6 +13,7 @@ class TBLUser(AbstractUser):
         'max_active_bridges': admin_config.DEFAULT_MAX_ACTIVE_BRIDGES,
         'rate_limit_per_url': admin_config.DEFAULT_RATE_LIMIT_PER_URL,
         'allowed_frequency': admin_config.DEFAULT_ALLOWED_FREQUENCY,
+        'allowed_file_flush': admin_config.DEFAULT_ALLOWED_FILE_FLUSH,
         'available_bridges': admin_config.DEFAULT_AVAILABLE_BRIDGE
     }))
 
