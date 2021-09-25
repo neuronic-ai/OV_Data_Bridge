@@ -305,58 +305,40 @@ class UserView(TemplateView):
         context = super(UserView, self).get_context_data(*args, **kwargs)
         put_base_info(self.request, context, 'user')
         bridges_status = {
-            'active_api_bridges': 0,
-            'active_wh_bridges': 0,
-            'active_total_bridges': 0,
-            'inactive_api_bridges': 0,
-            'inactive_wh_bridges': 0,
-            'inactive_total_bridges': 0
+            'active_wss': 0,
+            'active_wh': 0,
+            'active_api': 0,
+            'active_file': 0,
+            'active_total': 0
         }
 
-        bridges_info = list(TBLBridge.objects.all().values('user_id', 'type', 'is_active'))
-        users_info = list(TBLUser.objects.all().values('id', 'is_superuser', 'username', 'email', 'date_joined',
-                                                          'permission'))
+        bridges_info = TBLBridge.objects.all()
+        users_info = list(TBLUser.objects.all().values('id', 'is_superuser', 'username', 'email', 'date_joined', 'balance', 'spent', 'permission'))
         u_id = 1
         for ui in users_info:
             ui['uid'] = u_id
-            ui['balance'] = 0
-            ui['active_api_bridges'] = 0
-            ui['active_wh_bridges'] = 0
-            ui['active_total_bridges'] = 0
-            ui['inactive_api_bridges'] = 0
-            ui['inactive_wh_bridges'] = 0
-            ui['inactive_total_bridges'] = 0
+            ui['total'] = 0
+            ui['active'] = 0
+            ui['inactive'] = 0
 
             for bi in bridges_info:
-                if bi['user_id'] == ui['id']:
-                    if bi['is_active']:
-                        if bi['type'] in [1, 2]:
-                            ui['active_wh_bridges'] += 1
-                            ui['active_total_bridges'] += 1
-                        elif bi['type'] in [3, 4]:
-                            ui['active_api_bridges'] += 1
-                            ui['active_total_bridges'] += 1
-                        else:
-                            pass
+                if bi.user_id == ui['id']:
+                    if bi.is_active:
+                        if bi.type in [2, 6]:
+                            bridges_status['active_wss'] += 1
+                        elif bi.type in [1, 3, 5]:
+                            bridges_status['active_wh'] += 1
+                        elif bi.type in [4, 7]:
+                            bridges_status['active_api'] += 1
+                        elif bi.type in [8, 9, 10]:
+                            bridges_status['active_file'] += 1
+
+                        ui['active'] += 1
+                        bridges_status['active_total'] += 1
                     else:
-                        if bi['type'] in [1, 2]:
-                            ui['inactive_wh_bridges'] += 1
-                            ui['inactive_total_bridges'] += 1
-                        elif bi['type'] in [3, 4]:
-                            ui['inactive_api_bridges'] += 1
-                            ui['inactive_total_bridges'] += 1
-                        else:
-                            pass
+                        ui['inactive'] += 1
 
-            ui['total_api_bridges'] = ui['active_api_bridges'] + ui['inactive_api_bridges']
-            ui['total_wh_bridges'] = ui['active_wh_bridges'] + ui['inactive_wh_bridges']
-
-            bridges_status['active_api_bridges'] += ui['active_api_bridges']
-            bridges_status['active_wh_bridges'] += ui['active_wh_bridges']
-            bridges_status['active_total_bridges'] += ui['active_total_bridges']
-            bridges_status['inactive_api_bridges'] += ui['inactive_api_bridges']
-            bridges_status['inactive_wh_bridges'] += ui['inactive_wh_bridges']
-            bridges_status['inactive_total_bridges'] += ui['inactive_total_bridges']
+                    ui['total'] += 1
 
             u_id += 1
 
@@ -390,21 +372,26 @@ class EditUserGeneralView(TemplateView):
         context['edit_permission']['allowed_file_flush'] = json.dumps(context['edit_permission']['allowed_file_flush'])
         context['edit_permission']['available_bridges'] = json.dumps(context['edit_permission']['available_bridges'])
 
-        bridges_info = list(TBLBridge.objects.filter(user_id=user_id).values('user_id', 'type', 'is_active'))
+        bridges_info = TBLBridge.objects.filter(user_id=user_id)
 
-        context['api_bridges'] = 0
-        context['wh_bridges'] = 0
-        context['total_bridges'] = 0
+        context['active_wss'] = 0
+        context['active_wh'] = 0
+        context['active_api'] = 0
+        context['active_file'] = 0
+        context['active_total'] = 0
 
         for bi in bridges_info:
-            if bi['type'] in [1, 2]:
-                context['wh_bridges'] += 1
-            elif bi['type'] in [3, 4]:
-                context['api_bridges'] += 1
-            else:
-                pass
+            if bi.is_active:
+                if bi.type in [2, 6]:
+                    context['active_wss'] += 1
+                elif bi.type in [1, 3, 5]:
+                    context['active_wh'] += 1
+                elif bi.type in [4, 7]:
+                    context['active_api'] += 1
+                elif bi.type in [8, 9, 10]:
+                    context['active_file'] += 1
 
-            context['total_bridges'] += 1
+                context['active_total'] += 1
 
         return context
 
@@ -440,21 +427,26 @@ class EditUserAccountView(TemplateView):
         context['transactions_info'] = transactions_info
 
         # get bridge info
-        bridges_info = list(TBLBridge.objects.filter(user_id=user_id).values('user_id', 'type', 'is_active'))
+        bridges_info = TBLBridge.objects.filter(user_id=user_id)
 
-        context['api_bridges'] = 0
-        context['wh_bridges'] = 0
-        context['total_bridges'] = 0
+        context['active_wss'] = 0
+        context['active_wh'] = 0
+        context['active_api'] = 0
+        context['active_file'] = 0
+        context['active_total'] = 0
 
         for bi in bridges_info:
-            if bi['type'] in [1, 2]:
-                context['wh_bridges'] += 1
-            elif bi['type'] in [3, 4]:
-                context['api_bridges'] += 1
-            else:
-                pass
+            if bi.is_active:
+                if bi.type in [2, 6]:
+                    context['active_wss'] += 1
+                elif bi.type in [1, 3, 5]:
+                    context['active_wh'] += 1
+                elif bi.type in [4, 7]:
+                    context['active_api'] += 1
+                elif bi.type in [8, 9, 10]:
+                    context['active_file'] += 1
 
-            context['total_bridges'] += 1
+                context['active_total'] += 1
 
         return context
 

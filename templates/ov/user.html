@@ -10,9 +10,11 @@
         <div class="user-edit-panel">
             <h3 class="user-title">Users</h3>
             <div class="user-dashboard-title">
-                <h2>Active API Bridges: <span>{{ bridges_status.active_api_bridges }}</span></h2>
-                <h2>Active WebHook Bridges: <span>{{ bridges_status.active_wh_bridges }}</span></h2>
-                <h2>Total Active Bridges: <span>{{ bridges_status.active_total_bridges }}</span></h2>
+                <h2>Active WSS/WS: <span>{{ bridges_status.active_wss }}</span></h2>
+                <h2>Active WebHook: <span>{{ bridges_status.active_wh }}</span></h2>
+                <h2>Active API: <span>{{ bridges_status.active_api }}</span></h2>
+                <h2>Active FILE: <span>{{ bridges_status.active_file }}</span></h2>
+                <h2>Total Active: <span>{{ bridges_status.active_total }}</span></h2>
             </div>
         </div>
         <div class="table-panel">
@@ -23,9 +25,9 @@
                     <th>Email</th>
                     <th>Name</th>
 {#                    <th>Date Joined</th>#}
-{#                    <th>Balance</th>#}
-                    <th>API Bridges (Total/Active/Inactive)</th>
-                    <th>WebHook Bridges (Total/Active/Inactive)</th>
+                    <th>Balance</th>
+                    <th>Spent</th>
+                    <th>Total Bridges (Total/Active/Inactive)</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -37,11 +39,9 @@
                             {{ user.email }}{% if user.is_superuser %} <i>(Admin)</i>{% endif %}</td>
                         <td {% if user.is_superuser %}style="font-weight: bold"{% endif %}>{{ user.username }}</td>
 {#                        <td>{{ user.date_joined }}</td>#}
-{#                        <td><b>$</b> {{ user.balance }}</td>#}
-                        <td>{{ user.total_api_bridges }} / {{ user.active_api_bridges }}
-                            / {{ user.inactive_api_bridges }}</td>
-                        <td>{{ user.total_wh_bridges }} / {{ user.active_wh_bridges }}
-                            / {{ user.inactive_wh_bridges }}</td>
+                        <td>$ {{ user.balance }}</td>
+                        <td>$ {{ user.spent }}</td>
+                        <td>{{ user.total }} / {{ user.active }} / {{ user.inactive }}</td>
                         <td>
                             <div class="actions-panel">
                                 <a class="yellow-bg super-login" id={{ user.id }}>
