@@ -41,50 +41,57 @@ class Billing:
     def __init__(self):
         self.bridges_info = []
 
+    def available_cp(self):
+        utc_now = datetime.utcnow()
+        print(utc_now)
+        if 23 <= utc_now.hour < 24 and 50 <= utc_now.minute < 60:
+            return True
+        else:
+            return False
+
     def run_cp(self):
         while True:
-            utc_now = datetime.utcnow()
-            print(utc_now.hour, utc_now.minute)
-            if 23 <= utc_now.hour < 24 and 50 <= utc_now.minute < 60:
-                setting = list(TBLSetting.objects.all().values())
-                if len(setting) == 0:
-                    print('setting continue')
-                    continue
+            if self.available_cp():
+                try:
+                    setting = list(TBLSetting.objects.all().values())
+                    if len(setting) == 0:
+                        continue
 
-                price_setting = setting[0]['price_setting']
+                    price_setting = setting[0]['price_setting']
 
-                bridges = TBLBridge.objects.all()
-                for bridge in bridges:
-                    bill_api_calls = bridge.api_calls - bridge.billed_calls
-                    print(bridge.id, bridge.billed_calls)
-                    if bill_api_calls > 0:
-                        conversion_price = 0
-                        if not price_setting['disable_pricing']:
-                            for b_p in price_setting['bridge_price']:
-                                if b_p['type'] == bridge.type and b_p['is_active']:
-                                    conversion_price = b_p['c_p']
+                    bridges = TBLBridge.objects.all()
+                    for bridge in bridges:
+                        bill_api_calls = bridge.api_calls - bridge.billed_calls
+                        if bill_api_calls > 0:
+                            conversion_price = 0
+                            if not price_setting['disable_pricing']:
+                                for b_p in price_setting['bridge_price']:
+                                    if b_p['type'] == bridge.type and b_p['is_active']:
+                                        conversion_price = b_p['c_p']
 
-                        c_p = round(conversion_price * bill_api_calls / 1000, admin_config.ROUND_DIGIT)
+                            c_p = round(conversion_price * bill_api_calls / 1000, admin_config.ROUND_DIGIT)
 
-                        user = TBLUser.objects.get(id=bridge.user_id)
-                        if c_p > 0:
-                            user.balance = round(user.balance - c_p, admin_config.ROUND_DIGIT)
-                            user.spent = round(user.spent + c_p, admin_config.ROUND_DIGIT)
-                            user.save()
+                            user = TBLUser.objects.get(id=bridge.user_id)
+                            if c_p > 0:
+                                user.balance = round(user.balance - c_p, admin_config.ROUND_DIGIT)
+                                user.spent = round(user.spent + c_p, admin_config.ROUND_DIGIT)
+                                user.save()
 
-                        transaction = TBLTransaction()
-                        transaction.user_id = bridge.user_id
-                        transaction.mode = 1
-                        transaction.amount = c_p
-                        transaction.balance = user.balance
-                        transaction.description = f'Bridge ({bridge.name}): Conversion Fee - {bill_api_calls} calls'
-                        transaction.notes = f'Pricing: ' + (f'$ {conversion_price} Per 1000 Conversion' if conversion_price != 0 else 'Free')
-                        transaction.save()
+                            transaction = TBLTransaction()
+                            transaction.user_id = bridge.user_id
+                            transaction.mode = 1
+                            transaction.amount = c_p
+                            transaction.balance = user.balance
+                            transaction.description = f'Bridge ({bridge.name}): Conversion Fee - {bill_api_calls} calls'
+                            transaction.notes = f'Pricing: ' + (f'$ {conversion_price} Per 1000 Conversion' if conversion_price != 0 else 'Free')
+                            transaction.save()
 
-                        bridge.billed_calls = bridge.api_calls
-                        bridge.save()
+                            bridge.billed_calls = bridge.api_calls
+                            bridge.save()
 
-                check_bridge_out_of_funds()
+                    check_bridge_out_of_funds()
+                except:
+                    pass
 
             time.sleep(600)
         pass

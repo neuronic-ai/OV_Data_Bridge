@@ -92,7 +92,7 @@ def save_bridge(request):
                     'text': resp_data
                 })
 
-        bridge.user = request.user
+        bridge.user_id = request.user_id
         bridge.name = params['name']
         bridge.type = bridge_type
         bridge.src_address = params['src_address']
@@ -118,6 +118,8 @@ def save_bridge(request):
 
         if bridge.is_active:
             admin_config.BRIDGE_HANDLE.restart_bridge_by_id(bridge.id)
+
+        billing.check_bridge_out_of_funds(request.user_id)
 
         return JsonResponse({
             'status_code': 200,
