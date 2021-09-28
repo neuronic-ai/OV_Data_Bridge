@@ -25,14 +25,12 @@ def check_bridge_out_of_funds(user_id=None):
             if price_setting['disable_pricing']:
                 bridge.is_status = 0
                 bridge.save()
-                print('aa')
             else:
                 if bridge.user.balance <= 0:
                     for b_p in price_setting['bridge_price']:
                         if b_p['type'] == bridge.type and b_p['is_active']:
                             bridge.is_status = 1
                             bridge.save()
-                            print('bb')
 
 
 class Billing:
@@ -46,9 +44,11 @@ class Billing:
     def run_cp(self):
         while True:
             utc_now = datetime.utcnow()
-            if 23 <= utc_now.hour < 24:
+            print(utc_now.hour, utc_now.minute)
+            if 23 <= utc_now.hour < 24 and 50 <= utc_now.minute < 60:
                 setting = list(TBLSetting.objects.all().values())
                 if len(setting) == 0:
+                    print('setting continue')
                     continue
 
                 price_setting = setting[0]['price_setting']
@@ -56,6 +56,7 @@ class Billing:
                 bridges = TBLBridge.objects.all()
                 for bridge in bridges:
                     bill_api_calls = bridge.api_calls - bridge.billed_calls
+                    print(bridge.id, bridge.billed_calls)
                     if bill_api_calls > 0:
                         conversion_price = 0
                         if not price_setting['disable_pricing']:
@@ -85,7 +86,7 @@ class Billing:
 
                 check_bridge_out_of_funds()
 
-            time.sleep(3600)
+            time.sleep(600)
         pass
 
     def start_conversion_pricing(self):

@@ -4,10 +4,13 @@ import _thread as thread
 import time
 import os
 from django.contrib.auth import authenticate
+import urllib3
 
 from db.models import (
     TBLUser
 )
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 def run_module():
