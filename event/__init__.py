@@ -46,6 +46,7 @@ def run_module():
         try:
             admin_config.BILLING_HANDLE = billing.Billing()
             admin_config.BILLING_HANDLE.start_conversion_pricing()
+            admin_config.BILLING_HANDLE.start_monthly_pricing_fee()
         except Exception as e:
             print(f'Billing exception...{e}')
     else:

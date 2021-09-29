@@ -15,7 +15,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'HOST': os.getenv('MYSQL_HOST', '127.0.0.1'),
-        'NAME': os.getenv('MYSQL_DATABASE', 'ovdatabridge'),
+        'NAME': os.getenv('MYSQL_DATABASE', 'ovdb'),
         'USER': os.getenv('MYSQL_USER', 'root'),
         'PASSWORD': os.getenv('MYSQL_PASSWORD', ''),
         'PORT': os.getenv('MYSQL_PORT', '3306'),
