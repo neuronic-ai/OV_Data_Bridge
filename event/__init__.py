@@ -31,24 +31,24 @@ def run_module():
         user.save()
 
     if admin_config.BRIDGE_HANDLE is None:
-        print('Module start...')
+        print('Module start...', flush=True)
         try:
             admin_config.BRIDGE_HANDLE = bridge.BridgeQueue()
             admin_config.BRIDGE_HANDLE.fetch_all_bridges()
             admin_config.BRIDGE_HANDLE.start_all()
         except Exception as e:
-            print(f'Module exception...{e}')
+            print(f'Module exception...{e}', flush=True)
     else:
         pass
 
     if admin_config.BILLING_HANDLE is None:
-        print('Billing start...')
+        print('Billing start...', flush=True)
         try:
             admin_config.BILLING_HANDLE = billing.Billing()
             admin_config.BILLING_HANDLE.start_conversion_pricing()
             admin_config.BILLING_HANDLE.start_monthly_pricing_fee()
         except Exception as e:
-            print(f'Billing exception...{e}')
+            print(f'Billing exception...{e}', flush=True)
     else:
         pass
 

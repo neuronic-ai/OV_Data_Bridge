@@ -18,9 +18,8 @@ def check_bridge_out_of_funds(user_id=None):
     else:
         bridges = TBLBridge.objects.filter(user_id=user_id)
 
-    setting = list(TBLSetting.objects.all().values())
-    if len(setting) > 0:
-        price_setting = setting[0]['price_setting']
+    price_setting = get_price_setting()
+    if price_setting is not None:
         for bridge in bridges:
             if price_setting['disable_pricing']:
                 bridge.is_status = 0
@@ -33,6 +32,14 @@ def check_bridge_out_of_funds(user_id=None):
                             bridge.save()
 
 
+def get_price_setting():
+    setting = list(TBLSetting.objects.all().values())
+    if len(setting) == 0:
+        return None
+
+    return setting[0]['price_setting']
+
+
 class Billing:
     """
     Manage Billing
@@ -41,16 +48,10 @@ class Billing:
     def __init__(self):
         self.bridges_info = []
 
-    def get_price_setting(self):
-        setting = list(TBLSetting.objects.all().values())
-        if len(setting) == 0:
-            return None
-
-        return setting[0]['price_setting']
-
     def available_cp(self):
         utc_now = datetime.utcnow()
-        if 23 <= utc_now.hour < 24 and 50 <= utc_now.minute < 60:
+        print(utc_now, flush=True)
+        if utc_now.minute >= 50:
             return True
         else:
             return False
@@ -68,7 +69,7 @@ class Billing:
         transaction = TBLTransaction()
         transaction.user_id = user_id
         transaction.mode = mode
-        transaction.amount = amount
+        transaction.amount = -amount
         transaction.balance = balance
         transaction.description = description
         transaction.notes = notes
@@ -78,13 +79,16 @@ class Billing:
         while True:
             if self.available_cp():
                 try:
-                    price_setting = self.get_price_setting()
+                    print('1111', flush=True)
+                    price_setting = get_price_setting()
                     if price_setting is None:
+                        print('222', flush=True)
                         continue
 
                     bridges = TBLBridge.objects.all()
                     for bridge in bridges:
                         bill_api_calls = bridge.api_calls - bridge.billed_calls
+                        print('333', bill_api_calls, flush=True)
                         if bill_api_calls > 0:
                             conversion_price = 0
                             if not price_setting['disable_pricing']:
@@ -103,7 +107,9 @@ class Billing:
                             bridge.save()
 
                     check_bridge_out_of_funds()
-                except:
+                    print('444', flush=True)
+                except Exception as e:
+                    print(str(e), flush=True)
                     pass
 
             time.sleep(600)
@@ -115,7 +121,7 @@ class Billing:
     def run_mpf(self):
         while True:
             time.sleep(3600)
-            price_setting = self.get_price_setting()
+            price_setting = get_price_setting()
             if price_setting is None:
                 continue
 
