@@ -98,7 +98,7 @@ class Bridge:
             # call WebHook
             try:
                 self.add_cache(f'WH:Send - {content}')
-                res = requests.post(wh_address, json=content, verify=False)
+                res = requests.post(wh_address, json={'content': json.dumps(content)}, verify=False)
                 response = {
                     'status_code': res.status_code,
                     'text': res.text
