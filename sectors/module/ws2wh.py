@@ -3,6 +3,7 @@ import _thread as thread
 import time
 import json
 import requests
+import ssl
 from datetime import datetime
 
 from . import common, log
@@ -32,7 +33,7 @@ class Bridge:
         self.cache = self.log.get_last_log()
 
     def run_forever(self):
-        self.ws.run_forever()
+        self.ws.run_forever(sslopt={'cert_reqs': ssl.CERT_NONE})
 
     def open(self):
         if self.ws is None:

@@ -2,7 +2,7 @@ import websocket
 import _thread as thread
 import time
 import json
-import requests
+import ssl
 from datetime import datetime
 
 from . import common, log, file
@@ -36,7 +36,7 @@ class Bridge:
         self.flush = self.bridge_info['flush']
 
     def run_forever(self):
-        self.ws.run_forever()
+        self.ws.run_forever(sslopt={'cert_reqs': ssl.CERT_NONE})
 
     def run_api(self):
         count = 0

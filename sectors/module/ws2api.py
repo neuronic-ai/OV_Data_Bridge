@@ -4,6 +4,7 @@ from django.core.cache import cache
 import time
 import json
 from datetime import datetime
+import ssl
 
 from . import log
 
@@ -37,7 +38,7 @@ class Bridge:
         self.REDIS_CACHE_TTL = self.bridge_info['frequency']
 
     def run_forever(self):
-        self.ws.run_forever()
+        self.ws.run_forever(sslopt={'cert_reqs': ssl.CERT_NONE})
 
     def dumper(self):
         count = 0
