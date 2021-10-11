@@ -32,21 +32,23 @@ class Bridge:
         self.cache = self.log.get_last_log()
 
         self.file = file.File(bridge_info['dst_address'], bridge_info['file_format'])
+        self.init_string = bridge_info['format']
 
         self.flush = self.bridge_info['flush']
 
     def run_forever(self):
         self.ws.run_forever(sslopt={'cert_reqs': ssl.CERT_NONE})
 
-    def run_api(self):
+    def run_truncate(self):
         count = 0
         while True:
             if not self.connection_status:
                 break
 
-            if count >= self.flush:
+            if count == 0 or count >= self.flush:
                 count = 0
                 self.file.truncate()
+                self.add_cache(f'FILE:Flush!')
 
             time.sleep(1)
             count += 1
@@ -60,7 +62,7 @@ class Bridge:
                                              on_close=self.on_close)
         if not self.connection_status:
             thread.start_new_thread(self.run_forever, ())
-            thread.start_new_thread(self.run_api, ())
+            thread.start_new_thread(self.run_truncate, ())
 
     def close_log(self):
         self.log.close()
@@ -79,6 +81,8 @@ class Bridge:
         self.connection_status = True
         self.connection_text = 'WS:Open - Connected'
         self.add_cache(self.connection_text)
+        self.add_cache(f'WS:Send Init String - {self.init_string}')
+        self.ws.send(self.init_string)
 
     def send_message(self, message):
         if self.connection_status:

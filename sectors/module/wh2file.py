@@ -34,15 +34,16 @@ class Bridge:
         if event['type'] == 'on_message':
             self.write_file(data['message'])
 
-    def run_api(self):
+    def run_truncate(self):
         count = 0
         while True:
             if not self.connection_status:
                 break
 
-            if count >= self.flush:
+            if count == 0 or count >= self.flush:
                 count = 0
                 self.file.truncate()
+                self.add_cache(f'FILE:Flush!')
 
             time.sleep(1)
             count += 1
@@ -50,7 +51,7 @@ class Bridge:
     def open(self):
         self.connection_status = True
         self.connection_text = 'WH:Open - Ready'
-        thread.start_new_thread(self.run_api, ())
+        thread.start_new_thread(self.run_truncate, ())
         self.add_cache(self.connection_text)
 
     def close_log(self):

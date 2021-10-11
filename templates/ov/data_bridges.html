@@ -179,6 +179,7 @@
     {% include 'ov/bridges/api2file.html' %}
 
     {% include 'ov/bridges/format.html' %}
+    {% include 'ov/bridges/init.html' %}
 
     {% include 'ov/bridges/log_modal.html' %}
 
@@ -325,6 +326,8 @@
                 bridge_info.id = 0;
                 bridge_info.name = '';
 
+                bridge_info.format = JSON.stringify({'search_word': '', 'replace_word': '', 'any': false});
+
                 if (bridge_type === 1) {
                     bridge_info.src_address = '';
                     bridge_info.dst_address = '';
@@ -356,13 +359,14 @@
                     bridge_info.dst_address = file_host + gen_rp(10) + '/' + gen_rp(20);
                     bridge_info.flush = 3600;
                     bridge_info.file_format = 'txt';
+                    bridge_info.format = '';
                 } else if (bridge_type === 10) {
                     bridge_info.src_address = '';
                     bridge_info.dst_address = file_host + gen_rp(10) + '/' + gen_rp(20);
+                    bridge_info.flush = 3600;
                     bridge_info.file_format = 'txt';
                 }
 
-                bridge_info.format = JSON.stringify({'search_word': '', 'replace_word': '', 'any': false});
                 bridge_info.frequency = g_frequency_info[0].second;
             } else {
                 for (i = 0; i < g_bridges_info.length; i++) {
@@ -382,6 +386,8 @@
                 if (format_vue.any) {
                     document.getElementById("any").checked = true;
                 }
+            } else if (bridge_type === 9) {
+                init_string_vue.init_string = bridge_info.format;
             }
 
             if (bridge_type === 1)

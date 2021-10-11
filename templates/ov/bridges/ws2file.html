@@ -42,7 +42,7 @@
                                             <input v-model="ws_address" id="ws2file_ws_address" type="text" class="form-control" placeholder="Enter here">
                                         </div>
                                         <div class="col-lg-3" style="padding-top: 11px">
-                                            <a href="#" class="formate blue-bg" data-toggle="modal" data-target="#">Init</a>
+                                            <a href="#" v-on:click="on_init" class="formate blue-bg" data-toggle="modal" data-target="#initString">Init</a>
                                         </div>
                                     </div>
                                 </div>
@@ -109,6 +109,10 @@
             file_format: ''
         },
         methods: {
+            on_init: function() {
+
+                focus_on_element('init_string');
+            },
             on_delete: function () {
 
                 delete_bridge(this.id);
@@ -161,6 +165,7 @@
                     'type': 9,
                     'src_address': this.ws_address,
                     'dst_address': this.pre_fwa,
+                    'format': init_string_vue.init_string,
                     'frequency': this.frequency,
                     'flush': this.flush,
                     'file_format': this.file_format

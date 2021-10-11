@@ -1,0 +1,57 @@
+<div class="formate-popup modal fade" id="initString" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered format-modal" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Init String</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="websocket-panel">
+                    <div class="change-password">
+                        <form id="format_form">
+                            <div class="left-panel">
+                                <div class="form-group">
+                                    <label>Init String</label>
+                                    <input v-model="init_string" id="init_string" type="text" class="form-control" placeholder="Enter here">
+                                </div>
+                            </div>
+                            <div class="right-button-section">
+                                <a href="#" v-on:click="on_save" class="websocket-button green-bg">Save</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let init_string_vue = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#initString',
+        data: {
+            init_string: ''
+        },
+        methods: {
+            on_save: function () {
+
+                $('#initString').modal('hide');
+            }
+        },
+        watch: {
+            search_word: function (cur_val, prev_val) {
+
+            },
+            replace_word: function (cur_val, prev_val) {
+
+            }
+        }
+    });
+</script>

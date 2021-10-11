@@ -51,7 +51,7 @@ class Billing:
     def available_cp(self):
         utc_now = datetime.utcnow()
         print(utc_now, flush=True)
-        if utc_now.minute >= 50:
+        if 24 > utc_now.hour >= 23 and utc_now.minute >= 50:
             return True
         else:
             return False
@@ -116,6 +116,13 @@ class Billing:
         pass
 
     def start_conversion_pricing(self):
+        transactions = TBLTransaction.objects.all()
+        for transaction in transactions:
+            if transaction.mode in [1, 2]:
+                if transaction.amount > 0:
+                    transaction.amount = -transaction.amount
+                    transaction.save()
+
         thread.start_new_thread(self.run_cp, ())
 
     def run_mpf(self):

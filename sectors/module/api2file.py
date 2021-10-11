@@ -28,22 +28,22 @@ class Bridge:
 
         self.file = file.File(bridge_info['dst_address'], bridge_info['file_format'])
 
-        # self.REDIS_CACHE_ID = f"{admin_config.BRIDGE_REDIS_CACHE_PREFIX}_{self.bridge_info['id']}"
         self.REDIS_CACHE_TTL = self.bridge_info['frequency']
+        self.flush = self.bridge_info['flush']
 
     def run_api(self):
-        count = 0
+        count_api = 0
+        count_truncate = 0
         while True:
             if not self.connection_status:
                 break
 
-            if count == 0 or count >= self.REDIS_CACHE_TTL:
-                count = 0
+            if count_api == 0 or count_api >= self.REDIS_CACHE_TTL:
+                count_api = 0
                 try:
                     self.add_cache(f"API:Call - {self.bridge_info['src_address']}")
                     res = requests.get(self.bridge_info['src_address'], verify=False)
                     try:
-                        # cache.set(self.REDIS_CACHE_ID, res.json(), timeout=self.REDIS_CACHE_TTL)
                         self.add_cache(f'API:Receive - {res.text}')
                         self.write_file(res.text)
                     except Exception as e:
@@ -51,8 +51,14 @@ class Bridge:
                 except Exception as e:
                     self.add_cache(f'API:Call - Exception - {e}')
 
+            if count_truncate == 0 or count_truncate >= self.flush:
+                count_truncate = 0
+                self.file.truncate()
+                self.add_cache(f'FILE:Flush!')
+
             time.sleep(1)
-            count += 1
+            count_api += 1
+            count_truncate += 1
 
     def open(self):
         self.connection_status = True
@@ -81,7 +87,7 @@ class Bridge:
             self.add_cache(f'FILE:Update - Ignored! - Out of Funds!')
             return
 
-        self.file.truncate()
+        # self.file.truncate()
         self.file.write(data)
 
         bridge.api_calls += 1
