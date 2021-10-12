@@ -42,7 +42,7 @@ class Bridge:
     def run_truncate(self):
         count = 0
         while True:
-            if not self.connection_status:
+            if self.connection_status is False:
                 break
 
             if count == 0 or count >= self.flush:
@@ -60,9 +60,10 @@ class Bridge:
                                              on_message=self.on_message,
                                              on_error=self.on_error,
                                              on_close=self.on_close)
-        if not self.connection_status:
-            thread.start_new_thread(self.run_forever, ())
-            thread.start_new_thread(self.run_truncate, ())
+
+        self.connection_status = None
+        thread.start_new_thread(self.run_forever, ())
+        thread.start_new_thread(self.run_truncate, ())
 
     def close_log(self):
         self.log.close()

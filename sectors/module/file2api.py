@@ -83,8 +83,10 @@ class Bridge:
                 self.add_cache(f'REDIS QUEUE:Append - Ignored! - Out of Funds!')
                 return
 
+            new_message = message
             if self.prev_file_data:
-                if self.prev_file_data == message:
+                new_message = common.get_diff_lists(None, self.prev_file_data, message)
+                if not new_message:
                     self.add_cache(f'REDIS QUEUE:Append - Ignored! - Same Data!')
                     return
 
@@ -94,11 +96,11 @@ class Bridge:
             cache_data = cache.get(self.REDIS_CACHE_ID)
             cache_data.append({
                 'date': datetime.utcnow().strftime('%m/%d/%Y, %H:%M:%S'),
-                'data': message
+                'data': new_message
             })
 
             cache.set(self.REDIS_CACHE_ID, cache_data)
-            self.add_cache(f'REDIS QUEUE:Append - {message}')
+            self.add_cache(f'REDIS QUEUE:Append - {new_message}')
 
             self.prev_file_data = message
         except Exception as e:

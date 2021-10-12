@@ -82,20 +82,26 @@ class Bridge:
 
     def send_message(self, message):
         try:
+            if not message:
+                self.add_cache(f'WS:Send - Ignored! - Empty Data!')
+                return
+
             bridge = TBLBridge.objects.get(id=self.bridge_info['id'])
             if bridge.is_status == 1:
                 self.add_cache(f'WS:Send - Ignored! - Out of Funds!')
                 return
 
+            new_message = message
             if self.prev_file_data:
-                if self.prev_file_data == message:
+                new_message = common.get_diff_lists(None, self.prev_file_data, message)
+                if not new_message:
                     self.add_cache(f'WS:Send - Ignored! - Same Data!')
                     return
 
-            self.add_cache(f'WS:Send - {message}')
+            self.add_cache(f'WS:Send - {new_message}')
 
             for ws_id in self.ws_clients:
-                common.send_ws_message(ws_id, {'data': message})
+                common.send_ws_message(ws_id, {'data': new_message})
 
             bridge.api_calls += 1
             bridge.save()

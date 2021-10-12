@@ -68,18 +68,24 @@ class Bridge:
         return self.connection_status
 
     def call_webhook(self, message):
+        if not message:
+            self.add_cache(f'WS:Send - Ignored! - Empty Data!')
+            return
+
         bridge = TBLBridge.objects.get(id=self.bridge_info['id'])
         if bridge.is_status == 1:
             self.add_cache(f'WH:Send - Ignored! - Out of Funds!')
             return
 
+        new_message = message
         if self.prev_file_data:
-            if self.prev_file_data == message:
+            new_message = common.get_diff_lists(None, self.prev_file_data, message)
+            if not new_message:
                 self.add_cache(f'WH:Send - Ignored! - Same Data!')
                 return
 
         wh_address = self.bridge_info['dst_address']
-        replaceable, content = common.get_formatted_content(message, self.bridge_info)
+        replaceable, content = common.get_formatted_content(new_message, self.bridge_info)
 
         if replaceable:
             # call WebHook

@@ -80,3 +80,13 @@ class TBLTransaction(models.Model):
 
     class Meta:
         db_table = 'TBLTRANSACTION'
+
+
+class TBLApiKey(models.Model):
+    user = models.ForeignKey(TBLUser, on_delete=models.CASCADE, blank=True, null=True)
+    name = models.CharField(max_length=255, default='')
+    unique_id = models.CharField(max_length=255, default='')
+    api_key = models.CharField(max_length=255, default='')
+
+    class Meta:
+        db_table = 'TBLAPIKEY'

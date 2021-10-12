@@ -35,7 +35,7 @@ class Bridge:
         count_api = 0
         count_truncate = 0
         while True:
-            if not self.connection_status:
+            if self.connection_status is False:
                 break
 
             if count_api == 0 or count_api >= self.REDIS_CACHE_TTL:

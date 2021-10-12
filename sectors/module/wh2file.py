@@ -37,7 +37,7 @@ class Bridge:
     def run_truncate(self):
         count = 0
         while True:
-            if not self.connection_status:
+            if self.connection_status is False:
                 break
 
             if count == 0 or count >= self.flush:

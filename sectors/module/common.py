@@ -66,7 +66,7 @@ def send_ws_message(group_name, content):
 
 def check_validity_remote_file(request, url):
     try:
-        if url.lower()[url.rfind('.') + 1:] not in ['txt', 'csv', 'zip', 'gzip', 'js']:
+        if url.lower()[url.rfind('.') + 1:] not in ['txt', 'csv', 'zip', 'gzip']:
             return error.INVALID_FILE_WEB_TYPE, 403
 
         requests.get(url, verify=False)
@@ -98,3 +98,13 @@ def get_remote_file_data(request, bridge_info):
         return json_data_array, 200
     except:
         return error.INVALID_FILE_WEB_URL, 403
+
+
+def get_diff_lists(request, f_list, s_list):
+    r_list = []
+    for s in s_list:
+        if s not in f_list:
+            r_list.append(s)
+
+    return r_list
+
