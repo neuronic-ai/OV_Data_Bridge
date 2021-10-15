@@ -23,6 +23,7 @@ class Bridge:
         self.connection_text = 'Waiting for connect'
         self.log = log.BridgeLog(bridge_info)
         self.cache = self.log.get_last_log()
+        self.ws_id = f'{admin_config.BRIDGE_CONSUMER_PREFIX}_{bridge_info["id"]}'
         self.ws_clients = []
 
     def notify_event(self, event):
@@ -72,8 +73,7 @@ class Bridge:
             if replaceable:
                 self.add_cache(f'WS:Send - {content}')
 
-                for ws_id in self.ws_clients:
-                    common.send_ws_message(ws_id, content)
+                common.send_ws_message(self.ws_id, content)
 
                 bridge.api_calls += 1
                 bridge.save()

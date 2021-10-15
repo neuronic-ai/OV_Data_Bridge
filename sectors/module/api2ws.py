@@ -26,6 +26,7 @@ class Bridge:
         self.connection_text = 'Waiting for connect'
         self.log = log.BridgeLog(bridge_info)
         self.cache = self.log.get_last_log()
+        self.ws_id = f'{admin_config.BRIDGE_CONSUMER_PREFIX}_{bridge_info["id"]}'
         self.ws_clients = []
 
         self.REDIS_CACHE_ID = f"{admin_config.BRIDGE_REDIS_CACHE_PREFIX}_{self.bridge_info['id']}"
@@ -49,12 +50,7 @@ class Bridge:
                 try:
                     self.add_cache(f"API:Call - {self.bridge_info['src_address']}")
                     res = requests.get(self.bridge_info['src_address'], verify=False)
-                    try:
-                        cache.set(self.REDIS_CACHE_ID, res.json(), timeout=self.REDIS_CACHE_TTL)
-                        self.add_cache(f'REDIS QUEUE:Update - {res.text}')
-                        self.send_message()
-                    except Exception as e:
-                        self.add_cache(f'REDIS QUEUE:Update - Exception - {e}')
+                    self.send_message(res.json())
                 except Exception as e:
                     self.add_cache(f'API:Call - Exception - {e}')
 
@@ -88,12 +84,7 @@ class Bridge:
         if ws_id in self.ws_clients:
             self.ws_clients.remove(ws_id)
 
-    def send_message(self):
-        if self.REDIS_CACHE_ID in cache:
-            message = cache.get(self.REDIS_CACHE_ID)
-        else:
-            message = f'REDIS CACHE ID: {self.REDIS_CACHE_ID} not found'
-
+    def send_message(self, message):
         self.add_cache(f'API:Recv - {message}')
         try:
             self.add_cache(f'WS:Send - {message}')
@@ -102,8 +93,7 @@ class Bridge:
                 self.add_cache(f'WS:Send - Ignored! - Out of Funds!')
                 return
 
-            for ws_id in self.ws_clients:
-                common.send_ws_message(ws_id, message)
+            common.send_ws_message(self.ws_id, {'data': message})
 
             bridge.api_calls += 1
             bridge.save()

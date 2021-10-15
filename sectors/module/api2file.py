@@ -38,6 +38,11 @@ class Bridge:
             if self.connection_status is False:
                 break
 
+            if count_truncate == 0 or count_truncate >= self.flush:
+                count_truncate = 0
+                self.file.truncate()
+                self.add_cache(f'FILE:Flush!')
+
             if count_api == 0 or count_api >= self.REDIS_CACHE_TTL:
                 count_api = 0
                 try:
@@ -50,11 +55,6 @@ class Bridge:
                         self.add_cache(f'FILE:Update - Exception - {e}')
                 except Exception as e:
                     self.add_cache(f'API:Call - Exception - {e}')
-
-            if count_truncate == 0 or count_truncate >= self.flush:
-                count_truncate = 0
-                self.file.truncate()
-                self.add_cache(f'FILE:Flush!')
 
             time.sleep(1)
             count_api += 1

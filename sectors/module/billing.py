@@ -1,6 +1,7 @@
 import _thread as thread
 import time
 from datetime import datetime, timedelta
+from django.utils import timezone
 
 from sectors.common import admin_config
 
@@ -127,7 +128,7 @@ class Billing:
 
     def run_mpf(self):
         while True:
-            time.sleep(3600)
+            time.sleep(10)
             price_setting = get_price_setting()
             if price_setting is None:
                 continue
@@ -147,7 +148,7 @@ class Billing:
 
             # charge monthly mpf
             for bridge in bridges:
-                utc_now = datetime.utcnow()
+                utc_now = timezone.now()
                 if utc_now > bridge.date_created + timedelta(days=30) and bridge.monthly_usage > 24 * admin_config.MONTHLY_USAGE_LIMIT:
                     m_p = 0
                     for b_p in price_setting['bridge_price']:

@@ -24,6 +24,7 @@ class Bridge:
         self.connection_text = 'Waiting for connect'
         self.log = log.BridgeLog(bridge_info)
         self.cache = self.log.get_last_log()
+        self.ws_id = f'{admin_config.BRIDGE_CONSUMER_PREFIX}_{bridge_info["id"]}'
         self.ws_clients = []
 
         self.FILE_FREQUENCY = self.bridge_info['frequency']
@@ -100,8 +101,7 @@ class Bridge:
 
             self.add_cache(f'WS:Send - {new_message}')
 
-            for ws_id in self.ws_clients:
-                common.send_ws_message(ws_id, {'data': new_message})
+            common.send_ws_message(self.ws_id, {'data': new_message})
 
             bridge.api_calls += 1
             bridge.save()
