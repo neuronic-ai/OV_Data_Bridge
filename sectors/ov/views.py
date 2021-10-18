@@ -215,12 +215,12 @@ class ProfileView(TemplateView):
         return context
 
 
-class ApiMngView(TemplateView):
+class UserApiMngView(TemplateView):
     template_name = 'ov/api_mng.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context = put_base_info(self.request, context, 'api_mng')
+        context = put_base_info(self.request, context, 'user_api_mng')
 
         api_info = list(TBLApiKey.objects.filter(user_id=self.request.user.id).values('id', 'name', 'unique_id', 'api_key', 'permission'))
         u_id = 1
@@ -319,12 +319,12 @@ def delete_api_key(request):
         })
 
 
-class ApiRefView(TemplateView):
+class UserApiRefView(TemplateView):
     template_name = 'ov/api_ref.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context = put_base_info(self.request, context, 'api_ref')
+        context = put_base_info(self.request, context, 'user_api_ref')
 
         return context
 

@@ -265,7 +265,7 @@
                 type: 'POST',
                 data: bridge_info,
                 success: function (res) {
-                    if (res.status_code === 200) {
+                    if (res.status_code < 300) {
                         swal({
                                 title: "Saved!",
                                 text: "Your bridge saved successfully!",

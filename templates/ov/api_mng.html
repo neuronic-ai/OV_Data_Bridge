@@ -23,7 +23,7 @@
         <div class="add-api-key">
             <a href="#" class="change-paddword" onclick="open_api_form(0)">
                 <i class="fa fa-plus-square"></i> Add API Key</a>
-            <a href="{% url "api_ref" %}" class="change-paddword">
+            <a href="{% url "user_api_ref" %}" class="change-paddword">
                 <i class="fa fa-book"></i> API Reference</a>
         </div>
         <div class="table-panel">
@@ -199,7 +199,7 @@
                         success: function (res) {
 
                             if (res.status_code === 200)
-                                window.location.href = '{% url 'api_mng' %}';
+                                window.location.href = '{% url 'user_api_mng' %}';
                             else
                                 swal('Error!', res.text, 'error');
                         }
@@ -292,7 +292,7 @@
                         success: function (res) {
 
                             if (res.status_code === 200)
-                                window.location.href = '{% url 'api_mng' %}';
+                                window.location.href = '{% url 'user_api_mng' %}';
                             else
                                 swal('Error!', res.text, 'error');
                         }
