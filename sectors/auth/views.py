@@ -39,8 +39,8 @@ def logout(request):
 class SignupView(TemplateView):
     template_name = 'auth/signup.html'
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(SignupView, self).get_context_data(*args, **kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context['terms_of_service'] = '#'
         setting = list(TBLSetting.objects.all().values())
         if len(setting):
@@ -76,7 +76,7 @@ class SignupView(TemplateView):
                 'allowed_file_flush': setting['allowed_file_flush'],
                 'available_bridges': setting['available_bridges']
             })
-
+        user.unique_id = common.generate_random_string(10, 'ld')
         user.save()
 
         transaction = TBLTransaction()
@@ -131,10 +131,10 @@ class ChangePasswordView(TemplateView):
         if not TBLUser.objects.filter(reset_link=reset_link).exists():
             return redirect('/404_page')
         else:
-            return super(ChangePasswordView, self).dispatch(request, *args, **kwargs)
+            return super().dispatch(request, *args, **kwargs)
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(ChangePasswordView, self).get_context_data(*args, **kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context['reset_link'] = kwargs['param1']
 
         return context

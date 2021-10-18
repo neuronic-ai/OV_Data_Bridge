@@ -16,7 +16,7 @@
                                 <div class="card-body">
                                     <h2 class="main-title">New Data Bridge</h2>
                                     <div class="card-body-box">
-                                        <a class="" data-toggle="modal" data-target="#databridge">
+                                        <a data-toggle="modal" data-target="#databridge">
                                             <svg width="136" height="136" viewBox="0 0 136 136" fill="none"
                                                  xmlns="http://www.w3.org/2000/svg">
                                                 <g filter="url(#filter0_d)">
@@ -258,35 +258,6 @@
             }
         });
 
-        function focus_on_element(element_name, timeout = 500) {
-
-            setTimeout(function () {
-                $('#' + element_name).focus();
-            }, timeout);
-        }
-
-        function copy_text(text_value) {
-            var input = document.createElement('input');
-            input.setAttribute('value', text_value);
-            document.body.appendChild(input);
-            input.select();
-            document.execCommand('copy');
-            document.body.removeChild(input);
-        }
-
-        function gen_rp(length) {
-
-            var result = '';
-            var characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
-            var charactersLength = characters.length;
-
-            for (i = 0; i < length; i++) {
-                result += characters.charAt(Math.floor(Math.random() * charactersLength));
-            }
-
-            return result;
-        }
-
         function save_bridge(bridge_info) {
 
             $.ajax({
@@ -318,7 +289,7 @@
 
         function open_bridge_modal(bridge_type, bridge_id = 0) {
 
-            var bridge_info = {};
+            let bridge_info = {};
 
             bridge_type = parseInt(bridge_type);
             bridge_id = parseInt(bridge_id);
@@ -453,7 +424,7 @@
 
         function power_bridge(bridge_id, is_active) {
 
-            var msg = '', color = '';
+            let msg = '', color = '';
             is_active = parseInt(is_active);
 
             if (is_active) {
@@ -583,7 +554,7 @@
         });
 
         $('.search-bridge').on('keyup', function (e) {
-            var keyword = this.value;
+            let keyword = this.value;
             for (i = 0; i < dashboard_panel_vue.bridges.length; i++) {
                 dashboard_panel_vue.bridges[i]["show"] = dashboard_panel_vue.bridges[i]["name"].search(keyword) !== -1;
             }

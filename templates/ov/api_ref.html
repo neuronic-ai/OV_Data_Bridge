@@ -1,0 +1,245 @@
+{% extends "ov/base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>API Reference</title>
+    <style>
+        h2 {
+            margin-top: 20px !important;
+            border-bottom: 1px solid #929292;
+        }
+
+        table {
+            min-width: 500px;
+            margin-bottom: 30px;
+        }
+
+        tr th {
+            border: 1px solid #929292;
+            text-align: center;
+            font-weight: 600;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        tr td {
+            border: 1px solid #929292;
+            text-align: left;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .italic {
+            font-style: italic;
+        }
+
+        .sample {
+            font-family: monospace;
+            background-color: #e3e3e3;
+            padding: 10px;
+            border-radius: 7px;
+        }
+    </style>
+{% endblock title %}
+
+{% block content %}
+    <div class="main-content" style="padding-right: 52px">
+        <h1>API Reference</h1>
+        <p>Once you deploy the service, you will be able to navigate to the API Reference of your newly created service by going to
+            https://bridge.vantagecrypto.com/oapi/{unique_id}. Your will get the root url upon deploying your service.</p>
+        <h2>Quick Reference</h2>
+        <p>Use the following links to quickly jump to the relevant documentation:</p>
+        <table>
+            <thead>
+            <tr><th>API Documentation Reference</th></tr>
+            </thead>
+            <tbody>
+            <tr><td><a href="#authentication">Authentication</a></td></tr>
+            <tr><td><a href="#createBridge">Create Bridge</a></td></tr>
+            <tr><td><a href="#modifyBridge">Modify Bridge</a></td></tr>
+            <tr><td><a href="#getBridge">Get Bridge</a></td></tr>
+            <tr><td><a href="#deleteBridge">Delete Bridge</a></td></tr>
+            </tbody>
+        </table>
+
+        <h2 id="authentication">Authentication</h2>
+        <p>When calling the service, you will need to set authentication headers with the API key that is provided as part of the set-up process.</p>
+        <p>If you did not copy the keys at the time of setting up the preconfigured solution, you can find those by:</p>
+        <ol>
+            <li>Logging into the Bridge Portal.</li>
+            <li>Click on API Management.</li>
+            <li>The keys are under the list, it is called API Key.</li>
+        </ol>
+        <p>Sample authentication header:</p>
+        <p class="sample">api-key: {your_api_key}</p>
+
+        <!-- Create Bridge -->
+        <h2 id="createBridge">Create Bridge</h2>
+        <p class="italic">POST /bridge</p>
+        <p>Create a bridge.</p>
+        <p class="italic">Request parameters:</p>
+        <table>
+            <thead>
+            <tr><th>Request Parameter</th><th>Mandatory</th><th>Type</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+            <tr><td>name</td><td>Yes</td><td>Any alphanumeric characters<br>Max length: 255</td><td>Name of a bridge.</td></tr>
+            <tr><td>type</td><td>Yes</td><td>One of the following:<br>ws-wh, wh-ws, ws-api, api-ws, file-wh,<br> file-ws, file-api, wh-file, ws-file, api-file</td><td>Type of a bridge.</td></tr>
+            <tr><td>ws_url</td><td>No</td><td>WebSocket url</td><td>WebSocket url of a bridge.</td></tr>
+            <tr><td>wh_url</td><td>No</td><td>WebHook url</td><td>WebHook url of a bridge.</td></tr>
+            <tr><td>api_url</td><td>No</td><td>API url</td><td>API url of a bridge.</td></tr>
+            <tr><td>file_url</td><td>No</td><td>FILE url</td><td>FILE url of a bridge.</td></tr>
+            <tr><td>format_search</td><td>No</td><td>Any alphanumeric characters</td><td>Format(format_search) of a bridge.</td></tr>
+            <tr><td>format_re_search</td><td>No</td><td>Any alphanumeric characters</td><td>Format(format_re_search) of a bridge.</td></tr>
+            <tr><td>format_any</td><td>No</td><td>One of the following:<br>Yes, No</td><td>Format(format_any) of a bridge.</td></tr>
+            <tr><td>frequency</td><td>No</td><td>One of the following:<br>5, 60, 300, 3600 (second)</td><td>Frequency time of a bridge.</td></tr>
+            <tr><td>flush</td><td>No</td><td>One of the following:<br>300, 1800, 3600, 86400 (second)</td><td>Flush time of a bridge.</td></tr>
+            <tr><td>file_format</td><td>No</td><td>One of the following:<br>txt, csv, zip</td><td>File format of a bridge.</td></tr>
+            </tbody>
+        </table>
+        <p>Sample Request:</p>
+        <p class="sample">
+            POST https://bridge.vantagecrypto.com/oapi/{unique_id}/bridge<br>
+            api-key: {your_api_key}<br>
+            Content-Type: application/json<br>
+            <br>
+            {<br>
+            &emsp;"name": "WH->WS",<br>
+            &emsp;"type": "wh-ws",<br>
+            &emsp;"wh_url": "https://bridge.vantagecrypto.com/webhook/0xye9lx3ky/wxpndfx7zaie1mq59moh",<br>
+            &emsp;"ws_url": "wss://bridge.vantagecrypto.com/websocket/6g5h4l88lo/cgyybj8efybp96a69te4",<br>
+            &emsp;"format_search": "",<br>
+            &emsp;"format_re_format": "",<br>
+            &emsp;"format_any": "No",<br>
+            }<br>
+        </p>
+        <p>Sample Response:</p>
+        <p class="sample">
+            HTTP/1.1 201 ACCEPTED<br>
+            Content-Type: application/json; charset=utf-8<br>
+            <br>
+            {<br>
+            &emsp;"id": 11,<br>
+            }<br>
+        </p>
+
+        <!-- Modify Bridge -->
+        <h2 id="modifyBridge">Modify Bridge</h2>
+        <p class="italic">PUT /bridge</p>
+        <p>Modify a bridge.</p>
+        <p class="italic">Request parameters:</p>
+        <table>
+            <thead>
+            <tr><th>Request Parameter</th><th>Mandatory</th><th>Type</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+            <tr><td>id</td><td>Yes</td><td>One of the following:<br>1, 2, ... x</td><td>Unique id of a bridge.</td></tr>
+            <tr><td>name</td><td>No</td><td>Any alphanumeric characters<br>Max length: 255</td><td>Name of a bridge.</td></tr>
+            <tr><td>type</td><td>No</td><td>One of the following:<br>ws-wh, wh-ws, ws-api, api-ws, file-wh,<br> file-ws, file-api, wh-file, ws-file, api-file</td><td>Type of a bridge.</td></tr>
+            <tr><td>ws_url</td><td>No</td><td>WebSocket url</td><td>WebSocket url of a bridge.</td></tr>
+            <tr><td>wh_url</td><td>No</td><td>WebHook url</td><td>WebHook url of a bridge.</td></tr>
+            <tr><td>api_url</td><td>No</td><td>API url</td><td>API url of a bridge.</td></tr>
+            <tr><td>file_url</td><td>No</td><td>FILE url</td><td>FILE url of a bridge.</td></tr>
+            <tr><td>format_search</td><td>No</td><td>Any alphanumeric characters</td><td>Format(format_search) of a bridge.</td></tr>
+            <tr><td>format_re_search</td><td>No</td><td>Any alphanumeric characters</td><td>Format(format_re_search) of a bridge.</td></tr>
+            <tr><td>format_any</td><td>No</td><td>One of the following:<br>Yes, No</td><td>Format(format_any) of a bridge.</td></tr>
+            <tr><td>frequency</td><td>No</td><td>One of the following:<br>5, 60, 300, 3600 (second)</td><td>Frequency time of a bridge.</td></tr>
+            <tr><td>flush</td><td>No</td><td>One of the following:<br>300, 1800, 3600, 86400 (second)</td><td>Flush time of a bridge.</td></tr>
+            <tr><td>file_format</td><td>No</td><td>One of the following:<br>txt, csv, zip</td><td>File format of a bridge.</td></tr>
+            </tbody>
+        </table>
+        <p>Sample Request:</p>
+        <p class="sample">
+            PUT https://bridge.vantagecrypto.com/oapi/{unique_id}/bridge<br>
+            api-key: {your_api_key}<br>
+            Content-Type: application/json<br>
+            <br>
+            {<br>
+            &emsp;"id": 11,<br>
+            &emsp;"format_search": "bitcoin",<br>
+            &emsp;"format_re_format": "xxxx",<br>
+            &emsp;"format_any": "Yes",<br>
+            }<br>
+        </p>
+        <p>Sample Response:</p>
+        <p class="sample">
+            HTTP/1.1 202 ACCEPTED<br>
+            Content-Length: 0<br>
+            <br>
+            ""<br>
+        </p>
+
+        <!-- Get Bridge -->
+        <h2 id="getBridge">Get Bridge</h2>
+        <p class="italic">GET /bridge</p>
+        <p>Returns the bridge information, including the id, name and others.</p>
+        <p class="italic">Request parameters:</p>
+        <table>
+            <thead>
+            <tr><th>Request Parameter</th><th>Mandatory</th><th>Type</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+            <tr><td>id</td><td>Yes</td><td>One of the following:<br>1, 2, ... , all</td><td>Unique id of a bridge.</td></tr>
+            </tbody>
+        </table>
+        <p>Sample Request:</p>
+        <p class="sample">
+            GET https://bridge.vantagecrypto.com/oapi/{unique_id}/bridge<br>
+            api-key: {your_api_key}<br>
+            Content-Type: application/json<br>
+            <br>
+            {<br>
+            &emsp;"id": 11<br>
+            }<br>
+        </p>
+        <p>Sample Response:</p>
+        <p class="sample">
+            HTTP/1.1 200 OK<br>
+            Content-Type: application/json; charset=utf-8<br>
+            <br>
+            [<br>
+            &emsp;{<br>
+            &emsp;&emsp;"id": 11,<br>
+            &emsp;&emsp;"name": "WH->WS",<br>
+            &emsp;&emsp;"type": "wh-ws",<br>
+            &emsp;&emsp;"wh_url": "https://bridge.vantagecrypto.com/webhook/0xye9lx3ky/wxpndfx7zaie1mq59moh",<br>
+            &emsp;&emsp;"ws_url": "wss://bridge.vantagecrypto.com/websocket/6g5h4l88lo/cgyybj8efybp96a69te4",<br>
+            &emsp;&emsp;"format_search": "bitcoin",<br>
+            &emsp;&emsp;"format_re_format": "xxxx",<br>
+            &emsp;&emsp;"format_any": "Yes",<br>
+            &emsp;}<br>
+            ]<br>
+        </p>
+
+        <!-- Delete Bridge -->
+        <h2 id="deleteBridge">Delete Bridge</h2>
+        <p class="italic">DELETE /bridge</p>
+        <p>Delete the specified bridge.</p>
+        <p class="italic">Request parameters:</p>
+        <table>
+            <thead>
+            <tr><th>Request Parameter</th><th>Mandatory</th><th>Type</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+            <tr><td>id</td><td>Yes</td><td>One of the following:<br>1, 2, ... , all</td><td>Unique id of a bridge.</td></tr>
+            </tbody>
+        </table>
+        <p>Sample Request:</p>
+        <p class="sample">
+            DELETE https://bridge.vantagecrypto.com/oapi/{unique_id}/bridge<br>
+            api-key: {your_api_key}<br>
+            Content-Type: application/json<br>
+            <br>
+            {<br>
+            &emsp;"id": 11<br>
+            }<br>
+        </p>
+        <p>Sample Response:</p>
+        <p class="sample">
+            HTTP/1.1 202 ACCEPTED<br>
+            Content-Length: 0<br>
+            <br>
+            ""<br>
+        </p>
+    </div>
+{% endblock content %}

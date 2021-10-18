@@ -22,6 +22,7 @@ urlpatterns = [
     path('', include('sectors.ov.urls')),
     path('auth/', include('sectors.auth.urls')),
     path('event/', include('event.urls')),
+    path('oapi/', include('oapi.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -229,6 +229,10 @@ svg {
     margin-right: 15px;
 }
 
+.profile-page label i {
+    margin-right: 15px;
+}
+
 .profile-page.form .form-group {
     display: flex;
 }
@@ -1355,6 +1359,11 @@ a.term-services {
     overflow-y: auto;
 }
 
+.add-api-key {
+    padding-top: 30px;
+    color: white;
+}
+
 .sorting:after, .sorting_asc:after {
     content: "" !important;
     background-image: url('../img/icons/sorting-icon.png');
@@ -1624,12 +1633,6 @@ a.grey-bg {
     border-radius: 4px;
     margin-right: 10px;
     white-space: nowrap;
-}
-
-.super-login,
-.delete-user {
-    color: white !important;
-    cursor: pointer;
 }
 
 .p-0 {

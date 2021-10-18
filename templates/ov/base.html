@@ -136,8 +136,7 @@
                         {#                            </a>#}
                         {#                        </li>#}
                         <li class="nav-item">
-                            <a class="nav-link {% if page_name == 'data_bridges' %}active{% endif %}"
-                               href="{% url "data_bridges" %}">
+                            <a class="nav-link {% if page_name == 'data_bridges' %}active{% endif %}" href="{% url "data_bridges" %}">
                                 <svg width="18" height="20" viewBox="0 0 20 20" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
                                     <path d="M20 5.02205V3.70337H0V5.02205H1.31868V6.78029H0V16.2968H2.90079V13.6697C2.90079 12.1121 4.16532 10.8494 5.72523 10.8494C7.28514 10.8494 8.54967 12.1121 8.54967 13.6697L8.54945 16.2968H11.4504V13.6697C11.4504 12.1121 12.7149 10.8494 14.2748 10.8494C15.8347 10.8494 17.0993 12.1121 17.0993 13.6697V16.2968H20V6.78029H18.6813V5.02205H20ZM9.34066 6.78029H2.63736V5.02205H9.34066V6.78029ZM17.3626 6.78029H10.6593V5.02205H17.3626V6.78029Z"
@@ -147,10 +146,15 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if page_name == 'profile' %}active{% endif %}"
-                               href="{% url "profile" %}">
+                            <a class="nav-link {% if page_name == 'profile' %}active{% endif %}" href="{% url "profile" %}">
                                 <i class="fa fa-user" style="font-size: 21px"></i>
                                 <span class="nav-link-text">Profile</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if page_name == 'api_mng' %}active{% endif %}" href="{% url "api_mng" %}">
+                                <i class="fa fa-code" style="font-size: 14px"></i>
+                                <span class="nav-link-text">API Management</span>
                             </a>
                         </li>
                         {% if is_superuser %}
@@ -214,6 +218,37 @@
 
 {% block sub_content %}
 {% endblock sub_content %}
+
+<script>
+    function focus_on_element(element_name, timeout = 500) {
+
+        setTimeout(function () {
+            $('#' + element_name).focus();
+        }, timeout);
+    }
+
+    function copy_text(text_value) {
+        let input = document.createElement('input');
+        input.setAttribute('value', text_value);
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+    }
+
+    function gen_rp(length) {
+
+        let result = '';
+        let characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let charactersLength = characters.length;
+
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+
+        return result;
+    }
+</script>
 
 {% block javascript %}
 {% endblock javascript %}

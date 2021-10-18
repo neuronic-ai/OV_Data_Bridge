@@ -117,13 +117,6 @@ class Billing:
         pass
 
     def start_conversion_pricing(self):
-        transactions = TBLTransaction.objects.all()
-        for transaction in transactions:
-            if transaction.mode in [1, 2]:
-                if transaction.amount > 0:
-                    transaction.amount = -transaction.amount
-                    transaction.save()
-
         thread.start_new_thread(self.run_cp, ())
 
     def run_mpf(self):

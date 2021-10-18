@@ -1,0 +1,304 @@
+{% extends "ov/base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>API Management</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="main-content">
+        <div class="user-edit-panel">
+            <h3 class="user-title">API Management</h3>
+            <div style="width: 50%;float: right;margin-right: 52px;">
+                <h2>
+                    <div class="copybutton">
+                        <input type="text" readonly="readonly" class="form-control" value="{{ endpoint_url }}" style="height: 30px">
+                        <div class="copy-icon integration-checklist__copy-button" onclick="copy_text_endpoint(this)">
+                            <img src="/static/img/icons/copy.png">
+                        </div>
+                    </div>
+                </h2>
+            </div>
+        </div>
+        <div class="add-api-key">
+            <a href="#" class="change-paddword" onclick="open_api_form(0)">
+                <i class="fa fa-plus-square"></i> Add API Key</a>
+            <a href="{% url "api_ref" %}" class="change-paddword">
+                <i class="fa fa-book"></i> API Reference</a>
+        </div>
+        <div class="table-panel">
+            <table class="table table-bordered table-hover table-striped" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th style="width: 20px">#</th>
+                    <th>Name</th>
+                    <th>Permission</th>
+                    <th>API Key</th>
+                    <th>IP Whitelist</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for api in api_info %}
+                    <tr>
+                        <td>{{ api.uid }}</td>
+                        <td>{{ api.name }}</td>
+                        <td>
+                            <div class="actions-panel">
+                                {% if api.permission.create %}
+                                    <a href="#" class="green-bg">Create</a>
+                                {% endif %}
+                                {% if api.permission.modify %}
+                                    <a href="#" class="yellow-bg">Modify</a>
+                                {% endif %}
+                                {% if api.permission.delete %}
+                                    <a href="#" class="red-bg">Delete</a>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>{{ api.api_key }}</td>
+                        <td>{{ api.permission.ip_whitelist }}</td>
+                        <td>
+                            <div class="actions-panel">
+                                <a href="#" class="blue-bg" onclick="open_api_form({{ api.id }})"><i class="fa fa-pencil-square-o"></i>&nbsp;Edit</a>
+                                <a href="#" class="red-bg" onclick="delete_api_key({{ api.id }})"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block sub_content %}
+    <div class="formate-popup modal fade" id="apiForm" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered format-modal" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Create API Key</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 1L13 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M13 1L1 13" stroke="#676765" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="websocket-panel">
+                        <div class="change-password">
+                            <form id="api_form">
+                                <div class="left-panel">
+                                    <div class="form-group">
+                                        <label>Name</label>
+                                        <input v-model="name" id="name" type="text" class="form-control" placeholder="Enter here">
+                                    </div>
+                                    <div class="form-group remember-forgot">
+                                        <label>Permissions</label>
+                                        <div class="form-group remember-check" style="margin-top: 8px">
+                                            <input v-model="check_create" v-on:click="on_check_create" type="checkbox" id="create">
+                                            <label for="create">Create</label>
+                                        </div>
+                                        <div class="form-group remember-check" style="margin-top: 8px">
+                                            <input v-model="check_modify" v-on:click="on_check_modify" type="checkbox" id="modify">
+                                            <label for="modify">Modify</label>
+                                        </div>
+                                        <div class="form-group remember-check" style="margin-top: 8px">
+                                            <input v-model="check_delete" v-on:click="on_check_delete" type="checkbox" id="delete">
+                                            <label for="delete">Delete</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>API Key</label>
+                                        <input v-model="api_key" id="api_key" type="text" class="form-control" placeholder="Enter here">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>IP Whitelist</label>
+                                        <input v-model="ip_whitelist" id="ip_whitelist" type="text" class="form-control" placeholder="Enter here">
+                                    </div>
+                                </div>
+                                <div class="right-button-section">
+                                    <a href="#" v-on:click="on_save" class="websocket-button green-bg" style="position: absolute;bottom: 0;right: 0">Save</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock sub_content %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+            $('.table').DataTable({
+                //disable sorting on last column
+                "columnDefs": [
+                    {"orderable": false, "targets": 5}
+                ],
+                language: {
+                    //customize pagination prev and next buttons: use arrows instead of words
+                    'paginate': {
+                        'previous': '<span class="fa fa-chevron-left"></span>',
+                        'next': '<span class="fa fa-chevron-right"></span>'
+                    },
+                    //customize number of elements to be displayed
+                    "lengthMenu": 'Display <select class="form-control input-sm">' +
+                        '<option value="10">10</option>' +
+                        '<option value="20">20</option>' +
+                        '<option value="30">30</option>' +
+                        '<option value="40">40</option>' +
+                        '<option value="50">50</option>' +
+                        '<option value="-1">All</option>' +
+                        '</select> results'
+                }
+            });
+        });
+
+        let api_key_vue = new Vue({
+            delimiters: ['[[', ']]'],
+            el: '#api_form',
+            data: {
+                id: 0,
+                name: '',
+                check_create: false,
+                check_modify: false,
+                check_delete: false,
+                api_key: gen_rp(20),
+                ip_whitelist: '',
+            },
+            methods: {
+                on_save: function () {
+
+                    if (!this.name) {
+                        $('#name').focus();
+                        return;
+                    }
+
+                    if (!this.api_key) {
+                        $('#api_key').focus();
+                        return;
+                    }
+
+                    $.ajax({
+                        url: '{% url 'save_api_key' %}',
+                        type: 'POST',
+                        data: {
+                            'id': this.id,
+                            'name': this.name,
+                            'permission': JSON.stringify({
+                                'create': this.check_create,
+                                'modify': this.check_modify,
+                                'delete': this.check_delete,
+                                'ip_whitelist': this.ip_whitelist
+                            }),
+                            'api_key': this.api_key
+                        },
+                        success: function (res) {
+
+                            if (res.status_code === 200)
+                                window.location.href = '{% url 'api_mng' %}';
+                            else
+                                swal('Error!', res.text, 'error');
+                        }
+                    });
+                },
+                on_check_create: function () {
+
+                    this.check_create = !this.check_create;
+                },
+                on_check_modify: function () {
+
+                    this.check_modify = !this.check_modify;
+                },
+                on_check_delete: function () {
+
+                    this.check_delete = !this.check_delete;
+                }
+            },
+            watch: {
+
+            }
+        });
+
+        function copy_text_endpoint(element) {
+            let text_value = element.previousSibling.previousSibling.value;
+            copy_text(text_value);
+        }
+
+        function open_api_form(uid) {
+
+            api_key_vue.id = uid
+
+            if (uid === 0) {
+                api_key_vue.name = '';
+                api_key_vue.check_create = false;
+                api_key_vue.check_modify = false;
+                api_key_vue.check_delete = false;
+                api_key_vue.api_key = gen_rp(20);
+                api_key_vue.ip_whitelist = '';
+
+                $('#apiForm').modal('show');
+                focus_on_element('name');
+            }
+            else {
+                $.ajax({
+                    url: '{% url 'get_api_key' %}',
+                    type: 'POST',
+                    data: {
+                        'id': uid,
+                    },
+                    success: function (res) {
+
+                        let api_info = res.api_info;
+                        api_key_vue.name = api_info.name;
+                        api_key_vue.check_create = api_info.permission.create;
+                        api_key_vue.check_modify = api_info.permission.modify;
+                        api_key_vue.check_delete = api_info.permission.delete;
+                        api_key_vue.api_key = api_info.api_key;
+                        api_key_vue.ip_whitelist = api_info.permission.ip_whitelist;
+
+                        $('#apiForm').modal('show');
+                        focus_on_element('name');
+                    }
+                });
+            }
+        }
+
+        function delete_api_key(uid) {
+
+            swal({
+                title: 'Are you sure?',
+                text: 'You will not be able to recover this api key!',
+                type: 'warning',
+                showCancelButton: true,
+                showSweetAlert: true,
+                confirmButtonColor: '#C50101',
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                closeOnConfirm: false,
+                closeOnCancel: true
+            },
+            function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        url: '{% url 'delete_api_key' %}',
+                        type: 'POST',
+                        data: {
+                            'id': uid,
+                        },
+                        success: function (res) {
+
+                            if (res.status_code === 200)
+                                window.location.href = '{% url 'api_mng' %}';
+                            else
+                                swal('Error!', res.text, 'error');
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+{% endblock javascript %}

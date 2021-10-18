@@ -16,6 +16,7 @@ RATE_LIMIT_PER_URL_EXCEED = 'Rate limit per url exceed.'
 INVALID_URL = 'Invalid URL.'
 INVALID_FILE_WEB_URL = 'Invalid File Web Address.'
 INVALID_FILE_WEB_TYPE = 'Invalid File Web Type (txt, csv, zip/gzip).'
+INVALID_UNIQUE_ID_API_KEY = 'Invalid Unique ID or API Key.'
 UNABLE_TO_READ_FILE = 'Unable to read file.'
 
 SMTP_SETTING_NOT_AVAILABLE = 'SMTP setting not available.'

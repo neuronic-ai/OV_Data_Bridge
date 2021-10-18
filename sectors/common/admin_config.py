@@ -77,16 +77,16 @@ FILE_FORMAT = [
 ]
 
 BRIDGE = [
-    {'type': 1, 'abbreviation': 'ws2wh', 'description': 'WebSocket > WebHook', 'reg': 'WSS/WS>WH'},
-    {'type': 2, 'abbreviation': 'wh2ws', 'description': 'WebHook > WebSocket', 'reg': 'WH>WSS/WS'},
-    {'type': 3, 'abbreviation': 'ws2wh', 'description': 'WebSocket > API', 'reg': 'WSS/WS>API'},
-    {'type': 4, 'abbreviation': 'ws2api', 'description': 'API > WebSocket', 'reg': 'API>WSS/WS'},
-    {'type': 5, 'abbreviation': 'file2wh', 'description': 'FILE > WebHook', 'reg': 'FILE>WH'},
-    {'type': 6, 'abbreviation': 'file2ws', 'description': 'FILE > WebSocket', 'reg': 'FILE>WSS/WS'},
-    {'type': 7, 'abbreviation': 'file2api', 'description': 'FILE > API', 'reg': 'FILE>API'},
-    {'type': 8, 'abbreviation': 'wh2file', 'description': 'WebHook > FILE', 'reg': 'WH>FILE'},
-    {'type': 9, 'abbreviation': 'ws2file', 'description': 'WebSocket > FILE', 'reg': 'WSS/WS>FILE'},
-    {'type': 10, 'abbreviation': 'api2file', 'description': 'API > FILE', 'reg': 'API>FILE'},
+    {'type': 1, 'abbreviation': 'ws-wh', 'description': 'WebSocket > WebHook', 'reg': 'WSS/WS>WH', 'src': 'ws_url', 'dst': 'wh_url'},
+    {'type': 2, 'abbreviation': 'wh-ws', 'description': 'WebHook > WebSocket', 'reg': 'WH>WSS/WS', 'src': 'wh_url', 'dst': 'ws_url'},
+    {'type': 3, 'abbreviation': 'ws-api', 'description': 'WebSocket > API', 'reg': 'WSS/WS>API', 'src': 'ws_url', 'dst': 'api_url'},
+    {'type': 4, 'abbreviation': 'api-ws', 'description': 'API > WebSocket', 'reg': 'API>WSS/WS', 'src': 'api_url', 'dst': 'ws_url'},
+    {'type': 5, 'abbreviation': 'file-wh', 'description': 'FILE > WebHook', 'reg': 'FILE>WH', 'src': 'file_url', 'dst': 'wh_url'},
+    {'type': 6, 'abbreviation': 'file-ws', 'description': 'FILE > WebSocket', 'reg': 'FILE>WSS/WS', 'src': 'file_url', 'dst': 'ws_url'},
+    {'type': 7, 'abbreviation': 'file-api', 'description': 'FILE > API', 'reg': 'FILE>API', 'src': 'file_url', 'dst': 'api_url'},
+    {'type': 8, 'abbreviation': 'wh-file', 'description': 'WebHook > FILE', 'reg': 'WH>FILE', 'src': 'wh_url', 'dst': 'file_url'},
+    {'type': 9, 'abbreviation': 'ws-file', 'description': 'WebSocket > FILE', 'reg': 'WSS/WS>FILE', 'src': 'ws_url', 'dst': 'file_url'},
+    {'type': 10, 'abbreviation': 'api-file', 'description': 'API > FILE', 'reg': 'API>FILE', 'src': 'api_url', 'dst': 'file_url'},
 ]
 
 DISABLE_PRICING = True
@@ -110,19 +110,3 @@ FREQUENCY_PRICE = [
     {'type': 3, 'm_p': 0, 'is_active': True},
     {'type': 4, 'm_p': 0, 'is_active': True},
 ]
-
-
-def get_bridge_by_type(b_type):
-    for b in BRIDGE:
-        if b['type'] == b_type:
-            return b
-
-    return None
-
-
-def get_frequency_by_type(f_type):
-    for f in FREQUENCY:
-        if f['type'] == f_type:
-            return f
-
-    return None

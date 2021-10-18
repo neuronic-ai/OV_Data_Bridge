@@ -16,6 +16,13 @@ urlpatterns = [
     path('profile', login_required(ProfileView.as_view()), name='profile'),
     path('change_password', login_required(ChangePasswordView.as_view()), name='change_password'),
 
+    path('api_mng', login_required(ApiMngView.as_view()), name='api_mng'),
+    path('save_api_key', login_required(save_api_key), name='save_api_key'),
+    path('get_api_key', login_required(get_api_key), name='get_api_key'),
+    path('delete_api_key', login_required(delete_api_key), name='delete_api_key'),
+
+    path('api_ref', login_required(ApiRefView.as_view()), name='api_ref'),
+
     path('user', login_required(UserView.as_view()), name='user'),
     path('edit_user_general/<int:param1>', login_required(EditUserGeneralView.as_view()), name='edit_user_general'),
     path('edit_user_account/<int:param1>', login_required(EditUserAccountView.as_view()), name='edit_user_account'),

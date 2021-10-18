@@ -9,6 +9,7 @@ import os
 
 from sectors.common import admin_config, error, mail
 from sectors.module import common, billing
+from sectors.common.bridge import common as bridge_common
 
 from db.models import (
     TBLBridge,
@@ -16,6 +17,7 @@ from db.models import (
     TBLUser,
     TBLSetting,
     TBLTransaction,
+    TBLApiKey,
 )
 
 
@@ -37,10 +39,10 @@ class DashboardView(TemplateView):
     template_name = 'ov/dashboard.html'
 
     def dispatch(self, request, *args, **kwargs):
-        return super(DashboardView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(DashboardView, self).get_context_data(*args, **kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context = put_base_info(self.request, context, 'dashboard')
 
         return context
@@ -49,13 +51,13 @@ class DashboardView(TemplateView):
 class DataBridgesView(TemplateView):
     template_name = 'ov/data_bridges.html'
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(DataBridgesView, self).get_context_data(*args, **kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context = put_base_info(self.request, context, 'data_bridges')
         context['permission'] = json.loads(self.request.user.permission)
         context['bridges_info'] = list(TBLBridge.objects.filter(user_id=self.request.user.id).values())
         for bi in context['bridges_info']:
-            bi['description'] = admin_config.get_bridge_by_type(bi['type'])['description']
+            bi['description'] = bridge_common.get_bridge_by_type(bi['type'])['description']
             bi['date_created'] = bi['date_created'].strftime('%B %d, %Y')
             bi['date_updated'] = bi['date_updated'].strftime('%B %d, %Y')
 
@@ -77,54 +79,8 @@ def save_bridge(request):
     params = request.POST
 
     try:
-        if int(params['id']) == 0:  # new bridge
-            bridge = TBLBridge()
-        else:
-            bridge = TBLBridge.objects.get(id=int(params['id']))
-
-        bridge_type = int(params['type'])
-
-        if bridge_type in [5, 6, 7]:
-            resp_data, status_code = common.check_validity_remote_file(request, params['src_address'])
-            if status_code >= 300:
-                return JsonResponse({
-                    'status_code': status_code,
-                    'text': resp_data
-                })
-
-        bridge.user_id = request.user.id
-        bridge.name = params['name']
-        bridge.type = bridge_type
-        bridge.src_address = params['src_address']
-        bridge.dst_address = params['dst_address']
-        if 'format' in params:
-            bridge.format = params['format']
-        if 'frequency' in params:
-            bridge.frequency = int(params['frequency'])
-        if 'flush' in params:
-            bridge.flush = int(params['flush'])
-        if 'file_format' in params:
-            bridge.file_format = params['file_format']
-
-        bridge_qty = TBLBridge.objects.filter(user_id=request.user.id, is_active=True).count()
-        if int(params['id']) == 0:
-            bridge_qty += 1
-
-        max_active_bridges = json.loads(request.user.permission)['max_active_bridges']
-        if max_active_bridges < bridge_qty:
-            bridge.is_active = False
-
-        bridge.save()
-
-        if bridge.is_active:
-            admin_config.BRIDGE_HANDLE.restart_bridge_by_id(bridge.id)
-
-        billing.check_bridge_out_of_funds(request.user.id)
-
-        return JsonResponse({
-            'status_code': 200,
-            'text': error.SUCCESS
-        })
+        resp_data, _ = bridge_common.save_bridge(request, params, request.user)
+        return JsonResponse(resp_data)
     except Exception as e:
         return JsonResponse({
             'status_code': 500,
@@ -137,26 +93,25 @@ def report_bridge(request):
     try:
         bridge_id = int(params['id'])
         bridge = TBLBridge.objects.get(id=bridge_id)
-        if bridge.user_id == request.user.id:
-            logs_info = list(TBLLog.objects.filter(bridge_id=bridge_id).values())
-
-            for log in logs_info:
-                log['date_from'] = log['date_from'].strftime('%m/%d, %H:%M:%S')
-                log['date_to'] = log['date_to'].strftime('%m/%d, %H:%M:%S')
-                log['url'] = f"{admin_config.BRIDGE_LOG_ZIP_DOWNLOAD}/{log['filename']}"
-
-            return JsonResponse({
-                'status_code': 200,
-                'text': error.SUCCESS,
-                'cache': admin_config.BRIDGE_HANDLE.get_bridge_cache(bridge_id)[::-1],
-                'logs_info': logs_info[::-1]
-            })
-        else:
+        if bridge.user_id != request.user.id:
             return JsonResponse({
                 'status_code': 401,
                 'text': error.PERMISSION_NOT_ALLOWED
             })
 
+        logs_info = list(TBLLog.objects.filter(bridge_id=bridge_id).values())
+
+        for log in logs_info:
+            log['date_from'] = log['date_from'].strftime('%m/%d, %H:%M:%S')
+            log['date_to'] = log['date_to'].strftime('%m/%d, %H:%M:%S')
+            log['url'] = f"{admin_config.BRIDGE_LOG_ZIP_DOWNLOAD}/{log['filename']}"
+
+        return JsonResponse({
+            'status_code': 200,
+            'text': error.SUCCESS,
+            'cache': admin_config.BRIDGE_HANDLE.get_bridge_cache(bridge_id)[::-1],
+            'logs_info': logs_info[::-1]
+        })
     except Exception as e:
         return JsonResponse({
             'status_code': 500,
@@ -171,45 +126,43 @@ def power_bridge(request):
         bridge_id = int(params['id'])
         is_active = int(params['is_active'])
         bridge = TBLBridge.objects.get(id=bridge_id)
-        if bridge.user_id == request.user.id:
-            if is_active:
-                bridge.is_active = False
-                admin_config.BRIDGE_HANDLE.stop_bridge_by_id(bridge_id)
-            else:
-                # check available_bridges
-                available_bridges = json.loads(request.user.permission)['available_bridges']
-                for i in range(1, 5):
-                    if not available_bridges[f'ab{i}'] and bridge.type == i:
-                        return JsonResponse({
-                            'status_code': 401,
-                            'text': error.BRIDGE_TYPE_NOT_EXCEED
-                        })
-
-                # check max_active_bridges
-                bridge_qty = TBLBridge.objects.filter(user_id=bridge.user_id, is_active=True).count()
-                max_active_bridges = json.loads(request.user.permission)['max_active_bridges']
-                if max_active_bridges > bridge_qty:
-                    bridge.is_active = True
-                    admin_config.BRIDGE_HANDLE.start_bridge_by_id(bridge_id)
-                else:
-                    return JsonResponse({
-                        'status_code': 401,
-                        'text': error.MAX_ACTIVE_BRIDGES_EXCEED
-                    })
-
-            bridge.save()
-
-            return JsonResponse({
-                'status_code': 200,
-                'text': error.SUCCESS
-            })
-
-        else:
+        if bridge.user_id != request.user.id:
             return JsonResponse({
                 'status_code': 401,
                 'text': error.PERMISSION_NOT_ALLOWED
             })
 
+        if is_active:
+            bridge.is_active = False
+            admin_config.BRIDGE_HANDLE.stop_bridge_by_id(bridge_id)
+        else:
+            # check available_bridges
+            available_bridges = json.loads(request.user.permission)['available_bridges']
+            for i in range(1, 5):
+                if not available_bridges[f'ab{i}'] and bridge.type == i:
+                    return JsonResponse({
+                        'status_code': 401,
+                        'text': error.BRIDGE_TYPE_NOT_EXCEED
+                    })
+
+            # check max_active_bridges
+            bridge_qty = TBLBridge.objects.filter(user_id=bridge.user_id, is_active=True).count()
+            max_active_bridges = json.loads(request.user.permission)['max_active_bridges']
+            if max_active_bridges > bridge_qty:
+                bridge.is_active = True
+                admin_config.BRIDGE_HANDLE.start_bridge_by_id(bridge_id)
+            else:
+                return JsonResponse({
+                    'status_code': 401,
+                    'text': error.MAX_ACTIVE_BRIDGES_EXCEED
+                })
+
+        bridge.save()
+
+        return JsonResponse({
+            'status_code': 200,
+            'text': error.SUCCESS
+        })
     except Exception as e:
         return JsonResponse({
             'status_code': 500,
@@ -231,21 +184,20 @@ def delete_bridge(request):
     try:
         bridge_id = int(params['id'])
         bridge = TBLBridge.objects.get(id=bridge_id)
-        if bridge.user_id == request.user.id:
-            bridge.delete()
-            admin_config.BRIDGE_HANDLE.remove_bridge_by_id(bridge_id)
-            delete_bridge_log(request, bridge_id)
-
-            return JsonResponse({
-                'status_code': 200,
-                'text': error.SUCCESS
-            })
-        else:
+        if bridge.user_id != request.user.id:
             return JsonResponse({
                 'status_code': 401,
                 'text': error.PERMISSION_NOT_ALLOWED
             })
 
+        bridge.delete()
+        admin_config.BRIDGE_HANDLE.remove_bridge_by_id(bridge_id)
+        delete_bridge_log(request, bridge_id)
+
+        return JsonResponse({
+            'status_code': 200,
+            'text': error.SUCCESS
+        })
     except Exception as e:
         return JsonResponse({
             'status_code': 500,
@@ -256,9 +208,123 @@ def delete_bridge(request):
 class ProfileView(TemplateView):
     template_name = 'ov/profile.html'
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(ProfileView, self).get_context_data(*args, **kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context = put_base_info(self.request, context, 'profile')
+
+        return context
+
+
+class ApiMngView(TemplateView):
+    template_name = 'ov/api_mng.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context = put_base_info(self.request, context, 'api_mng')
+
+        api_info = list(TBLApiKey.objects.filter(user_id=self.request.user.id).values('id', 'name', 'unique_id', 'api_key', 'permission'))
+        u_id = 1
+        for ai in api_info:
+            ai['uid'] = u_id
+            u_id += 1
+
+        context['endpoint_url'] = f'{admin_config.HOST_URL}oapi/{self.request.user.unique_id}/'
+        context['api_info'] = api_info
+
+        return context
+
+
+def save_api_key(request):
+    params = request.POST
+
+    try:
+        if int(params['id']) == 0:
+            api_key = TBLApiKey()
+        else:
+            api_key = TBLApiKey.objects.get(id=int(params['id']))
+            if api_key.user_id != request.user.id:
+                return JsonResponse({
+                    'status_code': 401,
+                    'text': error.PERMISSION_NOT_ALLOWED
+                })
+
+        api_key.user_id = request.user.id
+        api_key.name = params['name']
+        api_key.unique_id = request.user.unique_id
+        api_key.api_key = params['api_key']
+        api_key.permission = json.loads(params['permission'])
+
+        api_key.save()
+
+        return JsonResponse({
+            'status_code': 200,
+            'text': error.SUCCESS
+        })
+    except Exception as e:
+        return JsonResponse({
+            'status_code': 500,
+            'text': str(e)
+        })
+
+
+def get_api_key(request):
+    params = request.POST
+
+    try:
+        api_key = TBLApiKey.objects.get(id=int(params['id']))
+        if api_key.user_id != request.user.id:
+            return JsonResponse({
+                'status_code': 401,
+                'text': error.PERMISSION_NOT_ALLOWED
+            })
+
+        return JsonResponse({
+            'status_code': 200,
+            'text': error.SUCCESS,
+            'api_info': {
+                'name': api_key.name,
+                'unique_id': api_key.unique_id,
+                'api_key': api_key.api_key,
+                'permission': api_key.permission
+            }
+        })
+    except Exception as e:
+        return JsonResponse({
+            'status_code': 500,
+            'text': str(e)
+        })
+
+
+def delete_api_key(request):
+    params = request.POST
+
+    try:
+        api_key = TBLApiKey.objects.get(id=int(params['id']))
+        if api_key.user_id != request.user.id:
+            return JsonResponse({
+                'status_code': 401,
+                'text': error.PERMISSION_NOT_ALLOWED
+            })
+
+        api_key.delete()
+
+        return JsonResponse({
+            'status_code': 200,
+            'text': error.SUCCESS
+        })
+    except Exception as e:
+        return JsonResponse({
+            'status_code': 500,
+            'text': str(e)
+        })
+
+
+class ApiRefView(TemplateView):
+    template_name = 'ov/api_ref.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context = put_base_info(self.request, context, 'api_ref')
 
         return context
 
@@ -266,8 +332,8 @@ class ProfileView(TemplateView):
 class ChangePasswordView(TemplateView):
     template_name = 'ov/change_password.html'
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(ChangePasswordView, self).get_context_data(*args, **kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context = put_base_info(self.request, context, 'profile')
 
         if 'change_password_msg' in self.request.session:
@@ -301,10 +367,10 @@ class UserView(TemplateView):
         if not request.user.is_superuser:
             return redirect('/404_page')
         else:
-            return super(UserView, self).dispatch(request, *args, **kwargs)
+            return super().dispatch(request, *args, **kwargs)
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(UserView, self).get_context_data(*args, **kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         put_base_info(self.request, context, 'user')
         bridges_status = {
             'active_wss': 0,
@@ -357,10 +423,10 @@ class EditUserGeneralView(TemplateView):
         if not request.user.is_superuser:
             return redirect('/404_page')
         else:
-            return super(EditUserGeneralView, self).dispatch(request, *args, **kwargs)
+            return super().dispatch(request, *args, **kwargs)
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(EditUserGeneralView, self).get_context_data(*args, **kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context = put_base_info(self.request, context, 'user')
 
         user_id = kwargs['param1']
@@ -405,10 +471,10 @@ class EditUserAccountView(TemplateView):
         if not request.user.is_superuser:
             return redirect('/404_page')
         else:
-            return super(EditUserAccountView, self).dispatch(request, *args, **kwargs)
+            return super().dispatch(request, *args, **kwargs)
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(EditUserAccountView, self).get_context_data(*args, **kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context = put_base_info(self.request, context, 'user')
 
         user_id = kwargs['param1']
@@ -460,10 +526,10 @@ class ResetPasswordView(TemplateView):
         if not request.user.is_superuser:
             return redirect('/404_page')
         else:
-            return super(ResetPasswordView, self).dispatch(request, *args, **kwargs)
+            return super().dispatch(request, *args, **kwargs)
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(ResetPasswordView, self).get_context_data(*args, **kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context = put_base_info(self.request, context, 'user')
 
         user_id = kwargs['param1']
@@ -630,10 +696,10 @@ class SettingServerView(TemplateView):
         if not request.user.is_superuser:
             return redirect('/404_page')
         else:
-            return super(SettingServerView, self).dispatch(request, *args, **kwargs)
+            return super().dispatch(request, *args, **kwargs)
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(SettingServerView, self).get_context_data(*args, **kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context = put_base_info(self.request, context, 'setting')
 
         setting = list(TBLSetting.objects.all().values())
@@ -676,10 +742,10 @@ class SettingPriceView(TemplateView):
         if not request.user.is_superuser:
             return redirect('/404_page')
         else:
-            return super(SettingPriceView, self).dispatch(request, *args, **kwargs)
+            return super().dispatch(request, *args, **kwargs)
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(SettingPriceView, self).get_context_data(*args, **kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context = put_base_info(self.request, context, 'setting')
 
         setting = list(TBLSetting.objects.all().values())
@@ -695,10 +761,10 @@ class SettingPriceView(TemplateView):
             frequency_price = setting['price_setting']['frequency_price']
 
         for bp in bridge_price:
-            bp['name'] = admin_config.get_bridge_by_type(bp['type'])['reg']
+            bp['name'] = bridge_common.get_bridge_by_type(bp['type'])['reg']
 
         for fp in frequency_price:
-            fp['name'] = admin_config.get_frequency_by_type(fp['type'])['reg']
+            fp['name'] = bridge_common.get_frequency_by_type(fp['type'])['reg']
 
         context['disable_pricing'] = disable_pricing
         context['bridge_price'] = bridge_price
@@ -714,10 +780,10 @@ class SettingSMTPView(TemplateView):
         if not request.user.is_superuser:
             return redirect('/404_page')
         else:
-            return super(SettingSMTPView, self).dispatch(request, *args, **kwargs)
+            return super().dispatch(request, *args, **kwargs)
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(SettingSMTPView, self).get_context_data(*args, **kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context = put_base_info(self.request, context, 'setting')
 
         setting = list(TBLSetting.objects.all().values())
@@ -854,8 +920,8 @@ class Page404View(TemplateView):
     template_name = 'ov/404.html'
 
     def dispatch(self, request, *args, **kwargs):
-        return super(Page404View, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
-        context = super(Page404View, self).get_context_data(*args, **kwargs)
+        context = super().get_context_data(**kwargs)
         return context

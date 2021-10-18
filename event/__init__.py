@@ -1,4 +1,4 @@
-from sectors.common import admin_config
+from sectors.common import admin_config, common
 from sectors.module import bridge, billing
 import _thread as thread
 import time
@@ -16,6 +16,12 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 def run_module():
     time.sleep(5)
 
+    users = TBLUser.objects.all()
+    for user in users:
+        if not user.unique_id:
+            user.unique_id = common.generate_random_string(10, 'ld')
+            user.save()
+
     ADMIN_USER = os.getenv('ADMIN_USER', 'admin')
     ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', 'admin@gmail.com')
     ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'xvX9BCE7RXdMzG4V')
@@ -27,7 +33,7 @@ def run_module():
         user.username = ADMIN_USER
         user.set_password(ADMIN_PASSWORD)
         user.is_superuser = True
-        user.is_active = True
+        user.unique_id = common.generate_random_string(10, 'ld')
         user.save()
 
     if admin_config.BRIDGE_HANDLE is None:
